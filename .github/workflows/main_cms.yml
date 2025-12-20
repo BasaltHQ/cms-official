@@ -32,7 +32,6 @@ jobs:
         run: |
           pnpm install
           npx prisma generate
-          npx prisma db push
           pnpm run build --if-present
           pnpm run test --if-present
 
@@ -60,5 +59,6 @@ jobs:
           slot-name: "Production"
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_10465936071D4A7AA627DEB04C65156B }}
+
 
 
