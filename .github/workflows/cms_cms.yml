@@ -42,6 +42,7 @@ jobs:
           mkdir -p .next/standalone/.next/static
           cp -r public .next/standalone/public
           cp -r .next/static .next/standalone/.next/static
+          rm -rf .next/standalone/node_modules/styled-jsx
           cp -rL node_modules/styled-jsx .next/standalone/node_modules/
           cd .next/standalone
           zip -r ../../release.zip .
