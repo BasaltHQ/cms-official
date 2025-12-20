@@ -46,8 +46,12 @@ jobs:
           cp -rL node_modules/styled-jsx .next/standalone/node_modules/
           rm -rf .next/standalone/node_modules/@swc
           cp -rL node_modules/@swc .next/standalone/node_modules/
-          cd .next/standalone
-          tar -hczf ../../release.tar.gz .
+
+          mkdir deployment
+          cp -rL .next/standalone/. deployment/
+
+          cd deployment
+          tar -czf ../release.tar.gz .
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
