@@ -47,6 +47,8 @@ jobs:
           cp -rL node_modules/styled-jsx .next/standalone/node_modules/
           rm -rf .next/standalone/node_modules/@swc
           cp -rL node_modules/@swc .next/standalone/node_modules/
+          rm -rf .next/standalone/node_modules/@next
+          cp -rL node_modules/@next .next/standalone/node_modules/
 
           mkdir deployment
           rsync -aL .next/standalone/ deployment/ || echo "Rsync: Some files could not be copied (likely broken symlinks)"
