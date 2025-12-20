@@ -11,6 +11,7 @@
 
 #jsons
 /jsons
+!package-lock.json
 
 /examples
 
@@ -50,3 +51,6 @@ next-env.d.ts
 # secrets
 gmail_credentials.json
 gmail_token.pickle
+
+Dockerfile
+Dockerfile_actions
