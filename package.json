@@ -2,7 +2,7 @@
   "name": "ledger1cms-app",
   "version": "1.0.5f",
   "private": true,
-  "packageManager": "pnpm@latest",
+  "packageManager": "pnpm",
   "scripts": {
     "dev": "set NODE_OPTIONS=--no-deprecation && next dev",
     "build": "prisma generate && node ./scripts/prisma-db-push-named.cjs && prisma db seed && next build",
