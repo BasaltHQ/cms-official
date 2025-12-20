@@ -124,21 +124,107 @@ export async function requestPasswordReset(email: string) {
 
         // Always return success to prevent email enumeration, but log internally if needed
         if (user) {
-            // In a real app, generate token and send email here.
-            // For now, we log it as requested.
+
+            // Generate secure random password (12 chars)
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+            let tempPassword = "";
+            for (let i = 0; i < 12; i++) {
+                tempPassword += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            const hashedTempPassword = await hash(tempPassword, 12);
+
+            await prismadb.users.update({
+                where: { id: user.id },
+                data: {
+                    password: hashedTempPassword,
+                    forcePasswordReset: true
+                }
+            });
+
+            // Send Email
             try {
-                // Import logActivity dynamically or assume it's available via audit
-                // Since I can't easily import from another file if I don't know the path relative or if circular deps exist.
-                // But audit is likely at @/actions/audit
+                const sendEmail = (await import("@/lib/sendmail")).default;
+                await sendEmail({
+                    to: user.email,
+                    from: process.env.EMAIL_FROM || "admin@ledger1.ai",
+                    subject: "Your Temporary Password - Ledger1 CMS",
+                    text: `A password reset was requested for your account.\n\nTemporary Password: ${tempPassword}\n\nPlease login and change your password immediately.`,
+                    html: `
+                        <div style="font-family: sans-serif; padding: 20px; color: #333;">
+                            <h2 style="color: #4f46e5;">Password Reset Request</h2>
+                            <p>A password reset was requested for your account.</p>
+                            <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                                <strong>Temporary Password:</strong>
+                                <div style="font-family: monospace; font-size: 18px; margin-top: 5px; color: #111;">${tempPassword}</div>
+                            </div>
+                            <p>Please <a href="${process.env.NEXT_PUBLIC_APP_URL}/cms/login">login here</a> and change your password immediately.</p>
+                        </div>
+                    `
+                });
+            } catch (e) {
+                console.error("Failed to send temp password email", e);
+                // Continue to log activity even if email fails? Yes.
+            }
+
+            try {
                 const { logActivityInternal } = await import("@/actions/audit");
-                await logActivityInternal(user.id, "Requested Password Reset", "Security", `Password reset requested for ${email}`);
+                await logActivityInternal(user.id, "Requested Password Reset", "Security", `Temporary password generated for ${email}`);
             } catch (e) {
                 console.error("Failed to log activity", e);
             }
         }
 
-        return { success: true, message: "If an account exists, a reset link has been sent." };
+        return { success: true, message: "If an account exists, a temporary password has been sent." };
     } catch (error) {
+        console.error("Request password reset failed", error);
         return { success: false, error: "Verification failed" };
+    }
+}
+
+export async function resetUserPassword(userId: string) {
+    try {
+        const user = await prismadb.users.findUnique({ where: { id: userId } });
+        if (!user) throw new Error("User not found");
+
+        // Generate secure random password (12 chars)
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+        let newPassword = "";
+        for (let i = 0; i < 12; i++) {
+            newPassword += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        const hashedPassword = await hash(newPassword, 12);
+
+        await prismadb.users.update({
+            where: { id: userId },
+            data: { password: hashedPassword }
+        });
+
+        // Dynamically import sendEmail to avoid top-level issues if any
+        const sendEmail = (await import("@/lib/sendmail")).default;
+
+        await sendEmail({
+            to: user.email,
+            from: process.env.EMAIL_FROM || "admin@ledger1.ai",
+            subject: "Your Password Has Been Reset - Ledger1 CMS",
+            text: `Your password has been reset by an administrator.\n\nNew Password: ${newPassword}\n\nPlease login and change this password immediately.`,
+            html: `
+                <div style="font-family: sans-serif; padding: 20px; color: #333;">
+                    <h2 style="color: #4f46e5;">Password Reset</h2>
+                    <p>Your password for Ledger1 CMS has been reset by an administrator.</p>
+                    <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                        <strong>New Password:</strong>
+                        <div style="font-family: monospace; font-size: 18px; margin-top: 5px; color: #111;">${newPassword}</div>
+                    </div>
+                    <p>Please <a href="https://ledger1.ai/cms/login">login here</a> and change your password immediately.</p>
+                </div>
+            `
+        });
+
+        return { success: true, message: "Password reset and emailed to user." };
+    } catch (error: any) {
+        console.error("Reset password failed:", error);
+        return { success: false, error: error.message || "Failed to reset password" };
     }
 }

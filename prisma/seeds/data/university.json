@@ -1,0 +1,52 @@
+[
+    {
+        "title": "Welcome to Ledger University",
+        "slug": "welcome-university",
+        "category": "General",
+        "type": "university",
+        "content": "# Welcome to Ledger University\n\n## Purpose\nLedger University is your central hub for all Standard Operating Procedures (SOPs), training modules, and internal guides. Whether you are an administrator, content editor, or operations manager, this knowledge base will help you navigate and utilize the full power of Ledger1CMS.\n\n## Navigation\n- **General**: High-level overviews and company policies.\n- **CMS Editing**: Guides on using the content editor, managing blogs, and pages.\n- **Technical**: Advanced configuration and troubleshooting.\n- **Vendor Ops**: Managing vendor compliance, onboarding, and documents.\n\n## Getting Help\nIf you cannot find what you are looking for, please contact the IT support team or raise a ticket in the Support portal.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 1
+    },
+    {
+        "title": "Using the Visual Content Editor",
+        "slug": "using-visual-editor",
+        "category": "CMS Editing",
+        "type": "university",
+        "content": "# Using the Visual Content Editor\n\n## Overview\nThe Ledger1CMS Visual Editor allows you to create stunning landing pages and articles without writing a single line of code. It uses a drag-and-drop interface powered by Puck.\n\n## Getting Started\n1.  Navigate to **CMS > Pages** or **CMS > Blog**.\n2.  Click **Create New** or select an existing item to edit.\n3.  Click the **\"Edit Visual\"** button to launch the editor.\n\n## Components\nThe editor provides a library of pre-built components:\n- **Hero**: Large banner with headline and CTA.\n- **Feature Grid**: Display key benefits in a grid layout.\n- **Testimonial**: Show social proof from customers.\n- **Call to Action**: Drive conversion with focused buttons.\n\n## Publishing\nChanges made in the editor are saved as \"Draft\". To make them live:\n1.  Click **Save** in the top right.\n2.  Click **Publish** to push changes to the production site.\n\n> [!NOTE]\n> Always preview your changes on different device sizes (Desktop, Tablet, Mobile) using the responsive toggle in the editor toolbar.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 2
+    },
+    {
+        "title": "OAuth & BYOK Setup Guide",
+        "slug": "oauth-byok-setup",
+        "category": "Technical",
+        "type": "university",
+        "content": "# OAuth & Bring Your Own Key (BYOK) Setup\n\n## Overview\nLedger1CMS allows you to connect your own email providers (Gmail, Outlook) and AI models (OpenAI, Anthropic) using a \"Bring Your Own Key\" architecture.\n\n## AI Model Configuration\n1.  Go to **Settings > AI Agent**.\n2.  Select your provider (e.g., OpenAI).\n3.  Enter your **API Key** in the secure field.\n4.  Click **Verify & Save**.\n\n> [!IMPORTANT]\n> Your API keys are encrypted at rest using AES-256. We never share your keys with third parties.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 3
+    },
+    {
+        "title": "Vendor Onboarding SOP",
+        "slug": "vendor-onboarding-sop",
+        "category": "Vendor Ops",
+        "type": "university",
+        "content": "# Vendor Onboarding SOP\n\n## Purpose\nThis SOP outlines the standard procedure for onboarding a new vendor into Ledger1CMS using the VCMS tools.\n\n## Pre-requisites\n- You must have a digital image of the vendor's business card OR a W9 form.\n\n## Process\n\n### 1. Vendor Scanning\n1.  Go to **CMS > Media Library**.\n2.  Click the **\"Vendors\"** tab in the top right.\n3.  Click **\"Scan Card\"** (or drop the image file).\n4.  The AI will process the image for approx. 5-10 seconds.\n5.  Once complete, a new profile is created in **CMS > Vendors**.\n\n### 2. Validation & Review\n1.  Navigate to **CMS > Vendors**.\n2.  Locate the new vendor (likely marked `AMBIGUOUS`).\n3.  Click to open the profile.\n4.  Verify the extracted data against the original card:\n    - Spelling of Name/Company\n    - Phone Number format\n    - Email Address\n5.  If correct, change status to **VALIDATED**.\n\n### 3. Document Collection\n1.  In the Vendor Profile, go to the **Documents** tab.\n2.  Upload any required compliance docs (COI, Insurance).\n3.  The **Compliance Score** will update automatically based on valid documents.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 4
+    },
+    {
+        "title": "Connecting Third-Party Apps",
+        "slug": "connecting-apps",
+        "category": "Integrations",
+        "type": "university",
+        "content": "# Connecting Third-Party Apps\n\n## Overview\nThe **Apps & Plugins** system allows you to connect external platforms (like Shopify, WooCommerce, and WordPress) directly to your CMS. This enables a \"Headless\" content strategy where you manage all content in Ledger1CMS and push it to your various storefronts and sites.\n\n## How to Connect an App\n\n1.  **Navigate to Apps Store**\n    - Go to **CMS > System > Apps & Plugins**.\n    - You will see a list of available integrations divided into categories (E-Commerce, Publishing, Utility).\n\n2.  **Select a Provider**\n    - **Shopify**: Click \"Connect\". You will be asked for your store URL (e.g., `mystore.myshopify.com`). You will then be redirected to Shopify to approve the connection.\n    - **WooCommerce**: Click \"Connect\". You will need to provide your Store URL, Consumer Key, and Consumer Secret. (See below for how to generate these).\n\n3.  **Verification**\n    - Once connected, the status indicator on the app card will turn **Green (Connected)**.\n    - You can now use this connection in the Content Editor to distribute posts.\n\n## Security Note\nAll API keys and tokens are encrypted using AES-256 before being stored in our database. We strictly log all access and usage of these credentials for your security audit trails.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 5
+    }
+]

@@ -1,0 +1,1234 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  engineType    = "binary"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("CMS_DATABASE_URL")
+}
+
+
+
+
+
+
+
+model VendorProfile {
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  
+  // Scoring & Classification
+  vcms_score         Float            @default(0)
+  primary_industry   String?
+  industry_synonyms  String[]         
+  
+  // Validation (AI Logic)
+  validation_status  VendorValidationStatus @default(PENDING)
+  validation_notes   String?
+  raw_ocr_data       Json?
+
+  // Compliance
+  document_status    VendorDocumentStatus @default(MISSING)
+  coi_expiry         DateTime?        @db.Date
+  w9_on_file         Boolean          @default(false)
+  license_number     String?
+  license_expiry     DateTime?        @db.Date
+  is_do_not_use      Boolean          @default(false)
+
+  // System
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  // Contact Details (since crm_Contacts is gone)
+  name               String?
+  email              String?
+  phone              String?
+  website            String?
+  address            String?
+  title              String?
+
+  // Reviews & External
+  angies_list_url    String?
+  google_reviews_url String?
+  google_rating      Float?
+  review_count       Int?
+  custom_fields      Json?
+
+  // Relations
+  business_cards     MediaItem[]
+}
+
+enum VendorValidationStatus {
+  PENDING
+  VALIDATED
+  AMBIGUOUS
+  FAILED
+}
+
+enum VendorDocumentStatus {
+  VALID
+  EXPIRED
+  MISSING
+  PARTIAL
+}
+
+model Boards {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  v                 Int       @map("__v")
+  description       String
+  favourite         Boolean?
+  favouritePosition Int?
+  icon              String?
+  position          Int?
+  title             String
+  user              String    @db.ObjectId
+  visibility        String?
+  sharedWith        String[]  @db.ObjectId
+  createdAt         DateTime? @default(now()) @db.Date
+  createdBy         String?   @db.ObjectId
+  updatedAt         DateTime? @updatedAt @db.Date
+  updatedBy         String?   @db.ObjectId
+
+  // Branding
+  brand_logo_url     String?
+  brand_primary_color String?
+
+  //Create watchers field for board. It will be array of users
+  watchers       String[] @db.ObjectId
+  assigned_user  Users?   @relation(name: "assigned_user", fields: [user], references: [id])
+  watchers_users Users[]  @relation(name: "watching_users", fields: [watchers], references: [id])
+  button_sets    Project_Button_Sets[] @relation(name: "BoardButtonSets")
+  project_opportunities Project_Opportunities[]
+
+
+  team_id             String?                @db.ObjectId
+  assigned_team       Team?                  @relation(fields: [team_id], references: [id])
+}
+
+model Employees {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  v      Int     @map("__v")
+  avatar String
+  email  String?
+  name   String
+  salary Int
+  status String
+
+  team_id String? @db.ObjectId
+  assigned_team Team? @relation(fields: [team_id], references: [id])
+}
+
+model ImageUpload {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model MyAccount {
+  id                   String  @id @default(auto()) @map("_id") @db.ObjectId
+  v                    Int     @map("__v")
+  company_name         String
+  is_person            Boolean @default(false)
+  email                String?
+  email_accountant     String?
+  phone_prefix         String?
+  phone                String?
+  mobile_prefix        String?
+  mobile               String?
+  fax_prefix           String?
+  fax                  String?
+  website              String?
+  // office Address
+  street               String?
+  city                 String?
+  state                String?
+  zip                  String?
+  country              String?
+  country_code         String?
+  // billing Address
+  billing_street       String?
+  billing_city         String?
+  billing_state        String?
+  billing_zip          String?
+  billing_country      String?
+  billing_country_code String?
+  //other
+  currency             String?
+  currency_symbol      String?
+  VAT_number           String
+  TAX_number           String?
+  bank_name            String?
+  bank_account         String?
+  bank_code            String?
+  bank_IBAN            String?
+  bank_SWIFT           String?
+}
+
+model Invoices {
+  id                            String          @id @default(auto()) @map("_id") @db.ObjectId
+  v                             Int?            @map("__v")
+  date_created                  DateTime        @default(now()) @db.Date
+  last_updated                  DateTime        @updatedAt
+  last_updated_by               String?         @db.ObjectId
+  date_received                 DateTime?       @default(now()) @db.Date
+  date_of_case                  DateTime?       @db.Date
+  date_tax                      DateTime?       @db.Date
+  date_due                      DateTime?       @db.Date
+  description                   String?
+  document_type                 String?
+  favorite                      Boolean?        @default(false)
+  variable_symbol               String?
+  constant_symbol               String?
+  specific_symbol               String?
+  order_number                  String?
+  internal_number               String?
+  invoice_number                String?
+  invoice_amount                String?
+  invoice_file_mimeType         String
+  invoice_file_url              String
+  invoice_items                 Json?
+  invoice_type                  String?
+  invoice_currency              String?
+  invoice_language              String?
+  partner                       String?
+  partner_street                String?
+  partner_city                  String?
+  partner_zip                   String?
+  partner_country               String?
+  partner_country_code          String?
+  partner_business_street       String?
+  partner_business_city         String?
+  partner_business_zip          String?
+  partner_business_country      String?
+  partner_business_country_code String?
+  partner_VAT_number            String?
+  partner_TAX_number            String?
+  partner_TAX_local_number      String?
+  partner_phone_prefix          String?
+  partner_phone_number          String?
+  partner_fax_prefix            String?
+  partner_fax_number            String?
+  partner_email                 String?
+  partner_website               String?
+  partner_is_person             Boolean?
+  partner_bank                  String?
+  partner_account_number        String?
+  partner_account_bank_number   String?
+  partner_IBAN                  String?
+  partner_SWIFT                 String?
+  partner_BIC                   String?
+  rossum_status                 String?
+  rossum_annotation_id          String?
+  rossum_annotation_url         String?
+  rossum_document_id            String?
+  rossum_document_url           String?
+  rossum_annotation_json_url    String?
+  rossum_annotation_xml_url     String?
+  money_s3_url                  String?
+  status                        String?
+  invoice_state_id              String?         @db.ObjectId
+  assigned_user_id              String?         @db.ObjectId
+  assigned_account_id           String?         @db.ObjectId
+  visibility                    Boolean         @default(true)
+  invoice_states                invoice_States? @relation(fields: [invoice_state_id], references: [id])
+  users                         Users?          @relation(fields: [assigned_user_id], references: [id])
+
+  connected_documents           String[]        @db.ObjectId
+  documents                     Documents[]     @relation(fields: [connected_documents], references: [id])
+
+  team_id                       String?         @db.ObjectId
+  assigned_team                 Team?           @relation(fields: [team_id], references: [id])
+}
+
+model invoice_States {
+  id                String     @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  assigned_invoices Invoices[]
+}
+
+model Documents {
+  id                     String              @id @default(auto()) @map("_id") @db.ObjectId
+  v                      Int?                @map("__v")
+  date_created           DateTime?           @default(now()) @db.Date
+  createdAt              DateTime?           @default(now()) @db.Date
+  last_updated           DateTime?           @updatedAt
+  updatedAt              DateTime?           @updatedAt @db.Date
+  document_name          String
+  created_by_user        String?             @db.ObjectId
+  createdBy              String?             @db.ObjectId
+  description            String?
+  document_type          String?             @db.ObjectId
+  favourite              Boolean?
+  document_file_mimeType String
+  document_file_url      String
+  status                 String?
+  visibility             String?
+  tags                   Json?
+  key                    String?
+  size                   Int?
+  assigned_user          String?             @db.ObjectId
+  connected_documents    String[]
+  invoiceIDs             String[]            @db.ObjectId
+  tasksIDs               String[]            @db.ObjectId
+  tasks                  Tasks[]             @relation(fields: [tasksIDs], references: [id])
+  invoices               Invoices[]          @relation(fields: [invoiceIDs], references: [id])
+
+  created_by             Users?              @relation(name: "created_by_user", fields: [created_by_user], references: [id])
+  assigned_to_user       Users?              @relation(name: "assigned_to_user", fields: [assigned_user], references: [id])
+  documents_type         Documents_Types?    @relation(fields: [document_type], references: [id])
+  document_system_type   DocumentSystemType? @default(OTHER)
+
+  team_id                String?             @db.ObjectId
+  assigned_team          Team?               @relation(fields: [team_id], references: [id])
+}
+
+enum DocumentSystemType {
+  INVOICE
+  RECEIPT
+  CONTRACT
+  OFFER
+  OTHER
+}
+
+model Documents_Types {
+  id                 String      @id @default(auto()) @map("_id") @db.ObjectId
+  v                  Int         @map("__v")
+  name               String
+  assigned_documents Documents[]
+}
+
+model Sections {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  v        Int     @map("__v")
+  board    String  @db.ObjectId
+  title    String
+  position Int?
+  tasks    Tasks[]
+}
+
+
+
+model modulStatus {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  isVisible Boolean
+}
+
+model Tasks {
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
+  v                Int             @map("__v")
+  content          String?
+  createdAt        DateTime?       @default(now()) @db.Date
+  createdBy        String?         @db.ObjectId
+  updatedAt        DateTime?       @updatedAt @db.Date
+  updatedBy        String?         @db.ObjectId
+  dueDateAt        DateTime?       @default(now()) @db.Date
+  lastEditedAt     DateTime?       @default(now()) @updatedAt @db.Date
+  position         Int
+  priority         String
+  section          String?         @db.ObjectId
+  tags             Json?
+  title            String
+  likes            Int?            @default(0)
+  user             String?         @db.ObjectId
+  documentIDs      String[]        @db.ObjectId
+  comments         tasksComments[]
+  documents        Documents[]     @relation(fields: [documentIDs], references: [id])
+  assigned_user    Users?          @relation(fields: [user], references: [id])
+  assigned_section Sections?       @relation(fields: [section], references: [id])
+  //Staus
+  taskStatus       taskStatus?     @default(ACTIVE)
+
+  team_id          String?         @db.ObjectId
+  assigned_team    Team?           @relation(fields: [team_id], references: [id])
+}
+
+
+
+model tasksComments {
+  id                             String              @id @default(auto()) @map("_id") @db.ObjectId
+  v                              Int                 @map("__v")
+  comment                        String
+  createdAt                      DateTime            @default(now()) @db.Date
+  task                           String              @db.ObjectId
+  user                           String              @db.ObjectId
+
+  assigned_task                  Tasks?              @relation(fields: [task], references: [id], onDelete: Cascade)
+  assigned_user                  Users?              @relation(fields: [user], references: [id])
+}
+
+enum taskStatus {
+  ACTIVE
+  PENDING
+  COMPLETE
+}
+
+model TodoList {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   String
+  description String
+  title       String
+  url         String
+  user        String
+}
+
+enum ActiveStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
+
+model Role {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  permissions String[]
+  cmsModules  String[] @default([])
+  color       String   @default("blue") // blue, purple, green, amber, red
+  description String?
+  users       Users[]
+}
+
+model Users {
+  id                   String                @id @default(auto()) @map("_id") @db.ObjectId
+  v                    Int                   @default(0) @map("__v")
+  account_name         String?
+  avatar               String?
+  email                String                @unique
+  is_account_admin     Boolean               @default(false)
+  is_admin             Boolean               @default(false) // Deprecated in favor of role
+  roleId               String?               @db.ObjectId
+  assigned_role        Role?                 @relation(fields: [roleId], references: [id])
+  created_on           DateTime              @default(now()) @db.Date
+  lastLoginAt          DateTime?             @db.Date
+  name                 String?
+  password             String?
+  username             String?
+  userStatus           ActiveStatus          @default(PENDING)
+  userLanguage         Language              @default(en)
+  forcePasswordReset   Boolean               @default(false)
+  tasksComment         tasksComments[]
+  created_by_documents Documents[]           @relation(name: "created_by_user")
+  assigned_documents   Documents[]           @relation(name: "assigned_to_user")
+  tasks                Tasks[]
+
+  // Restored Relations
+  notion_account       secondBrain_notions[]
+  openAi_key           openAi_keys[]
+  gmail_tokens         gmail_Tokens[]
+  assigned_invoices    Invoices[]
+  boards               Boards[]              @relation(name: "assigned_user")
+  watching_boardsIDs   String[]              @db.ObjectId
+  watching_boards      Boards[]              @relation(name: "watching_users", fields: [watching_boardsIDs], references: [id])
+  chat_sessions        chat_Sessions[]
+  button_sets_presets  Project_Button_Sets[] @relation(name: "UserButtonSets")
+  system_activities    SystemActivity[]      @relation(name: "UserSystemActivities")
+
+  // Outreach, signature, resources, and prompt settings
+  // Outreach Settings (Extracted)
+  outreach_settings          UserOutreachSettings?
+
+  // Calendar preferences
+  calendar_settings          UserCalendarSettings?
+
+  // Team / Partner
+  team_id                    String?   @db.ObjectId
+  assigned_team              Team?     @relation(fields: [team_id], references: [id])
+  team_role                  String?   @default("MEMBER") // OWNER, ADMIN, MEMBER
+
+  // CMS Settings
+  timezone                   String?
+  region                     String?
+  cmsModules                 String[] // CMS module slugs user can access
+  custom_features            Json?    // AI Feature toggle overrides
+  
+  // AI API Keys (Encrypted)
+  googleApiKey               String?  // Encrypted Google API key for Gemini/Nano Banana
+  googleApiKeyUpdatedAt      DateTime? @db.Date
+  
+  openaiApiKey               String?  // Encrypted OpenAI API key
+  openaiApiKeyUpdatedAt      DateTime?
+  
+  anthropicApiKey            String?  // Encrypted Anthropic API key
+  anthropicApiKeyUpdatedAt   DateTime?
+  
+  mistralApiKey              String?  // Encrypted Mistral API key
+  mistralApiKeyUpdatedAt     DateTime?
+
+  perplexityApiKey           String?  // Encrypted Perplexity API key
+  perplexityApiKeyUpdatedAt  DateTime?
+
+  // Post-2025 Flexible AI Config
+  ai_configs                 UserAiConfig[]
+  app_connections            AppConnection[]
+  created_forms              Form[]
+}
+
+model Team {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  slug        String   @unique
+  logo_url    String?
+  owner_id    String?  @db.ObjectId
+  created_at  DateTime @default(now()) @db.Date
+  updated_at  DateTime @updatedAt @db.Date
+
+  // Relations
+  members     Users[]
+  subscription_plan SubscriptionPlan @default(FREE) // Deprecated, keep for migration
+  
+  plan_id     String?  @db.ObjectId
+  assigned_plan Plan?  @relation(fields: [plan_id], references: [id])
+  
+  status      TeamStatus @default(ACTIVE)
+  suspension_reason String?
+  renewal_date DateTime?
+
+  // Data Ownership
+  boards      Boards[]
+  invoices    Invoices[]
+  documents   Documents[]
+  tasks       Tasks[]
+  employees   Employees[]
+  landing_pages LandingPage[]
+  
+  ai_config           TeamAiConfig?
+}
+
+enum BillingCycle {
+  MONTHLY
+  YEARLY
+  LIFETIME
+  ONE_TIME
+}
+
+model Plan {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  slug        String   @unique // FREE, TEAM, ENTERPRISE
+  description String?
+  price       Float    @default(0)
+  currency    String   @default("USD")
+  
+  // Limits
+  max_users   Int      @default(1)
+  max_storage Int      @default(1000) // MB
+  max_credits Int      @default(0)
+
+  // Subscription Settings
+  billing_cycle BillingCycle @default(MONTHLY)
+  grace_period_days Int @default(7)
+  
+  // Features (Modules)
+  features    String[] 
+  
+  isActive    Boolean  @default(true)
+  
+  created_at  DateTime @default(now()) @db.Date
+  updated_at  DateTime @default(now()) @updatedAt @db.Date
+
+  // Relations
+  teams       Team[]
+}
+
+enum SubscriptionPlan {
+  FREE
+  TEAM
+  ENTERPRISE
+}
+
+enum TeamStatus {
+  ACTIVE
+  PENDING
+  SUSPENDED
+}
+
+enum Language {
+  cz
+  en
+  de
+  uk
+}
+
+model system_Modules_Enabled {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  v        Int     @map("__v")
+  name     String
+  enabled  Boolean
+  position Int
+}
+
+model secondBrain_notions {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  v              Int    @map("__v")
+  user           String @db.ObjectId
+  notion_api_key String
+  notion_db_id   String
+  assigned_user  Users? @relation(fields: [user], references: [id])
+}
+
+model openAi_keys {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  v               Int    @map("__v")
+  user            String @db.ObjectId
+  organization_id String
+  api_key         String
+  assigned_user   Users? @relation(fields: [user], references: [id])
+}
+
+model gmail_Tokens {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  v             Int?     @map("__v")
+  user          String   @db.ObjectId
+  provider      String   @default("google")
+  access_token  String
+  refresh_token String
+  scope         String?
+  expiry_date   DateTime? @db.Date
+  createdAt     DateTime? @default(now()) @db.Date
+  updatedAt     DateTime? @updatedAt @db.Date
+
+  assigned_user Users?   @relation(fields: [user], references: [id])
+}
+
+model systemServices {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  v               Int     @map("__v")
+  name            String
+  serviceUrl      String?
+  serviceId       String?
+  serviceKey      String?
+  servicePassword String?
+  servicePort     String?
+  description     String?
+}
+
+model oauth_Authorization_Codes {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  code            String   @unique
+  userId          String   @db.ObjectId
+  clientId        String
+  redirectUri     String
+  scope           String?
+  codeChallenge   String
+  challengeMethod String   @default("S256")
+  expiresAt       DateTime @db.Date
+  used            Boolean  @default(false)
+  createdAt       DateTime @default(now()) @db.Date
+}
+
+enum AiProvider {
+  OPENAI
+  AZURE
+  ANTHROPIC
+  GOOGLE
+  GROK
+  DEEPSEEK
+  PERPLEXITY
+  MISTRAL
+  AWS
+}
+
+model AiModel {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int        @default(0) @map("__v")
+  name        String     // Display name (e.g. "GPT-4o")
+  modelId     String     // API model ID (e.g. "gpt-4o")
+  provider    AiProvider
+  description String?
+  
+  // Pricing per 1k tokens (managed by Partner)
+  inputPrice  Float      @default(0)
+  outputPrice Float      @default(0)
+  
+  isActive    Boolean    @default(true)
+  isDefault   Boolean    @default(false)
+  created_on  DateTime?  @default(now()) @db.Date
+
+  @@unique([modelId, provider])
+}
+
+model SystemSecurityConfig {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  twoFactor          Boolean  @default(true)
+  publicRegistration Boolean  @default(false)
+  sessionTimeout     Boolean  @default(true)
+  ipWhitelist        Boolean  @default(false)
+  auditLog           Boolean  @default(true)
+  strongPasswords    Boolean  @default(true)
+  whitelistedIps     String[]
+  updatedAt          DateTime @updatedAt
+}
+
+model SystemSeoConfig {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  globalTitle        String   @default("Ledger1 CMS | The Intelligent Visual Builder")
+  globalDescription  String   @default("Build, scale, and manage your digital presence with the world's most powerful AI-assisted visual CMS.")
+  globalKeywords     String[]
+  ogImage            String   @default("/social-preview.jpg?v=2")
+  ogTitle            String?
+  ogDescription      String?
+  twitterCard        String   @default("summary_large_image")
+  twitterImage       String?
+  twitterTitle       String?
+  twitterDescription String?
+  faviconUrl         String?
+  updatedAt          DateTime @updatedAt
+}
+
+model SystemAiConfig {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  provider  AiProvider @unique
+  apiKey    String
+  baseUrl   String?    // Optional override
+  configuration Json?  // Store provider-specific config (Azure endpoint, etc)
+  defaultModelId String? // Default model for this provider (e.g. "gpt-4o")
+  isActive  Boolean    @default(true)
+}
+
+model TeamAiConfig {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  team_id      String     @unique @db.ObjectId
+  provider     AiProvider @default(OPENAI) // Active provider for this team
+  modelId      String?    // Specific model override (e.g. "gpt-4o")
+  useSystemKey Boolean    @default(true)
+  apiKey       String?    // Stored if useSystemKey is false
+
+  assigned_team Team      @relation(fields: [team_id], references: [id])
+}
+
+
+model UserAiConfig {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String     @db.ObjectId
+  provider      AiProvider
+  apiKey        String
+  baseUrl       String?
+  configuration Json?      // For Azure (resourceName), AWS (accessKeyId), etc.
+  isActive      Boolean    @default(true)
+  
+  assigned_user Users      @relation(fields: [userId], references: [id])
+  
+  @@unique([userId, provider])
+}
+
+
+model chat_Sessions {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @default(0) @map("__v")
+  user        String   @db.ObjectId
+  title       String?
+  isTemporary Boolean  @default(false)
+  createdAt   DateTime @default(now()) @db.Date
+  updatedAt   DateTime? @updatedAt @db.Date
+
+  messages      chat_Messages[]
+  assigned_user Users?  @relation(fields: [user], references: [id])
+}
+
+model chat_Messages {
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  v               Int             @default(0) @map("__v")
+  session         String          @db.ObjectId
+  parent          String?         @db.ObjectId
+  role            String
+  content         String
+  createdAt       DateTime        @default(now()) @db.Date
+  model           String?
+  deployment      String?
+  tokenUsage      Json?
+
+  assigned_session chat_Sessions?  @relation(fields: [session], references: [id])
+  parent_message   chat_Messages?  @relation("ChatMessageChildren", fields: [parent], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children         chat_Messages[] @relation("ChatMessageChildren")
+}
+
+
+
+// Button set presets per project (Boards)
+model Project_Button_Sets {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  v          Int?     @map("__v")
+  project    String   @db.ObjectId
+  owner      String?  @db.ObjectId // null => project default shared to all team members
+  name       String
+  config     Json?
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime? @default(now()) @db.Date
+  updatedAt  DateTime? @updatedAt @db.Date
+
+  assigned_project Boards? @relation(name: "BoardButtonSets", fields: [project], references: [id])
+  assigned_owner   Users?  @relation(name: "UserButtonSets", fields: [owner], references: [id])
+}
+
+// Project-scoped Opportunities posted by Sales for feature buildouts and commissioned work
+enum ProjectOpportunityCategory {
+  FEATURE_BUILDOUT
+  COMMISSIONED_WORK
+  OTHER
+}
+
+enum ProjectOpportunityStatus {
+  OPEN
+  WON
+  LOST
+  ARCHIVED
+}
+
+model Project_Opportunities {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  v               Int?     @map("__v")
+  project         String   @db.ObjectId
+  title           String
+  description     String?
+  category        ProjectOpportunityCategory
+  status          ProjectOpportunityStatus @default(OPEN)
+  valueEstimate   Int?
+  createdAt       DateTime? @default(now()) @db.Date
+  createdBy       String?  @db.ObjectId
+  assignedTo      String?  @db.ObjectId
+  relatedTasksIDs String[] @db.ObjectId
+
+  assigned_project Boards? @relation(fields: [project], references: [id])
+}
+
+model FooterSection {
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  order     Int          @default(0)
+  isBase    Boolean      @default(false)
+  links     FooterLink[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model FooterLink {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  text            String
+  url             String
+  order           Int           @default(0)
+  sectionId       String        @db.ObjectId
+  section         FooterSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model FooterSetting {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  tagline       String   @default("Your 24/7 AI workforce. Sales, Support, and Growth on autopilot.")
+  copyrightText String   @default("© 2025 Ledger AI. All rights reserved.")
+  footerLogoUrl String?  @default("/ledger1-cms-logo.png")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model MarketingTeamGroup {
+  id        String                @id @default(auto()) @map("_id") @db.ObjectId
+  title     String?
+  order     Int                   @default(0)
+  members   MarketingTeamMember[]
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+}
+
+model MarketingTeamMember {
+  id        String             @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  role      String
+  imageSrc  String
+  linkedin  String?
+  twitter   String?
+  order     Int                @default(0)
+  groupId   String             @db.ObjectId
+  group     MarketingTeamGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+}
+
+
+model BlogPost {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String   @unique
+  content     String
+  excerpt     String?
+  coverImage  String?
+  category    String?
+  author      String?
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model JobPosting {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  department   String
+  location     String
+  type         String   @default("Full-time")
+  description  String?
+  summary      String?
+  content      String?
+  coverImage   String? // Generated or uploaded image URL
+  requirements String?
+  applyLink    String?
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  applications JobApplication[]
+}
+
+model JobApplication {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  jobId        String   @db.ObjectId
+  jobTitle     String   // Denormalized for easier display/querying
+  job          JobPosting @relation(fields: [jobId], references: [id])
+  
+  name         String
+  email        String
+  phone        String?
+  resumeUrl    String?
+  coverLetter  String?
+  linkedinUrl  String?
+  portfolioUrl String?
+  
+  status       String   @default("PENDING") // PENDING, REVIEWING, REJECTED, HIRED
+  jiraTicketId String?
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model DocArticle {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String   @unique
+  category    String
+  type        String   @default("docs") // "docs" | "university"
+  content     String
+  videoUrl    String?
+  resources   Json?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SocialSettings {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  // Primary Socials
+  xTwitterUrl       String?  @default("")
+  discordUrl        String?  @default("")
+  linkedinUrl       String?  @default("")
+  instagramUrl      String?  @default("")
+  facebookUrl       String?  @default("")
+  youtubeUrl        String?  @default("")
+  tiktokUrl         String?  @default("")
+  githubUrl         String?  @default("")
+  telegramUrl       String?  @default("")
+  redditUrl         String?  @default("")
+  threadsUrl        String?  @default("")
+  mastodonUrl       String?  @default("")
+  // Contact Info
+  emailSupport      String?  @default("")
+  emailSales        String?  @default("")
+  phoneNumber       String?  @default("")
+  // App Stores
+  appStoreUrl       String?  @default("")
+  playStoreUrl      String?  @default("")
+  // Newsletter/CTA
+  newsletterEnabled Boolean  @default(true)
+  blogUpdatesEnabled Boolean @default(true)
+  careerUpdatesEnabled Boolean @default(true)
+  ctaText           String?  @default("Stay Updated")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Subscriber {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  firstName String?
+  lastName  String?
+  isActive  Boolean  @default(true)
+  
+  // Preferences
+  subscribedToBlog    Boolean @default(true)
+  subscribedToCareers Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SupportTicket {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  source    String   // "PRICING", "SUPPORT", "AI_AGENT"
+  name      String   // Keeping for backward compatibility (can combine first/last)
+  firstName String?
+  lastName  String?
+  email     String
+  phone     String?
+  company   String?
+  supportType String? // "SALES", "TECHNICAL", "GENERAL", "BILLING", "OTHER"
+  subject   String?
+  message   String
+  attachmentUrl String?
+  messages  Json?    // For AI Agent chat history
+  status    String   @default("NEW") // "NEW", "JIRA_CREATED", "ARCHIVED"
+  jiraTicketId String?
+  createdAt DateTime @default(now()) @db.Date
+  updatedAt DateTime @updatedAt @db.Date
+  
+  formSubmission FormSubmission?
+}
+
+model SystemActivity {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  action    String
+  resource  String
+  details   String?
+  createdAt DateTime @default(now()) @db.Date
+
+  user      Users    @relation(name: "UserSystemActivities", fields: [userId], references: [id])
+}
+
+
+
+model PageView {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  path      String
+  userAgent String?
+  ipHash    String?
+  city      String?
+  country   String?
+  createdAt DateTime @default(now()) @db.Date
+}
+
+model MediaItem {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  url         String
+  filename    String
+  mimeType    String
+  size        Int
+  width       Int?
+  height      Int?
+  
+  // SEO & Metadata
+  title       String?
+  caption     String?
+  altText     String?
+  description String?
+  thumbnail   String?
+  
+  isPublic    Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  userId      String?  @db.ObjectId // Uploader
+  
+  // VCMS Fields
+  isBusinessCard Boolean? @default(false)
+  vendorId       String? @db.ObjectId
+  vendor         VendorProfile? @relation(fields: [vendorId], references: [id])
+}
+
+model BlogEvent {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  eventType      String   // "CLICK" | "SHARE"
+  sourceUrl      String   // The blog post URL where the event occurred
+  destinationUrl String?  // For CTR: the clicked link URL
+  sharePlatform  String?  // For Share: "Twitter", "LinkedIn", "Facebook", etc.
+  visitorId      String?  // Link to browser visitor ID for deduplication
+  createdAt      DateTime @default(now()) @db.Date
+}
+model UserCalendarSettings {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @unique @db.ObjectId
+  user              Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  calendar_selected_ids String[]
+  default_calendar_id   String?
+  calendar_colors       Json?
+  
+  updatedAt         DateTime @updatedAt
+}
+
+model UserOutreachSettings {
+  id                     String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId                 String    @unique @db.ObjectId
+  user                   Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Outreach Settings
+  meeting_link           String?
+  signature_html         String?
+  signature_updated_at   DateTime? @db.Date
+  signature_meta         Json?
+  resource_links         Json?
+  
+  // Prompt Settings
+  outreach_prompt_default String?
+  outreach_prompt_updated_at DateTime? @db.Date
+  outreach_prompt_meta   Json?
+
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+}
+
+model LandingPage {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String   @unique
+  description String?
+  
+  // Puck Editor Content (Draft vs Live)
+  content          Json?  // DRAFT content (edited in Puck)
+  publishedContent Json?  // LIVE content (shown to public users)
+  
+  isPublished Boolean  @default(false)
+  
+  // CRM Relations
+  team_id     String?  @db.ObjectId
+  assigned_team Team?  @relation(fields: [team_id], references: [id])
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Country {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  code      String   @unique // ISO 3166-1 alpha-2
+  slug      String   @unique
+  regions   Region[]
+  cities    City[]
+}
+
+model Region {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  slug         String
+  country_code String
+  country      Country  @relation(fields: [country_code], references: [code])
+  cities       City[]
+
+  @@unique([country_code, slug])
+}
+
+model City {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  native_name  String?
+  slug         String   @unique
+  population   Int?
+  country_code String
+  region_id    String?  @db.ObjectId
+  
+  country      Country  @relation(fields: [country_code], references: [code])
+  region       Region?  @relation(fields: [region_id], references: [id])
+  
+  // SEO & Content
+  description  String?
+  image_url    String?
+}
+
+enum AppCategory {
+  ECOMMERCE
+  PUBLISHING
+  MARKETING
+  UTILITY
+}
+
+model AppConnection {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String      @db.ObjectId
+  
+  providerId  String
+  category    AppCategory
+  displayName String
+  
+  credentials Json
+  
+  config      Json?
+  
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt @db.Date
+
+  user        Users       @relation(fields: [userId], references: [id])
+  sync_logs   AppSyncLog[]
+
+  @@index([providerId, userId])
+}
+
+model AppSyncLog {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  connectionId   String   @db.ObjectId
+  resourceType   String
+  resourceId     String
+  remoteId       String?
+  action         String
+  status         String
+  error          String?
+  createdAt      DateTime @default(now()) @db.Date
+
+  connection     AppConnection @relation(fields: [connectionId], references: [id])
+}
+
+model Form {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  
+  // Configuration
+  project     String?  // Optional project/board ID
+  isPublic    Boolean  @default(false)
+  status      FormStatus @default(DRAFT)
+  
+  // Analytics
+  clicks      Int      @default(0)
+  views       Int      @default(0)
+  
+  // Content (Puck/JSON)
+  content     Json?
+  
+  // Creator
+  createdById String?  @db.ObjectId
+  createdBy   Users?   @relation(fields: [createdById], references: [id])
+  
+  submissions FormSubmission[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model FormSubmission {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  formId    String   @db.ObjectId
+  form      Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+  
+  // Data
+  data      Json
+  
+  // Analytics
+  source      String? // e.g. "google", "newsletter"
+  medium      String? // e.g. "cpc", "email"
+  campaign    String? // e.g. "summer_sale"
+  referrer    String?
+  ipAddress   String?
+  userAgent   String?
+  
+  // Link to Support Ticket 
+  supportTicketId String? @unique @db.ObjectId
+  supportTicket   SupportTicket? @relation(fields: [supportTicketId], references: [id])
+  
+  createdAt DateTime @default(now())
+}
+
+enum FormStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}

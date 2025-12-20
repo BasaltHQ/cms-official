@@ -1,0 +1,102 @@
+[
+    {
+        "title": "Introduction to Ledger1CMS",
+        "slug": "introduction",
+        "category": "Getting Started",
+        "type": "docs",
+        "content": "# Introduction to Ledger1CMS\n\n## What is Ledger1CMS?\nLedger1CMS is a high-performance, developer-first Content Management System built on the modern web stack. Unlike traditional monolithic CMS platforms, Ledger1CMS leverages the power of **Next.js 15 (App Router)** and **React Server Components** to deliver content with zero client-side JavaScript overhead where possible.\n\n## Key Features\n\n- **Visual Editor**: Real-time content editing with a drag-and-drop interface powered by our custom visual blocks engine.\n- **AI Assistant**: Built-in AI tools analyze your text in real-time, offering suggestions to improve clarity, tone, and SEO. This \"genius mode\" significantly boosts content output quality and velocity.\n- **Vendor Compliance (VCMS)**: Manage vendor profiles, compliance documents, and validation with AI-powered checks.\n- **Type-Safe Content**: Fully typed schemas using Prisma and TypeScript ensure your content structure is rigid and reliable.\n- **Asset Management**: Integrated media library for managing images, videos, and documents.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 1
+    },
+    {
+        "title": "Vendor Compliance (VCMS)",
+        "slug": "vendor-compliance",
+        "category": "Core Concepts",
+        "type": "docs",
+        "content": "# Vendor Compliance Management System (VCMS)\n\n## Overview\nThe VCMS module allows organizations to manage vendor relationships, track compliance documentation, and ensure adherence to safety standards. It uses AI to extract and validate vendor data from diverse sources like business cards and invoices.\n\n## Key Concepts\n\n### Vendor Profile\nThe central record for a vendor, containing contact info, compliance status, and history.\n- **Validation Status**: `VALIDATED`, `AMBIGUOUS` (needs review), or `REJECTED`.\n- **Compliance Score**: A 0-100 score based on document completeness and history.\n\n### Documents\nVendors can have multiple compliance documents (COI, W9, Licenses).\n- **Status**: `VALID`, `MISSING`, `EXPIRED`, `PENDING_REVIEW`.\n\n## AI Scanning\nThe system includes an \"AI Scanner\" in the Media Library. Uploading a business card image automatically:\n1.  Extracts contact details (Name, Email, Phone, Company).\n2.  Performs a background check for basic compliance flags.\n3.  Creates a Draft Vendor Profile for review.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 2
+    },
+    {
+        "title": "System Architecture",
+        "slug": "system-architecture",
+        "category": "Architecture",
+        "type": "docs",
+        "content": "# System Architecture\n\n## Core Technologies\n\n- **Next.js 15 (App Router)**: The backbone of the application, handling routing, SSR, and API endpoints.\n- **Prisma ORM**: Manages database access and schema definitions.\n- **Tailwind CSS**: Utility-first styling engine.\n- **Shadcn/UI**: Accessible, reusable component primitives.\n- **NextAuth.js**: Authentication and session management.\n\n## Directory Structure\n\n```bash\n├── app/\n│   ├── [locale]/           # Internationalized routes\n│   │   ├── cms/            # Protected admin routes\n│   │   ├── (public)/       # Public facing pages (Blog, Docs)\n│   │   └── api/            # API Route Handlers\n├── components/\n│   ├── ui/                 # Shadcn primitives\n│   ├── demo/               # Premium marketing components\n│   └── editor/             # Visual editor blocks\n├── lib/\n│   ├── prisma.ts           # Database client instance\n│   └── vcms/               # Vendor Compliance logic\n└── prisma/                 # & Seeds\n    └── schema.prisma       # Database models\n```",
+        "videoUrl": null,
+        "resources": {},
+        "order": 3
+    },
+    {
+        "title": "Content Management",
+        "slug": "content-management",
+        "category": "Core Concepts",
+        "type": "docs",
+        "content": "# Content Management\n\n## The Visual Editor\nLedger1CMS introduces a unique \"Block-Based\" visual editor for creating rich content pages. Unlike a simple WYSIWYG editor, the Block Editor allows you to compose pages using pre-defined React components.\n\n### Available Blocks\n- **Hero Section**: Full-width header with title, subtitle, and CTA.\n- **Feature Grid**: A responsive grid layout for displaying key information.\n- **Rich Text**: Standard markdown-supported text block.\n- **Media**: Embed images or videos with options for aspect ratio and lazy loading.\n\n## Blog Engine\nThe blog system is designed for high SEO performance. It supports:\n- **Tags & Categories**: Organize posts efficiently.\n- **Author Profiles**: Link posts to user profiles.\n- **Related Articles**: Automatically suggest relevant content.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 4
+    },
+    {
+        "title": "Database Schema (CMS)",
+        "slug": "cms-database-schema",
+        "category": "Architecture",
+        "type": "docs",
+        "content": "# Database Schema (CMS)\n\n## System Models\nThese core models power the CMS functionality:\n\n### User & Identity\n- **`User`**: Admin and editor accounts. Linked to `Account` and `Session` for auth.\n- **`Role`**: Defines permissions (e.g., ADMIN, EDITOR, VIEWER).\n\n### Content Models\n- **`DocArticle`**: Polymorphic model for Documentation and SOPs.\n- **`BlogPost`**: public articles with `slug`, `excerpt`, `coverImage`, and `publishedAt`.\n- **`MediaItem`**: Stores metadata for uploaded assets (url, type, size).\n\n### Vendor Models\n- **`VendorProfile`**: Core vendor record with scores and contact info.\n- **`ComplianceRecord`**: Tracks individual document uploads and expiry dates.\n\n### Configuration\n- **`FooterSetting`**: Global footer configuration (tagline, copyright).\n- **`FooterSection`**: Configurable column in the footer.\n- **`FooterLink`**: Individual links within a section.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 5
+    },
+    {
+        "title": "Authentication",
+        "slug": "authentication",
+        "category": "Security",
+        "type": "docs",
+        "content": "# Authentication\n\n## Setup\nAuthentication is securely handled by **NextAuth.js**. The configuration is located in `app/api/auth/[...nextauth]/route.ts`.\n\n### Supported Providers\n1.  **Email/Password**: Uses `bcrypt` for password hashing.\n2.  **OAuth**: Built-in support for Google and GitHub. Configurable via `.env` variables:\n    - `GOOGLE_CLIENT_ID`\n    - `GOOGLE_CLIENT_SECRET`\n\n## Protecting Routes\n\n### Middleware\nWe use Next.js Middleware to protect the `/cms` dashboard routes. Any request to `/cms/*` without a valid session token is redirected to `/login`.\n\n```typescript\n// middleware.ts\nexport { auth as middleware } from \"./auth\"\n\nexport const config = {\n  matcher: [\"/cms/:path*\"],\n}\n```",
+        "videoUrl": null,
+        "resources": {},
+        "order": 6
+    },
+    {
+        "title": "Global Styling & Theming",
+        "slug": "global-styling",
+        "category": "Theming",
+        "type": "docs",
+        "content": "# Global Styling & Theming\n\n## Tailwind CSS Configuration\nThe project uses a customized `tailwind.config.ts`. We have extended the default theme to include our brand specific colors (deep slate, neon accents).\n\n### Dark Mode First\nLedger1CMS is designed as a dark-mode first experience.\n- **Base Background**: `bg-slate-950` (#020617)\n- **Glass Effect**: `bg-white/5 backdrop-blur-md`\n- **Borders**: `border-white/10`\n\n## Component Library\nWe use **Shadcn/UI** for base components. You can find them in `components/ui`. They are unstyled by default, allowing for full customization via Tailwind classes.\n\n### Icons\nWe standardise on **Lucide React** for iconography. Ensure you import icons from `lucide-react` to maintain visual consistency.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 7
+    },
+    {
+        "title": "API Reference",
+        "slug": "api-reference",
+        "category": "Development",
+        "type": "docs",
+        "content": "# API Reference\n\n## Internal API Routes\nThese routes are used by the CMS frontend to interact with the database.\n\n### Articles\n- **`GET /api/articles`**: List all articles. Supports pagination and filtering.\n- **`POST /api/articles`**: Create a new article (Admin only).\n- **`PATCH /api/articles/[id]`**: Update an article.\n\n### Uploads\n- **`POST /api/upload`**: Upload a file to the configured storage provider (S3 or local). Returns the public URL.\n\n### Stats\n- **`GET /api/stats`**: Returns dashboard analytics (total posts, views, recent activity).\n\n## Rate Limiting\nAPI routes are rate-limited to 100 requests per minute to prevent abuse.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 8
+    },
+    {
+        "title": "Deployment",
+        "slug": "deployment",
+        "category": "Guides",
+        "type": "docs",
+        "content": "# Deployment\n\n## Vercel Deployment (Recommended)\nThe easiest way to deploy Ledger1CMS is via Vercel.\n\n1.  **Connect Repo**: Import your Git repository in Vercel.\n2.  **Environment Variables**: Add your `.env` variables (DATABASE_URL, NEXTAUTH_SECRET, etc.).\n3.  **Build Command**: `next build`\n4.  **Install Command**: `npm install`\n\n## Docker Deployment\nA `Dockerfile` is included in the root for containerized deployment.\n\n```dockerfile\nFROM node:18-alpine\nWORKDIR /app\nCOPY . .\nRUN npm install\nRUN npm run build\nCMD [\"npm\", \"start\"]\n```",
+        "videoUrl": null,
+        "resources": {},
+        "order": 9
+    },
+    {
+        "title": "Apps & Plugins Architecture",
+        "slug": "apps-architecture",
+        "category": "Integrations",
+        "type": "docs",
+        "content": "# Apps & Plugins Architecture\n\n## Overview\nThe Apps system is designed to facilitate **Omnichannel Content Distribution**. It allows the CMS to act as a \"Headless\" source of truth that pushes content to various downstream platforms (Shopify, WooCommerce, WordPress, etc.).\n\n## Data Schema\n\n### `AppConnection`\nStores the credentials and configuration for a connected third-party app.\n```prisma\nmodel AppConnection {\n  providerId  String      // e.g. \"shopify\", \"woocommerce\"\n  category    AppCategory // ECOMMERCE | PUBLISHING\n  credentials Json        // Encrypted payload\n  config      Json?       // App-specific settings\n  isActive    Boolean\n}\n```\n\n## Security Model\n\n### Encryption at Rest\nWe use **AES-256-CBC** to encrypt sensitive fields within the `credentials` JSON object before saving to MongoDB. This includes:\n- Shopify Access Tokens\n- WooCommerce Consumer Secrets\n- WordPress Application Passwords\n\nThe encryption key `API_KEY_ENCRYPTION_KEY` is injected via environment variables and never exposed to the client.\n\n### Audit Logging\nEvery interaction with the Apps system is logged to `SystemActivity` and `AppSyncLog`.\n- **Connection Events**: Logged when a user connects/disconnects an app.\n- **Sync Events**: Logged whenever content is pushed to an external provider.\n\n## Adding New Integrations\nTo add a new integration:\n1.  **Frontend**: Add a new card to `apps/page.tsx` and configure the `AppConnectModal`.\n2.  **Backend**: Implement the auth flow (OAuth or API Key) in `api/cms/apps/connect`.\n3.  **Client**: Create a new client class in `lib/apps/[provider]/client.ts` to handle content transformations.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 10
+    }
+]
