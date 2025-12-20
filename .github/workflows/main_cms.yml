@@ -38,8 +38,13 @@ jobs:
           pnpm run build
           pnpm run test
 
-      - name: Zip artifact for deployment
-        run: zip -r --symlinks release.zip .
+      - name: Prepare standalone build
+        run: |
+          mkdir -p .next/standalone/.next/static
+          cp -r public .next/standalone/public
+          cp -r .next/static .next/standalone/.next/static
+          cd .next/standalone
+          zip -r ../../release.zip .
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
