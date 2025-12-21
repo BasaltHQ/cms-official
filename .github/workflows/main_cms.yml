@@ -76,8 +76,10 @@ jobs:
           cp -rL .next/static deployment/.next/static || true
 
           cd deployment
-          # Compress node_modules to tar.gz to force Azure to use our fresh dependencies and overwrite any stale artifacts
-          tar -czf node_modules.tar.gz node_modules
+          # Compress node_modules to tar.gz (flat archive) 
+          # We cd into node_modules so the tarball doesn't contain the 'node_modules' folder itself, but just its contents.
+          # Azure extracts this into /node_modules, so we want the contents directly there.
+          cd node_modules && tar -czf ../node_modules.tar.gz . && cd ..
           rm -rf node_modules
 
           zip -r ../release.zip .
