@@ -208,6 +208,10 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, account, user }: any) {
+      console.log("[Auth Debug] JWT Callback called");
+      if (user) console.log(`[Auth Debug] JWT Callback - User present: ${user.id}`);
+      if (account) console.log(`[Auth Debug] JWT Callback - Account present: ${account.provider}`);
+
       // If we have an account and the user is already signed in (token has email/sub) or we just signed in (user object present)
       if (account && ["twitter", "linkedin", "github", "azure-ad", "facebook", "slack"].includes(account.provider.toLowerCase())) {
         try {
@@ -316,8 +320,10 @@ export const authOptions: NextAuthOptions = {
 
     //TODO: fix this any
     async session({ token, session }: any) {
+      console.log("[Auth Debug] Session Callback called");
       // Guard against missing token data to avoid runtime errors and JWT session failures
       if (!token?.email) {
+        console.log("[Auth Debug] Session Callback - Token missing email", token);
         return session;
       }
 
