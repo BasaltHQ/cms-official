@@ -24,10 +24,7 @@ const authMiddleware = withAuth(
             authorized: ({ token, req }) => {
                 const path = req.nextUrl.pathname;
 
-                // Public API routes - Always allow
-                // Add more public API patterns here if needed (e.g. /api/auth is handled by next-auth automatically usually, but good to be explicit if needed)
-                // Actually next-auth handles /api/auth internally before this middleware might catch it if configured right, 
-                // but robustly:
+                // Public API routes
                 if (
                     path.startsWith("/api/webhooks") ||
                     path.startsWith("/api/public") ||
@@ -36,28 +33,24 @@ const authMiddleware = withAuth(
                     return true;
                 }
 
-                // Check for CMS or protected API
-                // CMS routes: anything with /cms that isn't login
-                // Note: Check for locale prefixes too? 
-                // /en/cms/dashboard -> path includes /cms
-                // /cms/dashboard -> path includes /cms
-                // const isCmsRoute = path.includes("/cms") && !path.includes("/cms/login");
-                // DISABLE MIDDLEWARE AUTH FOR CMS - Let Layout handle it to avoid Proxy Cookie issues
-                const isCmsRoute = false;
+                // API Routes: Let the API route handler itself check for session.
+                // This prevents the middleware from redirecting API calls to the login page (HTML)
+                // when the session is invalid or missing, which breaks the frontend JSON parsing.
+                if (path.startsWith("/api")) {
+                    return true;
+                }
 
-                // API routes: All API routes (except the public ones above) require token
-                const isApiRoute = path.startsWith("/api");
+                const isCmsRoute = false; // Disabled as per previous config
 
-                if (isCmsRoute || isApiRoute) {
+                if (isCmsRoute) {
                     return !!token;
                 }
 
-                // Default allow for other routes (marketing pages)
                 return true;
             },
         },
         pages: {
-            signIn: "/en/cms/login", // Redirect to login if unauthorized
+            signIn: "/en/cms/login",
         },
     }
 );
