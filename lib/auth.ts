@@ -28,6 +28,10 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
 }
 
 export const authOptions: NextAuthOptions = {
+  debug: true, // Enable NextAuth debugging
+  //trustHost: true, // Trust the host header (useful for proxies) - CAUSES TYPE ERROR usually, check types first. 
+  // Actually NextAuthOptions type might not have trustHost in v4 types visibly? It does.
+  // safer to just use debug first.
   secret: process.env.JWT_SECRET,
   //adapter: PrismaAdapter(prismadb),
   session: {
@@ -114,8 +118,10 @@ export const authOptions: NextAuthOptions = {
       },
 
       async authorize(credentials) {
-        // console.log(credentials, "credentials");
+        console.log("[Auth Debug] Authorize called");
+
         if (!credentials?.email || !credentials?.password) {
+          console.log("[Auth Debug] Missing credentials");
           throw new Error("Email or password is missing");
         }
 
@@ -124,6 +130,8 @@ export const authOptions: NextAuthOptions = {
           typeof credentials.email === "string"
             ? credentials.email.trim().toLowerCase()
             : credentials.email;
+
+        console.log(`[Auth Debug] Looking up user: ${normalizedEmail}`);
 
         const user = await prismadb.users.findFirst({
           where: {
@@ -135,15 +143,20 @@ export const authOptions: NextAuthOptions = {
         const trimmedPassword = credentials.password.trim();
 
         if (!user) {
+          console.log("[Auth Debug] User not found in database");
           throw new Error("User not found. Please register first.");
         }
 
+        console.log(`[Auth Debug] User found: ${user.id}, Status: ${user.userStatus}`);
+
         // Check if user is active
         if (user.userStatus !== "ACTIVE") {
+          console.log(`[Auth Debug] User inactive. Status: ${user.userStatus}`);
           throw new Error("Your account is pending approval. Please contact support.");
         }
 
         if (!user?.password) {
+          console.log("[Auth Debug] User has no password set (OAuth user?)");
           throw new Error(
             "Account exists but no password is set. Sign in with Google/GitHub or use 'Forgot password' to set one."
           );
@@ -155,9 +168,11 @@ export const authOptions: NextAuthOptions = {
         );
 
         if (!isCorrectPassword) {
+          console.log("[Auth Debug] Password mismatch");
           throw new Error("Password is incorrect");
         }
 
+        console.log("[Auth Debug] Login successful, returning user");
         //console.log(user, "user");
         return user;
       },
