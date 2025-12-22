@@ -315,6 +315,17 @@ export const authOptions: NextAuthOptions = {
         }
       }
 
+      // Credentials Login Logic (or when user object is available)
+      // Ensure we copy the user data to the token so the session callback can see it
+      if (user) {
+        console.log(`[Auth Debug] JWT Callback - Copying user data to token: ${user.email}`);
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.picture = user.avatar;
+        token.sub = user.id;
+      }
+
       return token;
     },
 
@@ -408,6 +419,7 @@ export const authOptions: NextAuthOptions = {
           return session;
         }
       } else {
+        console.log(`[Auth Debug] Session Callback - User found: ${user.id}`);
         // User already exists in localDB, put user data in session (avoid DB writes here)
         //User allready exist in localDB, put user data in session
         session.user.id = user.id;
