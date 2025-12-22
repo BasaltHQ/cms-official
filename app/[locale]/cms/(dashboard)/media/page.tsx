@@ -91,6 +91,14 @@ export default function MediaLibraryPage() {
             setLoading(true);
             const res = await fetch(`/api/media?search=${search}&scope=${scope}`);
 
+            // Check if response is actually JSON
+            const contentType = res.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                const text = await res.text();
+                console.error("Received non-JSON response:", text.substring(0, 500)); // Log first 500 chars
+                throw new Error(`Invalid response (not JSON): ${res.status} ${res.statusText}`);
+            }
+
             if (!res.ok) {
                 const errData = await res.json().catch(() => ({}));
                 throw new Error(errData.error || `Error ${res.status}: ${res.statusText}`);
