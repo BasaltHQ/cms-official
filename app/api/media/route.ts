@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prismadb } from "@/lib/prisma";
-import { logActivity } from "@/lib/cms/audit";
+import { logActivity } from "@/actions/audit";
 import { handleApiError } from "@/lib/api-error";
 
 export async function POST(req: Request) {

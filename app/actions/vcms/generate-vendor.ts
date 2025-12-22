@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { processVendorMedia } from "@/lib/vcms/workflow";
 import { revalidatePath } from "next/cache";
-import { logActivity } from "@/lib/cms/audit";
+import { logActivity } from "@/actions/audit";
 
 export async function generateVendorFromMedia(mediaId: string) {
     const session = await getServerSession(authOptions);
