@@ -4,7 +4,7 @@ import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import { Icons } from "@/components/ui/icons";
 import { useState, useEffect, useRef, Suspense, lazy, ComponentType } from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, LineChart, Shield } from "lucide-react";
 
 // Lazy loading wrapper - only renders content when in viewport
 function LazyVisual({ children }: { children: React.ReactNode }) {
@@ -24,111 +24,159 @@ function LazyVisual({ children }: { children: React.ReactNode }) {
 
 
 export function AiLandingVisual() {
+    const [stage, setStage] = useState<"typing" | "generating" | "preview">("typing");
+    const [cycle, setCycle] = useState(0);
+
+    useEffect(() => {
+        if (stage === "generating") {
+            const timeout = setTimeout(() => {
+                setStage("preview");
+            }, 800);
+            return () => clearTimeout(timeout);
+        }
+        if (stage === "preview") {
+            const timeout = setTimeout(() => {
+                setStage("typing");
+                setCycle(c => c + 1);
+            }, 4000);
+            return () => clearTimeout(timeout);
+        }
+    }, [stage]);
+
     return (
-        <div className="relative w-full h-full flex items-center justify-center p-8 overflow-hidden bg-slate-950/50">
-            <motion.div
-                className="relative w-full max-w-sm aspect-[4/5] bg-slate-900 rounded-xl border border-slate-700 shadow-2xl overflow-hidden flex flex-col"
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-            >
-                {/* Browser Header */}
-                <div className="h-8 bg-slate-800 border-b border-slate-700 flex items-center px-4 space-x-2 shrink-0">
-                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
-                    <div className="ml-4 h-4 rounded-full bg-slate-700 w-1/2 flex items-center px-2 overflow-hidden">
-                        {/* Typing URL effect */}
-                        <motion.div
-                            className="h-1.5 bg-purple-500/50 rounded-full"
-                            animate={{ width: ["0%", "80%", "80%", "0%"] }}
-                            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                        />
-                    </div>
-                </div>
+        <div className="relative w-full h-full flex flex-col items-center justify-center p-2 bg-slate-950/50 overflow-hidden">
+            {/* Background Ambience - Enhanced */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(168,85,247,0.1),transparent_70%)]" />
 
-                {/* Dynamic Content Construction */}
-                <div className="p-4 space-y-4 relative flex-1">
-                    {/* Header Text Generation */}
-                    <div className="space-y-2 mb-6">
-                        <motion.div
-                            className="h-6 bg-slate-800 rounded w-3/4"
-                            initial={{ width: "0%" }}
-                            animate={{ width: ["0%", "80%", "80%", "0%"] }}
-                            transition={{ duration: 4, times: [0, 0.2, 0.8, 1], repeat: Infinity }}
-                        />
-                        <motion.div
-                            className="h-3 bg-slate-800/50 rounded w-1/2"
-                            initial={{ width: "0%" }}
-                            animate={{ width: ["0%", "50%", "50%", "0%"] }}
-                            transition={{ duration: 4, delay: 0.2, times: [0, 0.2, 0.8, 1], repeat: Infinity }}
-                        />
-                    </div>
+            {/* Content Container - Fluid & Centered */}
+            <div className="relative z-10 w-full h-full p-2 flex flex-col items-center justify-center">
 
-                    {/* Main Image Block */}
-                    <motion.div
-                        className="h-32 w-full rounded-lg border border-slate-800 bg-slate-900 relative overflow-hidden flex items-center justify-center"
-                    >
-                        {/* Scanline Effect */}
-                        <motion.div
-                            className="absolute inset-x-0 h-1 bg-purple-500/50 blur-sm z-10"
-                            animate={{ top: ["0%", "100%", "0%"] }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                        />
-
-                        {/* Image appearing */}
-                        <motion.div
-                            className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-slate-800"
-                            animate={{ opacity: [0, 1, 1, 0] }}
-                            transition={{ duration: 4, times: [0, 0.3, 0.8, 1], repeat: Infinity }}
-                        >
-                            <div className="w-full h-full flex items-center justify-center">
-                                <SparklesIcon className="w-8 h-8 text-purple-500/50" />
-                            </div>
-                        </motion.div>
-                    </motion.div>
-
-                    {/* Grid Layout Assembly - Content Filling Boxes */}
-                    <div className="grid grid-cols-2 gap-3 mt-4">
-                        {[0, 1].map((i) => (
-                            <div key={i} className="h-24 bg-slate-800/20 rounded-lg p-2 flex flex-col gap-2 border border-slate-800/50">
-                                {/* Simulating text lines appearing inside the box */}
-                                <motion.div
-                                    className="h-2 bg-slate-700/50 rounded w-full"
-                                    animate={{ width: ["0%", "100%", "100%", "0%"] }}
-                                    transition={{ duration: 4, delay: 0.5 + (i * 0.2), times: [0, 0.2, 0.8, 1], repeat: Infinity }}
-                                />
-                                <motion.div
-                                    className="h-2 bg-slate-700/30 rounded w-2/3"
-                                    animate={{ width: ["0%", "70%", "70%", "0%"] }}
-                                    transition={{ duration: 4, delay: 0.6 + (i * 0.2), times: [0, 0.2, 0.8, 1], repeat: Infinity }}
-                                />
-                                <motion.div
-                                    className="mt-auto h-8 w-full bg-slate-800 rounded bg-gradient-to-r from-purple-500/10 to-transparent"
-                                    animate={{ opacity: [0, 1, 1, 0] }}
-                                    transition={{ duration: 4, delay: 0.8 + (i * 0.2), times: [0, 0.2, 0.8, 1], repeat: Infinity }}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Cursor AI Architect */}
+                {/* Prompt Interface - Floating & Glowing */}
                 <motion.div
-                    className="absolute z-20 pointer-events-none"
-                    animate={{
-                        x: ["10%", "80%", "40%", "20%", "10%"],
-                        y: ["20%", "40%", "70%", "30%", "20%"]
-                    }}
-                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                    key={`prompt-${cycle}`}
+                    className="bg-slate-900/90 backdrop-blur-md border border-purple-500/30 rounded-2xl p-4 shadow-[0_0_30px_rgba(168,85,247,0.15)] w-full max-w-[90%] md:max-w-md absolute z-30"
+                    initial={{ opacity: 1, scale: 1, y: 0 }}
+                    animate={stage === "preview" ? { opacity: 0, scale: 0.9, y: -40, pointerEvents: "none" } : { opacity: 1, scale: 1, y: 0, pointerEvents: "auto" }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
                 >
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 fill-purple-500 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]">
-                        <path d="M3 3L10.07 19.97L12.58 12.58L19.97 10.07L3 3Z" stroke="white" strokeWidth="1.5" />
-                    </svg>
+                    <div className="flex items-center gap-3 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/20 shrink-0">
+                            <Sparkles className="w-4 h-4 text-white animate-pulse" />
+                        </div>
+                        <span className="text-sm font-semibold text-slate-200 tracking-wide">Genius AI</span>
+                    </div>
+
+                    <div className="h-10 bg-slate-950/50 rounded-lg border border-white/5 flex items-center px-4 overflow-hidden relative">
+                        <motion.span
+                            className="text-purple-200/90 text-sm whitespace-nowrap font-mono"
+                            initial={{ width: 0 }}
+                            animate={{ width: "100%" }}
+                            transition={{ duration: 1.8, ease: "linear", delay: 0.3, onComplete: () => setStage("generating") }}
+                            style={{ overflow: "hidden", display: "block" }}
+                        >
+                            Generate a high-converting SaaS landing page...
+                        </motion.span>
+                        <motion.div
+                            className="absolute right-3 top-2.5 w-0.5 h-5 bg-purple-400"
+                            animate={{ opacity: [1, 0] }}
+                            transition={{ repeat: Infinity, duration: 0.6 }}
+                            style={{ display: stage === "typing" ? "block" : "none" }}
+                        />
+                    </div>
                 </motion.div>
-            </motion.div>
+
+                {/* Website Preview Window - High Fidelity CSS Mock */}
+                <motion.div
+                    key={`preview-${cycle}`}
+                    className="w-full h-full max-h-[340px] md:max-h-[400px] bg-slate-950 rounded-xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col relative z-20"
+                    initial={{ opacity: 0, scale: 0.95, y: 30 }}
+                    animate={stage === "preview" ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 30 }}
+                    transition={{ type: "spring", damping: 25, stiffness: 120 }}
+                >
+                    {/* Browser Header */}
+                    <div className="h-8 bg-slate-900 border-b border-white/5 flex items-center px-4 gap-2 shrink-0">
+                        <div className="flex gap-1.5">
+                            <div className="w-2.5 h-2.5 rounded-full bg-slate-700/50" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-slate-700/50" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-slate-700/50" />
+                        </div>
+                        <div className="ml-4 h-4 w-32 bg-slate-800/50 rounded-full flex items-center px-2">
+                            <div className="w-2 h-2 rounded-full bg-green-500/50 mr-1.5" />
+                            <div className="w-16 h-1 bg-slate-700/50 rounded-full" />
+                        </div>
+                    </div>
+
+                    {/* Generated Website Content */}
+                    <div className="flex-1 overflow-hidden relative bg-slate-950 flex flex-col">
+                        {/* Background Gradients */}
+                        <div className="absolute top-0 inset-x-0 h-40 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15),transparent_70%)]" />
+
+                        {/* Navigation Mock */}
+                        <div className="h-12 border-b border-white/5 flex items-center justify-between px-6 shrink-0 backdrop-blur-sm relative z-10">
+                            <div className="w-6 h-6 rounded bg-gradient-to-br from-purple-500 to-indigo-600" />
+                            <div className="flex gap-3">
+                                <div className="w-12 h-2 bg-slate-800 rounded-full" />
+                                <div className="w-12 h-2 bg-slate-800 rounded-full" />
+                                <div className="w-16 h-6 rounded-md bg-white/5 border border-white/10" />
+                            </div>
+                        </div>
+
+                        {/* Hero Section */}
+                        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center z-10 space-y-4">
+
+                            <motion.div
+                                className="space-y-2 flex flex-col items-center"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={stage === "preview" ? { opacity: 1, y: 0 } : {}}
+                                transition={{ delay: 0.2 }}
+                            >
+                                <div className="h-6 md:h-8 w-48 md:w-64 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent opacity-20 rounded animate-pulse"
+                                    style={{ backgroundImage: 'linear-gradient(to right, #e2e8f0, #d8b4fe, #e2e8f0)' }}>
+                                    {/* Abstract representation of text */}
+                                    <div className="w-full h-full bg-current opacity-100" />
+                                </div>
+                                <div className="h-3 w-32 md:w-40 bg-slate-700/50 rounded-full" />
+                            </motion.div>
+
+                            {/* Main CTA */}
+                            <motion.div
+                                className="mt-2"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={stage === "preview" ? { opacity: 1, scale: 1 } : {}}
+                                transition={{ delay: 0.4 }}
+                            >
+                                <div className="h-8 md:h-9 px-6 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg shadow-lg shadow-purple-500/25 flex items-center justify-center">
+                                    <div className="w-16 h-2 bg-white/90 rounded-full" />
+                                </div>
+                            </motion.div>
+
+                            {/* Features Grid */}
+                            <div className="grid grid-cols-3 gap-3 w-full max-w-sm mt-6">
+                                {[0, 1, 2].map((i) => (
+                                    <motion.div
+                                        key={i}
+                                        className="aspect-square rounded-xl bg-slate-900 border border-white/5 flex flex-col items-center justify-center gap-2 p-2 hover:bg-slate-800/50 transition-colors"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={stage === "preview" ? { opacity: 1, y: 0 } : {}}
+                                        transition={{ delay: 0.5 + (i * 0.1) }}
+                                    >
+                                        <div className={`w-6 h-6 rounded-lg ${i === 0 ? 'bg-blue-500/10' : i === 1 ? 'bg-purple-500/10' : 'bg-emerald-500/10'} flex items-center justify-center`}>
+                                            {i === 0 && <LineChart className="w-3 h-3 text-blue-400" />}
+                                            {i === 1 && <Sparkles className="w-3 h-3 text-purple-400" />}
+                                            {i === 2 && <Shield className="w-3 h-3 text-emerald-400" />}
+                                        </div>
+                                        <div className="w-10 h-1.5 bg-slate-800 rounded-full" />
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
+            </div>
         </div>
     );
 }
+
 
 function SparklesIcon({ className }: { className?: string }) {
     return (
@@ -347,56 +395,50 @@ export function VisualBuilderVisual() {
                         {/* Dot Grid Background */}
                         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(#fff 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
 
-                        {/* Real Header Image - Full Width */}
+                        {/* Real Header - CSS Construction */}
                         <motion.div
-                            className="w-full relative group rounded-lg overflow-hidden border border-transparent hover:border-purple-500/30 transition-colors shrink-0"
+                            className="w-full relative group rounded-xl overflow-hidden border border-white/5 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 shrink-0"
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
                         >
-                            <div className="relative h-24 w-full">
-                                <Image
-                                    src="/visuals/nano-header-flat.jpg"
-                                    alt="Header"
-                                    fill
-                                    sizes="(max-width: 768px) 100vw, 400px"
-                                    className="object-cover"
-                                />
+                            <div className="h-28 md:h-32 w-full flex flex-col items-center justify-center relative overflow-hidden">
+                                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15),transparent_70%)]" />
+                                <div className="relative z-10 text-center">
+                                    <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-1">Modern Header</h3>
+                                    <div className="w-12 h-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mx-auto opacity-80" />
+                                </div>
                             </div>
                             <div className="opacity-0 group-hover:opacity-100 absolute top-2 right-2 bg-purple-600 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg font-medium transition-all">Header</div>
                         </motion.div>
 
-                        {/* Feature Cards Grid - Two Separate Images */}
-                        <div className="grid grid-cols-2 gap-4 w-full h-28 shrink-0">
+                        {/* Feature Cards Grid - CSS Construction */}
+                        <div className="grid grid-cols-2 gap-3 md:gap-4 w-full shrink-0">
+                            {/* Analytics Card */}
                             <motion.div
-                                className="w-full h-full relative group rounded-lg overflow-hidden border border-transparent hover:border-slate-500/30 transition-colors bg-slate-900/50"
+                                className="w-full h-22 relative group rounded-xl border border-white/5 bg-slate-900/50 flex flex-col items-center justify-center gap-2 hover:bg-slate-800/50 transition-colors"
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3 }}
                             >
-                                <Image
-                                    src="/visuals/nano-feature-card-1.jpg"
-                                    alt="Feature 1"
-                                    fill
-                                    sizes="(max-width: 768px) 50vw, 200px"
-                                    className="object-cover"
-                                />
+                                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20 group-hover:border-blue-500/40 transition-colors">
+                                    <LineChart className="w-4 h-4 text-blue-400" />
+                                </div>
+                                <span className="text-sm font-semibold text-slate-200">Analytics</span>
                                 <div className="opacity-0 group-hover:opacity-100 absolute top-2 right-2 bg-slate-700 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg font-medium transition-all">Card</div>
                             </motion.div>
 
+                            {/* Security Card */}
                             <motion.div
-                                className="w-full h-full relative group rounded-lg overflow-hidden border border-transparent hover:border-slate-500/30 transition-colors bg-slate-900/50"
+                                className="w-full h-22 relative group rounded-xl border border-white/5 bg-slate-900/50 flex flex-col items-center justify-center gap-2 hover:bg-slate-800/50 transition-colors"
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.4 }}
                             >
-                                <Image
-                                    src="/visuals/nano-feature-card-2.jpg"
-                                    alt="Feature 2"
-                                    fill
-                                    sizes="(max-width: 768px) 50vw, 200px"
-                                    className="object-cover"
-                                />
+                                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:border-emerald-500/40 transition-colors">
+                                    <Shield className="w-4 h-4 text-emerald-400" />
+                                </div>
+                                <span className="text-sm font-semibold text-slate-200">Security</span>
                                 <div className="opacity-0 group-hover:opacity-100 absolute top-2 right-2 bg-slate-700 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg font-medium transition-all">Card</div>
                             </motion.div>
                         </div>
@@ -505,98 +547,130 @@ export function GeniusVisual() {
 
     return (
         <div className="relative w-full h-full flex flex-col items-center justify-center p-8 bg-slate-950/50 overflow-hidden">
-            {/* Background Ambience */}
+            {/* Background Ambience - Enhanced */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(168,85,247,0.1),transparent_70%)]" />
 
-            <div className="relative z-10 w-full max-w-md h-64 flex items-center justify-center">
-                {/* Prompt Interface */}
+            {/* Content Container - Fluid & Centered */}
+            <div className="relative z-10 w-full h-full p-6 flex flex-col items-center justify-center">
+
+                {/* Prompt Interface - Floating & Glowing */}
                 <motion.div
                     key={`prompt-${cycle}`}
-                    className="bg-slate-900 border border-white/10 rounded-xl p-4 shadow-2xl w-full absolute"
+                    className="bg-slate-900/90 backdrop-blur-md border border-purple-500/30 rounded-2xl p-4 shadow-[0_0_30px_rgba(168,85,247,0.15)] w-full max-w-[90%] md:max-w-md absolute z-30"
                     initial={{ opacity: 1, scale: 1, y: 0 }}
-                    animate={stage === "preview" ? { opacity: 0, scale: 0.9, y: -20 } : { opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
+                    animate={stage === "preview" ? { opacity: 0, scale: 0.9, y: -40, pointerEvents: "none" } : { opacity: 1, scale: 1, y: 0, pointerEvents: "auto" }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
                 >
                     <div className="flex items-center gap-3 mb-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                            <Sparkles className="w-4 h-4 text-white" />
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/20 shrink-0">
+                            <Sparkles className="w-4 h-4 text-white animate-pulse" />
                         </div>
-                        <span className="text-sm font-medium text-slate-300">Genius Architect</span>
+                        <span className="text-sm font-semibold text-slate-200 tracking-wide">Genius AI</span>
                     </div>
 
-                    <div className="h-10 bg-slate-950 rounded-lg border border-white/5 flex items-center px-3 overflow-hidden relative">
+                    <div className="h-10 bg-slate-950/50 rounded-lg border border-white/5 flex items-center px-4 overflow-hidden relative">
                         <motion.span
-                            className="text-slate-200 text-sm whitespace-nowrap font-mono"
+                            className="text-purple-200/90 text-sm whitespace-nowrap font-mono"
                             initial={{ width: 0 }}
                             animate={{ width: "100%" }}
-                            transition={{ duration: 1.5, ease: "linear", delay: 0.5, onComplete: () => setStage("generating") }}
+                            transition={{ duration: 1.8, ease: "linear", delay: 0.3, onComplete: () => setStage("generating") }}
                             style={{ overflow: "hidden", display: "block" }}
                         >
-                            Build a magnificent SaaS landing page...
+                            Generate a high-converting SaaS landing page...
                         </motion.span>
                         <motion.div
-                            className="absolute right-3 top-2.5 w-1.5 h-5 bg-purple-500/50"
+                            className="absolute right-3 top-2.5 w-0.5 h-5 bg-purple-400"
                             animate={{ opacity: [1, 0] }}
-                            transition={{ repeat: Infinity, duration: 0.8 }}
+                            transition={{ repeat: Infinity, duration: 0.6 }}
                             style={{ display: stage === "typing" ? "block" : "none" }}
                         />
                     </div>
                 </motion.div>
 
-                {/* Website Preview Window */}
+                {/* Website Preview Window - High Fidelity CSS Mock */}
                 <motion.div
                     key={`preview-${cycle}`}
-                    className="w-full aspect-[4/3] bg-slate-900 rounded-lg border border-slate-700 shadow-2xl overflow-hidden flex flex-col absolute"
-                    initial={{ scale: 0.8, opacity: 0, rotateX: 20 }}
-                    animate={stage === "preview" ? { scale: 1, opacity: 1, rotateX: 0 } : { scale: 0.8, opacity: 0, rotateX: 20 }}
-                    transition={{ type: "spring", damping: 20, stiffness: 100 }}
+                    className="w-full h-full max-h-[340px] md:max-h-[400px] bg-slate-950 rounded-xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col relative z-20"
+                    initial={{ opacity: 0, scale: 0.95, y: 30 }}
+                    animate={stage === "preview" ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 30 }}
+                    transition={{ type: "spring", damping: 25, stiffness: 120 }}
                 >
-                    {/* Simulated Browser Header */}
-                    <div className="h-6 bg-slate-800 border-b border-slate-700 flex items-center px-3 gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-slate-600" />
-                        <div className="w-2 h-2 rounded-full bg-slate-600" />
-                        <div className="w-2 h-2 rounded-full bg-slate-600" />
+                    {/* Browser Header */}
+                    <div className="h-8 bg-slate-900 border-b border-white/5 flex items-center px-4 gap-2 shrink-0">
+                        <div className="flex gap-1.5">
+                            <div className="w-2.5 h-2.5 rounded-full bg-slate-700/50" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-slate-700/50" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-slate-700/50" />
+                        </div>
+                        <div className="ml-4 h-4 w-32 bg-slate-800/50 rounded-full flex items-center px-2">
+                            <div className="w-2 h-2 rounded-full bg-green-500/50 mr-1.5" />
+                            <div className="w-16 h-1 bg-slate-700/50 rounded-full" />
+                        </div>
                     </div>
 
-                    {/* Simulated Content Building Up */}
-                    <div className="flex-1 p-4 space-y-3 bg-slate-950 relative">
-                        {/* Header */}
-                        <motion.div
-                            className="h-6 w-full bg-white/5 rounded flex items-center justify-between px-3"
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={stage === "preview" ? { opacity: 1, y: 0 } : {}}
-                            transition={{ delay: 0.2 }}
-                        >
-                            <div className="w-6 h-3 bg-white/10 rounded" />
-                            <div className="flex gap-2">
-                                <div className="w-8 h-3 bg-white/10 rounded" />
-                                <div className="w-8 h-3 bg-white/10 rounded" />
+                    {/* Generated Website Content */}
+                    <div className="flex-1 overflow-hidden relative bg-slate-950 flex flex-col">
+                        {/* Background Gradients */}
+                        <div className="absolute top-0 inset-x-0 h-40 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15),transparent_70%)]" />
+
+                        {/* Navigation Mock */}
+                        <div className="h-12 border-b border-white/5 flex items-center justify-between px-6 shrink-0 backdrop-blur-sm relative z-10">
+                            <div className="w-6 h-6 rounded bg-gradient-to-br from-purple-500 to-indigo-600" />
+                            <div className="flex gap-3">
+                                <div className="w-12 h-2 bg-slate-800 rounded-full" />
+                                <div className="w-12 h-2 bg-slate-800 rounded-full" />
+                                <div className="w-16 h-6 rounded-md bg-white/5 border border-white/10" />
                             </div>
-                        </motion.div>
+                        </div>
 
-                        {/* Hero */}
-                        <motion.div
-                            className="h-28 w-full bg-gradient-to-br from-purple-900/20 to-indigo-900/20 rounded-lg border border-purple-500/10 flex flex-col items-center justify-center gap-2"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={stage === "preview" ? { opacity: 1, scale: 1 } : {}}
-                            transition={{ delay: 0.4 }}
-                        >
-                            <div className="w-3/4 h-3 bg-white/10 rounded" />
-                            <div className="w-1/2 h-2 bg-white/5 rounded" />
-                            <div className="mt-2 w-20 h-5 bg-purple-500/20 rounded-md border border-purple-500/30" />
-                        </motion.div>
+                        {/* Hero Section */}
+                        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center z-10 space-y-4">
 
-                        {/* Cards */}
-                        <div className="grid grid-cols-3 gap-2">
-                            {[0, 1, 2].map(i => (
-                                <motion.div
-                                    key={i}
-                                    className="h-16 bg-white/5 rounded border border-white/5"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={stage === "preview" ? { opacity: 1, y: 0 } : {}}
-                                    transition={{ delay: 0.6 + (i * 0.1) }}
-                                />
-                            ))}
+                            <motion.div
+                                className="space-y-2 flex flex-col items-center"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={stage === "preview" ? { opacity: 1, y: 0 } : {}}
+                                transition={{ delay: 0.2 }}
+                            >
+                                <div className="h-6 md:h-8 w-48 md:w-64 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent opacity-20 rounded animate-pulse"
+                                    style={{ backgroundImage: 'linear-gradient(to right, #e2e8f0, #d8b4fe, #e2e8f0)' }}>
+                                    {/* Abstract representation of text */}
+                                    <div className="w-full h-full bg-current opacity-100" />
+                                </div>
+                                <div className="h-3 w-32 md:w-40 bg-slate-700/50 rounded-full" />
+                            </motion.div>
+
+                            {/* Main CTA */}
+                            <motion.div
+                                className="mt-2"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={stage === "preview" ? { opacity: 1, scale: 1 } : {}}
+                                transition={{ delay: 0.4 }}
+                            >
+                                <div className="h-8 md:h-9 px-6 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg shadow-lg shadow-purple-500/25 flex items-center justify-center">
+                                    <div className="w-16 h-2 bg-white/90 rounded-full" />
+                                </div>
+                            </motion.div>
+
+                            {/* Features Grid */}
+                            <div className="grid grid-cols-3 gap-3 w-full max-w-sm mt-6">
+                                {[0, 1, 2].map((i) => (
+                                    <motion.div
+                                        key={i}
+                                        className="aspect-square rounded-xl bg-slate-900 border border-white/5 flex flex-col items-center justify-center gap-2 p-2 hover:bg-slate-800/50 transition-colors"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={stage === "preview" ? { opacity: 1, y: 0 } : {}}
+                                        transition={{ delay: 0.5 + (i * 0.1) }}
+                                    >
+                                        <div className={`w-6 h-6 rounded-lg ${i === 0 ? 'bg-blue-500/10' : i === 1 ? 'bg-purple-500/10' : 'bg-emerald-500/10'} flex items-center justify-center`}>
+                                            {i === 0 && <LineChart className="w-3 h-3 text-blue-400" />}
+                                            {i === 1 && <Sparkles className="w-3 h-3 text-purple-400" />}
+                                            {i === 2 && <Shield className="w-3 h-3 text-emerald-400" />}
+                                        </div>
+                                        <div className="w-10 h-1.5 bg-slate-800 rounded-full" />
+                                    </motion.div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </motion.div>
