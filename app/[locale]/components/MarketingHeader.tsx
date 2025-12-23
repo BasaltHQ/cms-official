@@ -86,6 +86,7 @@ export default function MarketingHeader() {
                                     key={link.label}
                                     className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
                                     href={link.href}
+                                    prefetch={false}
                                 >
                                     {link.label}
                                 </Link>
@@ -94,12 +95,12 @@ export default function MarketingHeader() {
 
                         {/* Desktop Actions */}
                         <div className="hidden lg:flex items-center gap-4">
-                            <Link href="/cms/login">
+                            <Link href="/cms/login" prefetch={false}>
                                 <Button variant="ghost" size={isScrolled ? "sm" : "default"} className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-950/30 border border-cyan-500/20 hover:border-cyan-500/50 rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(34,211,238,0.1)] hover:shadow-[0_0_20px_rgba(34,211,238,0.3)]">
                                     Login
                                 </Button>
                             </Link>
-                            <Link href="/create-account">
+                            <Link href="/create-account" prefetch={false}>
                                 <Button variant="glow" size={isScrolled ? "sm" : "default"} className="px-6">
                                     Get Started
                                 </Button>
@@ -125,6 +126,7 @@ export default function MarketingHeader() {
                                 <Link
                                     key={link.label}
                                     href={link.href}
+                                    prefetch={false}
                                     className="text-2xl font-medium text-gray-300 hover:text-white transition-colors w-full text-center py-2"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
@@ -132,12 +134,12 @@ export default function MarketingHeader() {
                                 </Link>
                             ))}
                             <div className="w-full h-px bg-white/10 my-4" />
-                            <Link href="/cms/login" className="w-full" onClick={() => setIsMobileMenuOpen(false)}>
+                            <Link href="/cms/login" className="w-full" onClick={() => setIsMobileMenuOpen(false)} prefetch={false}>
                                 <Button variant="ghost" className="w-full text-lg h-12 text-cyan-400 hover:text-cyan-300 hover:bg-cyan-950/30 border border-cyan-500/20 hover:border-cyan-500/50 rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(34,211,238,0.1)] hover:shadow-[0_0_20px_rgba(34,211,238,0.3)]">
                                     Login
                                 </Button>
                             </Link>
-                            <Link href="/create-account" className="w-full" onClick={() => setIsMobileMenuOpen(false)}>
+                            <Link href="/create-account" className="w-full" onClick={() => setIsMobileMenuOpen(false)} prefetch={false}>
                                 <Button variant="glow" className="w-full text-lg h-12">
                                     Get Started
                                 </Button>
