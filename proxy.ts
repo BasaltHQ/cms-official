@@ -2,12 +2,15 @@ import { withAuth } from "next-auth/middleware";
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 
-const locales = ["en", "de", "cz", "uk"];
+// Czech uses ISO code "cs" not "cz"
+const locales = ["en", "de", "cs", "uk"];
 const publicPages = ["/", "/sign-in", "/pricing", "/about", "/contact", "/terms", "/privacy", "/features", "/roadmap", "/blog", "/docs"];
 
 const intlMiddleware = createMiddleware({
     locales,
     defaultLocale: "en",
+    // Avoid 302 redirect from / to /en - keeps English at root URL
+    localePrefix: "as-needed",
 });
 
 const authMiddleware = withAuth(

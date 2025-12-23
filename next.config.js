@@ -41,6 +41,11 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
+  // Performance optimizations
+  experimental: {
+    // Optimize imports for tree-shaking (reduces unused JS)
+    optimizePackageImports: ['framer-motion', 'lucide-react', '@measured/puck'],
+  },
 };
 
 module.exports = withNextIntl(nextConfig);
