@@ -3,8 +3,10 @@
 
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+// Only import what's needed for initial render
 import { motion, AnimatePresence, LazyMotion, domAnimation } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import MarketingHeader from "@/app/[locale]/components/MarketingHeader";
 
 import {
@@ -13,7 +15,8 @@ import {
     Globe as GlobeIcon,
     MousePointer2 as CursorArrowIcon
 } from "lucide-react";
-import GlassCard from "./GlassCard";
+// Defer below-fold components
+const GlassCard = dynamic(() => import("./GlassCard"), { ssr: true });
 import { DEMO_FEATURES } from "./demo-data";
 import { VISUAL_MAP } from "./FeatureVisuals";
 import { Button } from "@/components/ui/button";
@@ -232,11 +235,14 @@ export default function DemoPage({ footer }: DemoPageProps) {
                                                             className="group relative w-12 h-12 bg-slate-800/50 rounded-xl border border-white/5 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-slate-800 hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)]"
                                                         >
                                                             <div className="w-6 h-6 relative grayscale group-hover:grayscale-0 transition-all duration-300">
-                                                                {/* Using standard img for simplicity in map, or NextImage with unoptimized */}
-                                                                <img
+                                                                {/* Next.js Image for optimization */}
+                                                                <Image
                                                                     src={social.url}
                                                                     alt={social.name}
+                                                                    width={24}
+                                                                    height={24}
                                                                     className={`w-full h-full object-contain ${social.name === "WordPress" ? "brightness-0 invert" : ""}`}
+                                                                    unoptimized
                                                                 />
                                                             </div>
                                                         </a>

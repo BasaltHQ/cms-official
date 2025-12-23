@@ -122,21 +122,21 @@ export default async function AboutPage() {
                                     <TeamMember
                                         name="Krishna Patel"
                                         role="Chairman & CTO"
-                                        imageSrc="/images/team/member1.png"
+                                        imageSrc="/images/team/member1.jpg"
                                         linkedin="https://www.linkedin.com/in/krishna-patel-89039120/"
                                         twitter="https://x.com/GenRevoeth"
                                     />
                                     <TeamMember
                                         name="Eric Turner"
                                         role="Chief Executive Officer (CEO)"
-                                        imageSrc="/images/team/member6.png"
+                                        imageSrc="/images/team/member6.jpg"
                                         linkedin="https://www.linkedin.com/in/ericturner85/"
                                         twitter="https://x.com/sinisterxtwitr"
                                     />
                                     <TeamMember
                                         name="Michael Milton"
                                         role="Chief Marketing Officer (CMO)"
-                                        imageSrc="/images/team/member3.png"
+                                        imageSrc="/images/team/member3.jpg"
                                         linkedin="https://www.linkedin.com/in/mayordelmar/"
                                         twitter="https://x.com/mayordelmar"
                                     />
@@ -147,14 +147,14 @@ export default async function AboutPage() {
                                     <TeamMember
                                         name="John Garcia"
                                         role="SVP, AI Research"
-                                        imageSrc="/images/team/member5.png"
+                                        imageSrc="/images/team/member5.jpg"
                                         linkedin="https://www.linkedin.com/in/john-garcia-54ab73398/"
                                         twitter="https://x.com/JohnG1isit"
                                     />
                                     <TeamMember
                                         name="Shahir Monjour"
                                         role="SVP, Engineering"
-                                        imageSrc="/images/team/member4.png"
+                                        imageSrc="/images/team/member4.jpg"
                                         linkedin="https://www.linkedin.com/in/shahir-monjur/"
                                         twitter="https://x.com/shahir1395"
                                     />

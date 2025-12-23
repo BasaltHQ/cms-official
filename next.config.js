@@ -32,6 +32,19 @@ const nextConfig = {
         protocol: "https",
         hostname: "engram1.blob.core.windows.net",
       },
+      // External icon sources
+      {
+        protocol: "https",
+        hostname: "uxwing.com",
+      },
+      {
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
     ],
   },
   env: {
@@ -45,6 +58,20 @@ const nextConfig = {
   experimental: {
     // Optimize imports for tree-shaking (reduces unused JS)
     optimizePackageImports: ['framer-motion', 'lucide-react', '@measured/puck'],
+  },
+  // Add preconnect headers for external resources
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Link',
+            value: '<https://fonts.googleapis.com>; rel=preconnect, <https://fonts.gstatic.com>; rel=preconnect; crossorigin',
+          },
+        ],
+      },
+    ];
   },
 };
 

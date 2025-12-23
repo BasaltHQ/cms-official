@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Sparkles, Image as ImageIcon, FileVideo, Globe, CheckCircle, Search } from "lucide-react";
 
 const GoogleIcon = () => (
@@ -135,7 +136,7 @@ export function CompareMediaSeoVisual() {
                     transition={{ delay: 0.2 }}
                 >
                     <div className="flex-1 relative overflow-hidden">
-                        <img src="/visuals/seo-hero.png" alt="Hero" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                        <Image src="/visuals/seo-hero.jpg" alt="Hero" fill className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1e] via-transparent to-transparent" />
                     </div>
                     <div className="h-10 border-t border-white/5 bg-[#121215] flex items-center justify-between px-3 relative">
@@ -157,7 +158,7 @@ export function CompareMediaSeoVisual() {
                     transition={{ delay: 0.4 }}
                 >
                     <div className="flex-1 relative overflow-hidden bg-black">
-                        <img src="/visuals/seo-demo.png" alt="Demo Video" className="absolute inset-0 w-full h-full object-cover opacity-90" />
+                        <Image src="/visuals/seo-demo.jpg" alt="Demo Video" fill className="object-cover opacity-90" />
                         <div className="absolute inset-0 flex items-center justify-center">
                             <motion.div
                                 className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center pl-1"
@@ -193,7 +194,7 @@ export function CompareMediaSeoVisual() {
                     transition={{ delay: 0.6 }}
                 >
                     <div className="flex-1 relative overflow-hidden">
-                        <img src="/visuals/seo-landing.png" alt="Landing" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                        <Image src="/visuals/seo-landing.jpg" alt="Landing" fill className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                     </div>
                     <div className="h-10 border-t border-white/5 bg-[#121215] flex items-center justify-between px-3 relative">
                         <span className="text-[10px] font-mono text-gray-400">Landing</span>

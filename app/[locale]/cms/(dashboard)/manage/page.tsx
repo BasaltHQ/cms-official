@@ -90,7 +90,7 @@ export default function TeamAdminPage() {
         newGroups[groupIndex].members.push({
             name: "New Member",
             role: "Role",
-            imageSrc: "/images/team/member1.png",
+            imageSrc: "/images/team/member1.jpg",
             linkedin: "",
             twitter: ""
         });

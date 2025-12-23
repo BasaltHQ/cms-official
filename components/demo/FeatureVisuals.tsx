@@ -356,11 +356,10 @@ export function VisualBuilderVisual() {
                         >
                             <div className="relative h-24 w-full">
                                 <Image
-                                    src="/visuals/nano-header-flat.png"
+                                    src="/visuals/nano-header-flat.jpg"
                                     alt="Header"
                                     fill
                                     className="object-cover"
-                                    unoptimized
                                 />
                             </div>
                             <div className="opacity-0 group-hover:opacity-100 absolute top-2 right-2 bg-purple-600 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg font-medium transition-all">Header</div>
@@ -375,11 +374,10 @@ export function VisualBuilderVisual() {
                                 transition={{ delay: 0.3 }}
                             >
                                 <Image
-                                    src="/visuals/nano-feature-card-1.png"
+                                    src="/visuals/nano-feature-card-1.jpg"
                                     alt="Feature 1"
                                     fill
                                     className="object-cover"
-                                    unoptimized
                                 />
                                 <div className="opacity-0 group-hover:opacity-100 absolute top-2 right-2 bg-slate-700 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg font-medium transition-all">Card</div>
                             </motion.div>
@@ -391,11 +389,10 @@ export function VisualBuilderVisual() {
                                 transition={{ delay: 0.4 }}
                             >
                                 <Image
-                                    src="/visuals/nano-feature-card-2.png"
+                                    src="/visuals/nano-feature-card-2.jpg"
                                     alt="Feature 2"
                                     fill
                                     className="object-cover"
-                                    unoptimized
                                 />
                                 <div className="opacity-0 group-hover:opacity-100 absolute top-2 right-2 bg-slate-700 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg font-medium transition-all">Card</div>
                             </motion.div>
@@ -645,7 +642,6 @@ export function IntegrationsVisual() {
                         alt="Ledger1CMS"
                         fill
                         className="object-contain brightness-0 invert drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"
-                        unoptimized
                     />
                 </div>
             </motion.div>
