@@ -37,7 +37,7 @@ export default function DashboardHeader({ userName }: DashboardHeaderProps) {
 
     return (
         <div className="mb-8 space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-0">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 tracking-tight leading-tight">
                         Welcome back, {userName}
@@ -48,7 +48,7 @@ export default function DashboardHeader({ userName }: DashboardHeaderProps) {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 self-start md:self-auto">
                     {/* University Button */}
                     <Link href={`/${params?.locale}/cms/university`}>
                         <button

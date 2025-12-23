@@ -124,22 +124,22 @@ export default function DashboardGrid({ enabledModules = [], isAdmin = false, un
             <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-6 mb-8">
                 {visibleItems.map((item, idx) => {
                     const CardContent = (
-                        <div className="relative h-full">
+                        <div className="relative h-full w-full">
                             <div className={cn(
-                                "h-full p-3 md:p-6 rounded-xl md:rounded-2xl bg-[#0A0A0B] border border-white/5 hover:border-white/10 transition-all duration-300 relative overflow-hidden group hover:shadow-2xl hover:shadow-black/50 flex flex-col items-center md:items-start text-center md:text-left justify-center md:justify-start aspect-square md:aspect-auto",
+                                "h-36 md:h-full w-full p-2 md:p-6 rounded-xl md:rounded-2xl bg-[#0A0A0B] border border-white/5 hover:border-white/10 transition-all duration-300 relative overflow-hidden group hover:shadow-2xl hover:shadow-black/50 flex flex-col items-center md:items-start text-center md:text-left justify-between md:justify-start",
                             )}>
                                 {/* Gradient Blob Background - Desktop Only */}
                                 <div className={cn("hidden md:block absolute -right-20 -top-20 h-40 w-40 rounded-full blur-3xl opacity-20 transition-opacity group-hover:opacity-40", item.iconColor.replace("text-", "bg-"))} />
 
-                                <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-between relative z-10 w-full gap-3 md:gap-0 mt-2 md:mt-0">
-                                    <div className={cn("p-4 md:p-3 rounded-2xl md:rounded-xl bg-white/5 border border-white/5 shadow-inner mb-0 md:mb-0", item.iconColor)}>
+                                <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-between relative z-10 w-full pt-3 md:pt-0">
+                                    <div className={cn("p-2.5 md:p-3 rounded-2xl md:rounded-xl bg-white/5 border border-white/5 shadow-inner mb-0 md:mb-0", item.iconColor)}>
                                         {/* Large icons for mobile, normal for desktop */}
                                         <item.icon className="h-8 w-8 md:h-6 md:w-6" />
                                     </div>
 
                                     {/* Notification Badge for Support Inbox */}
                                     {item.slug === "support" && unreadSupportCount > 0 && (
-                                        <div className="absolute top-0 right-10 md:-top-1 md:-right-1 bg-red-500 text-white text-[10px] md:text-[10px] font-bold h-5 w-5 md:min-w-[20px] rounded-full border-2 border-[#0A0A0B] shadow-lg animate-pulse z-20 flex items-center justify-center">
+                                        <div className="absolute top-0 right-4 md:-top-1 md:-right-1 bg-red-500 text-white text-[10px] md:text-[10px] font-bold h-5 w-5 md:min-w-[20px] rounded-full border-2 border-[#0A0A0B] shadow-lg animate-pulse z-20 flex items-center justify-center">
                                             {unreadSupportCount > 99 ? '99+' : unreadSupportCount}
                                         </div>
                                     )}
@@ -150,8 +150,8 @@ export default function DashboardGrid({ enabledModules = [], isAdmin = false, un
                                     )}
                                 </div>
 
-                                <div className="mt-1 md:mt-5 relative z-10 w-full">
-                                    <h3 className="text-[10px] md:text-lg font-bold text-slate-300 md:text-white group-hover:tracking-wide transition-all duration-300 leading-tight md:leading-normal truncate w-full px-1 md:px-0">{item.title}</h3>
+                                <div className="md:mt-5 relative z-10 w-full flex flex-col justify-end items-center md:items-start h-auto mt-auto pb-1">
+                                    <h3 className="text-[11px] md:text-lg font-bold text-slate-300 md:text-white group-hover:tracking-wide transition-all duration-300 leading-tight md:leading-normal line-clamp-2 w-full px-0.5 md:px-0 break-words">{item.title}</h3>
                                     <p className="hidden md:block text-sm text-slate-400 mt-1 font-medium">{item.description}</p>
                                 </div>
 
@@ -169,7 +169,7 @@ export default function DashboardGrid({ enabledModules = [], isAdmin = false, un
                         );
                     } else {
                         return (
-                            <button key={idx} onClick={() => setActiveModal(item.action!)} className="block w-full text-left h-full cursor-pointer">
+                            <button key={idx} onClick={() => setActiveModal(item.action!)} className="block w-full text-left h-full cursor-pointer appearance-none">
                                 {CardContent}
                             </button>
                         );
