@@ -73,7 +73,7 @@ export default async function AdminDashboardLayout({
     }));
 
     return (
-        <div className="flex h-screen bg-black text-slate-200 overflow-hidden relative">
+        <div className="flex h-screen supports-[height:100dvh]:h-[100dvh] bg-black text-slate-200 overflow-hidden relative">
             {/* Ambient Background - Enforced Dark */}
             <div className="absolute inset-0 bg-[#0A0A0B] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] z-0" />
 

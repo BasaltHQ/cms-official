@@ -407,37 +407,39 @@ export default function CareersAdminPage() {
                 description="Are you sure you want to delete this job posting? This action cannot be undone."
             />
 
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-0">
                 <div>
                     <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">Careers Management</h1>
                     <p className="text-slate-400 mt-1">Manage job listings and applications.</p>
                 </div>
 
-                <div className="flex items-center gap-4">
-                    {/* View Toggle */}
-                    <button
-                        onClick={() => setViewMode("grid")}
-                        className={cn("p-2 rounded-md transition-all", viewMode === "grid" ? "bg-white/10 text-white shadow-sm" : "text-slate-400 hover:text-white")}
-                        title="Grid View"
-                    >
-                        <LayoutGrid className="h-4 w-4" />
-                    </button>
-                    <button
-                        onClick={() => setViewMode("list")}
-                        className={cn("p-2 rounded-md transition-all", viewMode === "list" ? "bg-white/10 text-white shadow-sm" : "text-slate-400 hover:text-white")}
-                        title="List View"
-                    >
-                        <List className="h-4 w-4" />
-                    </button>
-                </div>
+                <div className="flex items-center justify-between w-full md:w-auto gap-4">
+                    <div className="flex items-center gap-2 bg-[#0A0A0B] p-1 rounded-lg border border-white/10">
+                        {/* View Toggle */}
+                        <button
+                            onClick={() => setViewMode("grid")}
+                            className={cn("p-2 rounded-md transition-all", viewMode === "grid" ? "bg-white/10 text-white shadow-sm" : "text-slate-400 hover:text-white")}
+                            title="Grid View"
+                        >
+                            <LayoutGrid className="h-4 w-4" />
+                        </button>
+                        <button
+                            onClick={() => setViewMode("list")}
+                            className={cn("p-2 rounded-md transition-all", viewMode === "list" ? "bg-white/10 text-white shadow-sm" : "text-slate-400 hover:text-white")}
+                            title="List View"
+                        >
+                            <List className="h-4 w-4" />
+                        </button>
+                    </div>
 
-                <Button
-                    onClick={() => setEditingJob({ active: true })}
-                    variant="gradient"
-                    className="px-4 py-2 rounded-md flex items-center gap-2"
-                >
-                    <Plus className="h-4 w-4" /> New Job
-                </Button>
+                    <Button
+                        onClick={() => setEditingJob({ active: true })}
+                        variant="gradient"
+                        className="px-4 py-2 rounded-md flex items-center gap-2"
+                    >
+                        <Plus className="h-4 w-4" /> New Job
+                    </Button>
+                </div>
             </div>
 
             {
