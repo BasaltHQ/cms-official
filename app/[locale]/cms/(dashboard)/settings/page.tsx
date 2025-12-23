@@ -63,7 +63,7 @@ export default function AdminSettingsPage() {
     }
 
     return (
-        <div className="p-8 max-w-6xl mx-auto space-y-8">
+        <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
             <div className="mb-2">
                 <h1 className="text-3xl font-bold text-white">Settings</h1>
                 <p className="text-slate-400 mt-1">Manage your profile, team members, and system preferences.</p>
@@ -179,7 +179,7 @@ function ProfileSettings() {
                     <p className="text-xs text-slate-500 mt-1">Leave empty to keep current password. Min 6 chars.</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium mb-1 text-slate-300 flex items-center gap-1">
                             <Globe className="h-4 w-4" /> Timezone

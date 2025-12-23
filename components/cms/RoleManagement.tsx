@@ -149,14 +149,14 @@ export function RoleManagement() {
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-5 duration-500">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-0">
                 <div>
                     <h3 className="text-xl font-bold text-white flex items-center gap-2">
                         <Shield className="h-5 w-5 text-indigo-400" /> Role & Access Control
                     </h3>
                     <p className="text-sm text-slate-400">Define roles and restrict which CMS modules specific user groups can access.</p>
                 </div>
-                <Button onClick={handleOpenCreate} className="bg-indigo-600 hover:bg-indigo-700 text-white border border-indigo-400/20">
+                <Button onClick={handleOpenCreate} className="bg-indigo-600 hover:bg-indigo-700 text-white border border-indigo-400/20 w-full md:w-auto">
                     <Plus className="h-4 w-4 mr-2" /> Add Role
                 </Button>
 

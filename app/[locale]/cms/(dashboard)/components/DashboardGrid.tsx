@@ -50,7 +50,7 @@ const items = [
     },
     {
         slug: "integrations",
-        title: "System Status",
+        title: "System",
         description: "Real-time metrics",
         action: "system_status",
         icon: Activity,
@@ -91,7 +91,7 @@ const items = [
     },
     {
         slug: "support",
-        title: "Support Inbox",
+        title: "Support",
         description: "Customer messages",
         action: "support_inbox",
         icon: Mail,
@@ -126,12 +126,12 @@ export default function DashboardGrid({ enabledModules = [], isAdmin = false, un
                     const CardContent = (
                         <div className="relative h-full w-full">
                             <div className={cn(
-                                "h-36 md:h-full w-full p-2 md:p-6 rounded-xl md:rounded-2xl bg-[#0A0A0B] border border-white/5 hover:border-white/10 transition-all duration-300 relative overflow-hidden group hover:shadow-2xl hover:shadow-black/50 flex flex-col items-center md:items-start text-center md:text-left justify-between md:justify-start",
+                                "h-36 md:h-full w-full p-2 md:p-6 rounded-xl md:rounded-2xl bg-[#0A0A0B] border border-white/5 hover:border-white/10 transition-all duration-300 relative overflow-hidden group hover:shadow-2xl hover:shadow-black/50 flex flex-col items-center md:items-start text-center md:text-left justify-start pt-5 md:pt-6 md:justify-start",
                             )}>
                                 {/* Gradient Blob Background - Desktop Only */}
                                 <div className={cn("hidden md:block absolute -right-20 -top-20 h-40 w-40 rounded-full blur-3xl opacity-20 transition-opacity group-hover:opacity-40", item.iconColor.replace("text-", "bg-"))} />
 
-                                <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-between relative z-10 w-full pt-3 md:pt-0">
+                                <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-between relative z-10 w-full mb-3 md:mb-0">
                                     <div className={cn("p-2.5 md:p-3 rounded-2xl md:rounded-xl bg-white/5 border border-white/5 shadow-inner mb-0 md:mb-0", item.iconColor)}>
                                         {/* Large icons for mobile, normal for desktop */}
                                         <item.icon className="h-8 w-8 md:h-6 md:w-6" />
@@ -150,8 +150,8 @@ export default function DashboardGrid({ enabledModules = [], isAdmin = false, un
                                     )}
                                 </div>
 
-                                <div className="md:mt-5 relative z-10 w-full flex flex-col justify-end items-center md:items-start h-auto mt-auto pb-1">
-                                    <h3 className="text-[11px] md:text-lg font-bold text-slate-300 md:text-white group-hover:tracking-wide transition-all duration-300 leading-tight md:leading-normal line-clamp-2 w-full px-0.5 md:px-0 break-words">{item.title}</h3>
+                                <div className="md:mt-5 relative z-10 w-full px-1 md:px-0">
+                                    <h3 className="text-[11px] md:text-lg font-bold text-slate-300 md:text-white group-hover:tracking-wide transition-all duration-300 leading-tight md:leading-normal line-clamp-2 w-full break-words">{item.title}</h3>
                                     <p className="hidden md:block text-sm text-slate-400 mt-1 font-medium">{item.description}</p>
                                 </div>
 

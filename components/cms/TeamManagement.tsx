@@ -177,7 +177,7 @@ export function TeamManagement() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-0">
                 <div>
                     <h2 className="text-xl font-semibold text-white">
                         {teamViewMode === "team" ? "Team & Admins" : "Users Management"}
@@ -188,10 +188,10 @@ export function TeamManagement() {
                             : "Manage registered users and viewers."}
                     </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
                     {/* View Toggle for Admins */}
                     {session?.user?.isAdmin && (
-                        <div className="flex bg-slate-900 border border-white/10 rounded-lg p-1 mr-2">
+                        <div className="flex bg-slate-900 border border-white/10 rounded-lg p-1 mr-2 shrink-0">
                             <button
                                 onClick={() => setTeamViewMode("team")}
                                 className={cn("px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-2", teamViewMode === "team" ? "bg-slate-800 text-white shadow-sm" : "text-slate-400 hover:text-white")}
@@ -252,7 +252,7 @@ export function TeamManagement() {
                 </div>
             ) : viewMode === "list" ? (
                 /* List View */
-                <div className="rounded-xl border border-white/10 overflow-hidden bg-[#0A0A0B]/50 backdrop-blur-sm">
+                <div className="rounded-xl border border-white/10 overflow-x-auto bg-[#0A0A0B]/50 backdrop-blur-sm">
                     <table className="w-full text-left text-sm">
                         <thead className="bg-white/5 text-slate-400 font-medium">
                             <tr>
