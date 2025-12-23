@@ -70,10 +70,10 @@ export default function AdminSettingsPage() {
             </div>
 
             <Tabs defaultValue={canManageTeam ? "team" : "profile"} className="w-full">
-                <TabsList className="bg-[#0A0A0B] border border-white/10 mb-8 w-full justify-start overflow-x-auto no-scrollbar">
-                    <TabsTrigger value="profile">My Profile</TabsTrigger>
-                    {canManageTeam && <TabsTrigger value="team">User Management</TabsTrigger>}
-                    {canManageTeam && <TabsTrigger value="roles">Role Management</TabsTrigger>}
+                <TabsList className="bg-[#0A0A0B] md:bg-transparent md:border-none flex flex-nowrap border border-white/10 mb-8 w-full md:w-auto justify-start overflow-x-auto no-scrollbar md:gap-2">
+                    <TabsTrigger value="profile" className="flex-shrink-0 data-[state=active]:bg-white/10 data-[state=active]:text-white">My Profile</TabsTrigger>
+                    {canManageTeam && <TabsTrigger value="team" className="flex-shrink-0 data-[state=active]:bg-white/10 data-[state=active]:text-white">User Management</TabsTrigger>}
+                    {canManageTeam && <TabsTrigger value="roles" className="flex-shrink-0 data-[state=active]:bg-white/10 data-[state=active]:text-white">Role Management</TabsTrigger>}
                 </TabsList>
 
                 <TabsContent value="profile" className="focus-visible:ring-0 focus-visible:outline-none">

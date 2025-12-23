@@ -173,12 +173,12 @@ export default function ActivityList({ initialActivities }: ActivityListProps) {
                             </DropdownMenuContent>
                         </DropdownMenu>
 
-                        <div className="flex items-center bg-black border border-white/10 rounded-xl p-1 gap-1 h-11">
+                        <div className="flex items-center bg-black border border-white/10 rounded-xl p-1 gap-1 h-11 overflow-x-auto no-scrollbar max-w-[200px] sm:max-w-none">
                             <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => toggleSort("date")}
-                                className={cn("h-full px-4 rounded-lg text-xs font-black uppercase tracking-wider transition-all", sortBy === "date" ? "bg-primary/20 text-primary" : "text-slate-500 hover:text-slate-300")}
+                                className={cn("h-full px-4 rounded-lg text-xs font-black uppercase tracking-wider transition-all shrink-0", sortBy === "date" ? "bg-primary/20 text-primary" : "text-slate-500 hover:text-slate-300")}
                             >
                                 Date {sortBy === "date" && (sortOrder === "desc" ? "↓" : "↑")}
                             </Button>
@@ -186,7 +186,7 @@ export default function ActivityList({ initialActivities }: ActivityListProps) {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => toggleSort("user")}
-                                className={cn("h-full px-4 rounded-lg text-xs font-black uppercase tracking-wider transition-all", sortBy === "user" ? "bg-primary/20 text-primary" : "text-slate-500 hover:text-slate-300")}
+                                className={cn("h-full px-4 rounded-lg text-xs font-black uppercase tracking-wider transition-all shrink-0", sortBy === "user" ? "bg-primary/20 text-primary" : "text-slate-500 hover:text-slate-300")}
                             >
                                 User {sortBy === "user" && (sortOrder === "desc" ? "↓" : "↑")}
                             </Button>
@@ -194,7 +194,7 @@ export default function ActivityList({ initialActivities }: ActivityListProps) {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => toggleSort("action")}
-                                className={cn("h-full px-4 rounded-lg text-xs font-black uppercase tracking-wider transition-all", sortBy === "action" ? "bg-primary/20 text-primary" : "text-slate-500 hover:text-slate-300")}
+                                className={cn("h-full px-4 rounded-lg text-xs font-black uppercase tracking-wider transition-all shrink-0", sortBy === "action" ? "bg-primary/20 text-primary" : "text-slate-500 hover:text-slate-300")}
                             >
                                 Action {sortBy === "action" && (sortOrder === "desc" ? "↓" : "↑")}
                             </Button>

@@ -71,7 +71,7 @@ const items = [
     },
     {
         slug: "footer",
-        title: "Footer Manager",
+        title: "Footer",
         description: "Edit site footer",
         href: "/cms/footer",
         icon: Globe,

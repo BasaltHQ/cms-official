@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Activity, Server, Database, Globe, Zap, Cpu, MemoryStick } from "lucide-react";
+import { Activity, Server, Database, Globe, Zap, Cpu, MemoryStick, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getSystemStatus } from "@/actions/cms/system-status";
 
@@ -58,10 +58,17 @@ export function SystemStatusModal({ isOpen, onClose }: SystemStatusModalProps) {
                         </h2>
                         <p className="text-xs text-cyan-600/80 font-mono mt-1">REAL-TIME MONITORING // V.2.4.1</p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 mr-8">
                         <span className="block h-2 w-2 bg-cyan-500 rounded-full animate-pulse shadow-[0_0_10px_#06b6d4]"></span>
                         <span className="text-xs font-mono text-cyan-400">ONLINE</span>
                     </div>
+                    <button
+                        onClick={onClose}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-white/10 rounded-full text-cyan-500/50 hover:text-cyan-400 transition-all z-10"
+                        aria-label="Close"
+                    >
+                        <X className="h-5 w-5" />
+                    </button>
                 </div>
 
                 <div className="p-8 grid grid-cols-2 gap-6 relative">
@@ -131,6 +138,6 @@ export function SystemStatusModal({ isOpen, onClose }: SystemStatusModalProps) {
                     </p>
                 </div>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     );
 }

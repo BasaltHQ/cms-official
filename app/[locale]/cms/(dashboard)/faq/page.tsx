@@ -17,12 +17,12 @@ export default async function CMSFaqPage(props: { params: Promise<{ locale: stri
 
     return (
         <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-500">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-4xl font-bold tracking-tight text-white">FAQ Manager</h1>
-                    <p className="text-slate-400 mt-2 text-lg">Manage your frequently asked questions and answers.</p>
+                    <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-white">FAQ Manager</h1>
+                    <p className="text-slate-400 mt-2 text-base md:text-lg">Manage your frequently asked questions and answers.</p>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 md:gap-4 flex-wrap">
                     <SeedFaqsButton />
                     <Link href={`/${params.locale}/cms/faq/new`}>
                         <Button className="bg-blue-600 hover:bg-blue-500 text-white gap-2">
