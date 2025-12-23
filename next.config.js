@@ -57,7 +57,19 @@ const nextConfig = {
   // Performance optimizations
   experimental: {
     // Optimize imports for tree-shaking (reduces unused JS)
-    optimizePackageImports: ['framer-motion', 'lucide-react', '@measured/puck'],
+    optimizePackageImports: [
+      'framer-motion',
+      'lucide-react',
+      '@measured/puck',
+      '@tremor/react',
+      'date-fns',
+      'dayjs',
+      'react-icons',
+      '@radix-ui/react-icons',
+      'recharts'
+    ],
+    // CSS optimization - inline critical CSS and defer the rest
+    optimizeCss: true,
   },
   // Add preconnect headers for external resources
   async headers() {

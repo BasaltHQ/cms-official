@@ -287,7 +287,7 @@ export default async function MarketingFooter() {
 
                 {/* Bottom Section: Copyright */}
                 <div className="pt-8 flex flex-col items-center justify-center gap-4 text-center">
-                    <p className="text-xs text-[#647084]">
+                    <p className="text-xs text-slate-400">
                         {copyrightText}
                     </p>
 

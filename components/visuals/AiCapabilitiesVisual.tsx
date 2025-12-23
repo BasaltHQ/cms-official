@@ -188,7 +188,7 @@ export function AiCapabilitiesVisual() {
                             <div className="flex items-start gap-4 relaitve z-10">
                                 <div className={`
                                     p-3 rounded-lg bg-white/5 border border-white/5 transition-colors duration-300
-                                    ${isActive ? feature.color : 'text-slate-500 group-hover:text-slate-300'}
+                                    ${isActive ? feature.color : 'text-slate-400 group-hover:text-slate-300'}
                                 `}>
                                     <feature.icon className="w-6 h-6" />
                                 </div>

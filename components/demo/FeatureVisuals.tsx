@@ -337,7 +337,7 @@ export function VisualBuilderVisual() {
                         {["Hero", "Text", "Image", "Grid"].map((item, i) => (
                             <div key={item} className="w-12 h-10 lg:w-14 lg:h-12 rounded bg-slate-900 border border-white/5 flex flex-col items-center justify-center gap-1 hover:border-purple-500/30 transition-colors group cursor-grab">
                                 <div className={`w-6 h-1 rounded-full ${i === 0 ? 'bg-slate-600' : i === 1 ? 'bg-slate-700 w-4' : 'bg-slate-700'}`} />
-                                <span className="text-[8px] text-slate-500 group-hover:text-slate-300">{item}</span>
+                                <span className="text-[8px] text-slate-400 group-hover:text-slate-300">{item}</span>
                             </div>
                         ))}
                     </div>
@@ -359,6 +359,7 @@ export function VisualBuilderVisual() {
                                     src="/visuals/nano-header-flat.jpg"
                                     alt="Header"
                                     fill
+                                    sizes="(max-width: 768px) 100vw, 400px"
                                     className="object-cover"
                                 />
                             </div>
@@ -377,6 +378,7 @@ export function VisualBuilderVisual() {
                                     src="/visuals/nano-feature-card-1.jpg"
                                     alt="Feature 1"
                                     fill
+                                    sizes="(max-width: 768px) 50vw, 200px"
                                     className="object-cover"
                                 />
                                 <div className="opacity-0 group-hover:opacity-100 absolute top-2 right-2 bg-slate-700 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg font-medium transition-all">Card</div>
@@ -392,6 +394,7 @@ export function VisualBuilderVisual() {
                                     src="/visuals/nano-feature-card-2.jpg"
                                     alt="Feature 2"
                                     fill
+                                    sizes="(max-width: 768px) 50vw, 200px"
                                     className="object-cover"
                                 />
                                 <div className="opacity-0 group-hover:opacity-100 absolute top-2 right-2 bg-slate-700 text-white text-[9px] px-2 py-0.5 rounded-full shadow-lg font-medium transition-all">Card</div>
@@ -604,22 +607,22 @@ export function GeniusVisual() {
 
 export function IntegrationsVisual() {
     const INNER_ICONS = [
-        { name: "Twitter", url: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/x-social-media-white-icon.png" },
-        { name: "LinkedIn", url: "https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg" },
-        { name: "Slack", url: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg" },
-        { name: "Zapier", url: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/zapier-icon.png" },
-        { name: "Meta", url: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/meta-icon.png" },
+        { name: "Twitter", url: "/icons/x-twitter.png" },
+        { name: "LinkedIn", url: "/icons/linkedin.svg" },
+        { name: "Slack", url: "/icons/slack.svg" },
+        { name: "Zapier", url: "/icons/zapier.png" },
+        { name: "Meta", url: "/icons/meta.png" },
     ];
 
     const OUTER_ICONS = [
-        { name: "OpenAI", url: "https://avatars.githubusercontent.com/u/14957082?s=200&v=4" },
-        { name: "Shopify", url: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/shopify-icon.png" },
+        { name: "OpenAI", url: "https://avatars.githubusercontent.com/u/14957082?s=48&v=4" },
+        { name: "Shopify", url: "/icons/shopify.png" },
         { name: "Gemini", url: "https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg" },
-        { name: "WordPress", url: "https://s.w.org/style/images/about/WordPress-logotype-wmark.png" },
-        { name: "Anthropic", url: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/claude-ai-icon.png" },
-        { name: "WooCommerce", url: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/woocommerce-icon.png" },
-        { name: "Bedrock", url: "https://avatars.githubusercontent.com/u/2232217?s=200&v=4" },
-        { name: "DeepSeek", url: "https://avatars.githubusercontent.com/u/148330874?s=200&v=4" },
+        { name: "WordPress", url: "/icons/wordpress.png" },
+        { name: "Anthropic", url: "/icons/claude.png" },
+        { name: "WooCommerce", url: "/icons/woocommerce.png" },
+        { name: "Bedrock", url: "https://avatars.githubusercontent.com/u/2232217?s=48&v=4" },
+        { name: "DeepSeek", url: "https://avatars.githubusercontent.com/u/148330874?s=48&v=4" },
     ];
 
     return (

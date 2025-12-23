@@ -222,12 +222,12 @@ export default function DemoPage({ footer }: DemoPageProps) {
                                                 </p>
                                                 <div className="flex flex-wrap gap-4">
                                                     {[
-                                                        { name: "Shopify", url: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/shopify-icon.png", href: "#" },
-                                                        { name: "WooCommerce", url: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/woocommerce-icon.png", href: "#" },
-                                                        { name: "WordPress", url: "https://s.w.org/style/images/about/WordPress-logotype-wmark.png", href: "#" },
-                                                        { name: "Zapier", url: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/zapier-icon.png", href: "#" },
-                                                        { name: "OpenAI", url: "https://avatars.githubusercontent.com/u/14957082?s=200&v=4", href: "#" },
-                                                        { name: "Anthropic", url: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/claude-ai-icon.png", href: "#" }
+                                                        { name: "Shopify", url: "/icons/shopify.png", href: "#" },
+                                                        { name: "WooCommerce", url: "/icons/woocommerce.png", href: "#" },
+                                                        { name: "WordPress", url: "/icons/wordpress.png", href: "#" },
+                                                        { name: "Zapier", url: "/icons/zapier.png", href: "#" },
+                                                        { name: "OpenAI", url: "https://avatars.githubusercontent.com/u/14957082?s=48&v=4", href: "#" },
+                                                        { name: "Anthropic", url: "/icons/claude.png", href: "#" }
                                                     ].map((social) => (
                                                         <a
                                                             key={social.name}

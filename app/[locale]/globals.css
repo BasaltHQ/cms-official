@@ -390,16 +390,16 @@
   --scrollbar-track: transparent;
 }
 
-/* Firefox - Apply only to specific scrollable elements to avoid animation issues */
+/* Firefox - Apply ONLY to html and body to avoid inheritance issues */
 html,
-body,
-.overflow-auto,
-.overflow-y-auto,
-.overflow-x-auto,
-.overflow-scroll,
-[data-scrollable] {
+body {
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* Reset scrollbar-color for all other elements to prevent non-composited animation warnings */
+*:not(html):not(body) {
+  scrollbar-color: auto;
 }
 
 /* WebKit-based browsers - Apply only to scrollable elements */
