@@ -17,7 +17,7 @@ export default function MarketingLayout({
 }: MarketingLayoutProps) {
     return (
         <div className={cn(
-            "min-h-screen bg-[#020617] text-white selection:bg-purple-500/30 font-sans overflow-x-hidden relative",
+            "min-h-screen text-white selection:bg-purple-500/30 font-sans overflow-x-hidden relative",
             className
         )}>
             <InteractiveBackground variant={variant} />

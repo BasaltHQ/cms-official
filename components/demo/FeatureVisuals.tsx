@@ -1,10 +1,27 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import { Icons } from "@/components/ui/icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, Suspense, lazy, ComponentType } from "react";
 import { Sparkles } from "lucide-react";
+
+// Lazy loading wrapper - only renders content when in viewport
+function LazyVisual({ children }: { children: React.ReactNode }) {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, margin: "100px" });
+
+    return (
+        <div ref={ref} className="w-full h-full">
+            {isInView ? children : (
+                <div className="w-full h-full flex items-center justify-center bg-slate-900/50">
+                    <div className="w-8 h-8 border-2 border-purple-500/30 border-t-purple-500 rounded-full animate-spin" />
+                </div>
+            )}
+        </div>
+    );
+}
+
 
 export function AiLandingVisual() {
     return (
@@ -274,13 +291,21 @@ export function HeadlessVisual() {
     )
 }
 
+// Lazy-wrapped versions of visuals - only render when in viewport
+function LazyAiLandingVisual() { return <LazyVisual><AiLandingVisual /></LazyVisual>; }
+function LazyAiBlogVisual() { return <LazyVisual><AiBlogVisual /></LazyVisual>; }
+function LazyHeadlessVisual() { return <LazyVisual><HeadlessVisual /></LazyVisual>; }
+function LazyVisualBuilderVisual() { return <LazyVisual><VisualBuilderVisual /></LazyVisual>; }
+function LazyIntegrationsVisual() { return <LazyVisual><IntegrationsVisual /></LazyVisual>; }
+function LazyGeniusVisual() { return <LazyVisual><GeniusVisual /></LazyVisual>; }
+
 export const VISUAL_MAP: Record<string, React.ComponentType> = {
-    "AiLandingVisual": AiLandingVisual,
-    "AiBlogVisual": AiBlogVisual,
-    "HeadlessVisual": HeadlessVisual,
-    "VisualBuilderVisual": VisualBuilderVisual,
-    "IntegrationsVisual": IntegrationsVisual,
-    "GeniusVisual": GeniusVisual,
+    "AiLandingVisual": LazyAiLandingVisual,
+    "AiBlogVisual": LazyAiBlogVisual,
+    "HeadlessVisual": LazyHeadlessVisual,
+    "VisualBuilderVisual": LazyVisualBuilderVisual,
+    "IntegrationsVisual": LazyIntegrationsVisual,
+    "GeniusVisual": LazyGeniusVisual,
 };
 
 export function VisualBuilderVisual() {

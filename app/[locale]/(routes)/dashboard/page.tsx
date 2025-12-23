@@ -27,7 +27,7 @@ const DashboardPage = async () => {
 
   const userId = session?.user?.id;
   const lang = session?.user?.userLanguage;
-  const dict = await getDictionary(lang as "en" | "cz" | "de" | "uk");
+  const dict = await getDictionary(lang as "en" | "cs" | "de" | "uk");
 
   // Fetch all CMS data
   const [

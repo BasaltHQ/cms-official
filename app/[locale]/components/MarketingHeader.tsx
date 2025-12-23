@@ -64,7 +64,7 @@ export default function MarketingHeader() {
 
                 <header className={cn(
                     "flex items-center w-full transition-all duration-300 px-4 lg:px-6",
-                    isScrolled ? "h-16" : "h-20 border-b border-white/5 bg-[#0F0F1A]/15 backdrop-blur-sm"
+                    isScrolled ? "h-16" : "h-20"
                 )}>
                     <div className="container mx-auto flex items-center justify-between h-full">
                         {/* Logo */}
@@ -170,8 +170,8 @@ export default function MarketingHeader() {
                     </div>
                 )}
             </div>
-            {/* Spacer to prevent content overlap - Adjusted logic */}
-            <div className={cn("w-full transition-all duration-300", isScrolled ? "h-16" : "h-28")} />
+            {/* Spacer to prevent content overlap - Reduced padding */}
+            <div className={cn("w-full transition-all duration-300", isScrolled ? "h-16" : "h-20")} />
         </>
     );
 }

@@ -1,10 +1,8 @@
 import DemoPage from "@/components/demo/DemoPage";
-import MarketingLayout from "@/components/marketing/MarketingLayout";
+import MarketingFooter from "@/app/[locale]/components/MarketingFooter";
 
 export default function Page() {
     return (
-        <MarketingLayout>
-            <DemoPage />
-        </MarketingLayout>
+        <DemoPage footer={<MarketingFooter />} />
     );
 }

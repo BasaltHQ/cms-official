@@ -38,6 +38,9 @@ const nextConfig = {
     NEXT_PUBLIC_APP_VERSION: require("./package.json").version,
   },
   output: "standalone",
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
 };
 
 module.exports = withNextIntl(nextConfig);

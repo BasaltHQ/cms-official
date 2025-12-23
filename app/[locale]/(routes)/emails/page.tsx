@@ -21,7 +21,7 @@ const EmailRoute = async () => {
   const lang = session.user.userLanguage;
 
   //Fetch translations from dictionary
-  const dict = await getDictionary(lang as "en" | "cz" | "de");
+  const dict = await getDictionary(lang as "en" | "cs" | "de");
 
   const layout = (await cookies()).get("react-resizable-panels:layout");
   const collapsed = (await cookies()).get("react-resizable-panels:collapsed");

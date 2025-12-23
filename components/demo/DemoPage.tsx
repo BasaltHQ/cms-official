@@ -2,10 +2,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
+import { motion, AnimatePresence, LazyMotion, domAnimation } from "framer-motion";
 import Link from "next/link";
 import MarketingHeader from "@/app/[locale]/components/MarketingHeader";
-import InteractiveBackground from "./InteractiveBackground";
+
 import {
     ArrowRight,
     Sparkles,
@@ -13,17 +14,36 @@ import {
     MousePointer2 as CursorArrowIcon
 } from "lucide-react";
 import GlassCard from "./GlassCard";
-import DemoPuckEditor from "./DemoPuckEditor";
 import { DEMO_FEATURES } from "./demo-data";
 import { VISUAL_MAP } from "./FeatureVisuals";
 import { Button } from "@/components/ui/button";
 import { DesktopOnlyModal } from "@/components/modals/DesktopOnlyModal";
 
+// Dynamic imports for heavy components - saves ~300KB+ on initial load
+const DemoPuckEditor = dynamic(() => import("./DemoPuckEditor"), {
+    loading: () => (
+        <div className="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center">
+            <div className="animate-pulse text-white text-lg">Loading Editor...</div>
+        </div>
+    ),
+    ssr: false
+});
 
-export default function DemoPage() {
+// Defer InteractiveBackground to after first paint
+const InteractiveBackground = dynamic(() => import("./InteractiveBackground"), {
+    ssr: false,
+    loading: () => <div className="fixed inset-0 z-0 bg-[#020617]" />
+});
+
+interface DemoPageProps {
+    footer: React.ReactNode;
+}
+
+export default function DemoPage({ footer }: DemoPageProps) {
     const [mode, setMode] = useState<"landing" | "builder">("landing");
     const [isMobile, setIsMobile] = useState(false);
     const [showDesktopModal, setShowDesktopModal] = useState(false);
+
 
     useEffect(() => {
         const checkMobile = () => {
@@ -273,6 +293,9 @@ export default function DemoPage() {
 
 
                             </main>
+                        </div>
+                        <div className="relative z-50">
+                            {footer}
                         </div>
                     </motion.div>
                 ) : (

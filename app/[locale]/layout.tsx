@@ -134,10 +134,12 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     },
     manifest: "/site.webmanifest",
     alternates: {
-      canonical: "/",
+      canonical: `${siteUrl}/${locale === "en" ? "" : locale}`,
       languages: {
-        "en-US": "/en",
-        "de-DE": "/de",
+        "en": `${siteUrl}`,
+        "de": `${siteUrl}/de`,
+        "cs": `${siteUrl}/cs`,
+        "uk": `${siteUrl}/uk`,
       },
     },
   };
@@ -146,7 +148,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 // ... existing imports
 
 export function generateStaticParams() {
-  return ["en", "de", "cz", "uk"].map((locale) => ({ locale }));
+  return ["en", "de", "cs", "uk"].map((locale) => ({ locale }));
 }
 
 export default async function RootLayout(props: Props) {
@@ -166,7 +168,7 @@ export default async function RootLayout(props: Props) {
       <head>
         <meta
           name="viewport"
-          content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=0"
+          content="width=device-width, height=device-height, initial-scale=1, maximum-scale=5, user-scalable=1"
         />
       </head>
       <body className={inter.className + " min-h-screen"} suppressHydrationWarning>

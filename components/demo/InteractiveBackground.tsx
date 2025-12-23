@@ -1,138 +1,100 @@
 "use client";
-
-import { useEffect, useRef } from "react";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 interface InteractiveBackgroundProps {
-    parallaxSpeed?: number;
     variant?: "default" | "blue" | "gold" | "emerald";
 }
 
 export default function InteractiveBackground({
-    parallaxSpeed = 0.2,
     variant = "default"
 }: InteractiveBackgroundProps) {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const containerRef = useRef(null);
+    const { scrollY } = useScroll();
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
+    // Smoother scroll spring
+    const smoothScrollY = useSpring(scrollY, {
+        stiffness: 50,
+        damping: 20,
+        mass: 0.5
+    });
 
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
+    // Parallax transforms - different speeds for different layers
+    // Negative values move up as you scroll down (standard parallax)
+    const y1 = useTransform(smoothScrollY, [0, 1000], [0, -200]);   // Slowest
+    const y2 = useTransform(smoothScrollY, [0, 1000], [0, -400]);   // Medium
+    const y3 = useTransform(smoothScrollY, [0, 1000], [0, -100]);   // Slow
 
-        let width = window.innerWidth;
-        let height = window.innerHeight;
-        let scrollY = window.scrollY;
+    const themes = {
+        default: "from-purple-500/10 via-blue-500/10 to-transparent",
+        blue: "from-cyan-500/10 via-blue-500/10 to-transparent",
+        gold: "from-amber-500/10 via-orange-500/10 to-transparent",
+        emerald: "from-emerald-500/10 via-green-500/10 to-transparent",
+    };
 
-        // Resize handler
-        const resize = () => {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-        };
-
-        const handleScroll = () => {
-            scrollY = window.scrollY;
-        };
-
-        window.addEventListener("resize", resize);
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        resize();
-
-        // Particles
-        const particles: { x: number; y: number; vx: number; vy: number; size: number; color: string; offsetFactor: number }[] = [];
-        const particleCount = 50;
-
-        const variantColors = {
-            default: ["rgba(74, 222, 128, 0.2)", "rgba(168, 85, 247, 0.2)", "rgba(255, 255, 255, 0.05)"],
-            blue: ["rgba(56, 189, 248, 0.2)", "rgba(34, 211, 238, 0.2)", "rgba(255, 255, 255, 0.05)"],
-            gold: ["rgba(251, 191, 36, 0.15)", "rgba(245, 158, 11, 0.15)", "rgba(255, 255, 255, 0.05)"],
-            emerald: ["rgba(16, 185, 129, 0.2)", "rgba(5, 150, 105, 0.2)", "rgba(255, 255, 255, 0.05)"],
-        };
-
-        const colors = variantColors[variant] || variantColors.default;
-
-        for (let i = 0; i < particleCount; i++) {
-            particles.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.4,
-                vy: (Math.random() - 0.5) * 0.4,
-                size: Math.random() * 250 + 100,
-                color: colors[Math.floor(Math.random() * colors.length)],
-                offsetFactor: Math.random() * 0.5 + 0.5 // Random weight for parallax
-            });
-        }
-
-        let mouseX = 0;
-        let mouseY = 0;
-
-        const handleMouseMove = (e: MouseEvent) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        };
-        window.addEventListener("mousemove", handleMouseMove);
-
-        const animate = () => {
-            ctx.clearRect(0, 0, width, height);
-
-            particles.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-
-                // Adjust drawn Y position based on scroll (Parallax)
-                const parallaxY = p.y - (scrollY * parallaxSpeed * p.offsetFactor);
-
-                // Effective Y for drawing (modulo for infinite scroll effect or wrap)
-                let drawY = parallaxY % height;
-                if (drawY < 0) drawY += height;
-
-                // Wrap X
-                if (p.x < -p.size) p.x = width + p.size;
-                if (p.x > width + p.size) p.x = -p.size;
-
-                // Wrap Y (base position)
-                if (p.y < -height) p.y = height * 2;
-                if (p.y > height * 2) p.y = -height;
-
-                // Mouse interaction
-                const dx = mouseX - p.x;
-                const dy = mouseY - drawY;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist < 400) {
-                    p.x -= dx * 0.0003;
-                    // Note: interactive with drawY for visual consistency
-                }
-
-                // Draw
-                ctx.beginPath();
-                const gradient = ctx.createRadialGradient(p.x, drawY, 0, p.x, drawY, p.size);
-                gradient.addColorStop(0, p.color);
-                gradient.addColorStop(1, "rgba(0,0,0,0)");
-
-                ctx.fillStyle = gradient;
-                ctx.arc(p.x, drawY, p.size, 0, Math.PI * 2);
-                ctx.fill();
-            });
-
-            requestAnimationFrame(animate);
-        };
-
-        animate();
-
-        return () => {
-            window.removeEventListener("resize", resize);
-            window.removeEventListener("scroll", handleScroll);
-            window.removeEventListener("mousemove", handleMouseMove);
-        };
-    }, [variant, parallaxSpeed]);
+    const gradientClass = themes[variant] || themes.default;
 
     return (
-        <canvas
-            ref={canvasRef}
-            className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen"
-        />
+        <div ref={containerRef} className="fixed inset-0 z-0 overflow-hidden pointer-events-none w-full h-full bg-[#020617]">
+            {/* Base static gradient for depth */}
+            <div className={`absolute inset-0 bg-gradient-to-br ${gradientClass} opacity-50`} />
+
+            {/* Parallax Layers - "Blurred Dots" - DISTINCT SHAPES */}
+            
+            {/* Layer 1: Purple (Top Left) - Moved CLEAR of header */}
+            <motion.div 
+                style={{ y: y1 }}
+                className="absolute top-[120px] left-[5%] w-[400px] h-[400px] rounded-full bg-purple-600/40 blur-[60px]"
+                animate={{
+                    scale: [1, 1.1, 1],
+                    opacity: [0.8, 1, 0.8],
+                }}
+                transition={{
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+            />
+
+            {/* Layer 2: Blue (Center/Right) - Distinct Orb */}
+            <motion.div 
+                style={{ y: y2 }}
+                className="absolute top-[180px] right-[10%] w-[350px] h-[350px] rounded-full bg-blue-600/40 blur-[60px]" 
+                animate={{
+                    scale: [1, 1.2, 1],
+                    x: [0, 30, 0],
+                }}
+                transition={{
+                    duration: 15,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1
+                }}
+            />
+
+            {/* Layer 3: Indigo (Bottom Left) */}
+            <motion.div 
+                style={{ y: y3 }}
+                className="absolute bottom-[10%] left-[20%] w-[500px] h-[500px] rounded-full bg-indigo-600/30 blur-[80px]"
+                animate={{
+                    scale: [1, 1.15, 1],
+                    x: [0, -30, 0],
+                }}
+                transition={{
+                    duration: 12,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 2
+                }}
+            />
+
+            {/* Optional SVG overlay for subtle texture */}
+            <svg className="absolute inset-0 w-full h-full opacity-[0.03] mix-blend-overlay" xmlns="http://www.w3.org/2000/svg">
+                <filter id="noiseFilter">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.6" stitchTiles="stitch" />
+                </filter>
+                <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+            </svg>
+        </div>
     );
 }

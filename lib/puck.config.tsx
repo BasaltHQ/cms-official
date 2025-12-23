@@ -160,17 +160,19 @@ export const puckConfig: Config<Props> = {
             title: "My Landing Page",
             font: "Inter",
         },
-        render: ({ children, font = "Inter" }) => {
+            render: ({ children, font = "Inter" }) => {
             // Generate Google Fonts URL dynamically
             const fontUrl = `https://fonts.googleapis.com/css2?family=${font.replace(/\s+/g, "+")}:wght@300;400;600;700;800&display=swap`;
 
             return (
                 <div
-                    className="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-indigo-500/30"
+                    className="text-slate-100 antialiased selection:bg-indigo-500/30 relative overflow-x-hidden"
                     style={{ fontFamily: `'${font}', sans-serif` }}
                 >
                     <link rel="stylesheet" href={fontUrl} />
-                    {children}
+                    <div className="relative z-10">
+                        {children}
+                    </div>
                 </div>
             );
         }
@@ -233,7 +235,7 @@ export const puckConfig: Config<Props> = {
             },
             render: ({ logoText, logoImage, links, ctaText, ctaLink, fixed, id }) => (
                 <header id={id} className={cn(
-                    "w-full bg-slate-950/80 backdrop-blur-md border-b border-white/10 z-40 transition-all",
+                    "w-full bg-slate-950 border-b border-white/10 z-40 transition-all",
                     fixed === "true" ? "sticky top-0 left-0" : "relative"
                 )}>
                     <div className="container mx-auto px-6 h-20 flex items-center justify-between">
@@ -588,7 +590,7 @@ export const puckConfig: Config<Props> = {
                 overlayGradient: "none",
                 align: "center",
                 minHeight: "[50vh]",
-                paddingY: "16",
+                paddingY: "4",
             },
             render: ({ title, subtitle, bgImage, primaryAction, primaryActionUrl, secondaryAction, secondaryActionUrl, overlayOpacity = "60", overlayGradient = "none", align = "center", minHeight, id, ...styleProps }) => {
                 // REACT-LEVEL LOCK: Map minHeight option to explicit strict height

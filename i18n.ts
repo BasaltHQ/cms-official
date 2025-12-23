@@ -1,6 +1,6 @@
 import { getRequestConfig } from "next-intl/server";
 
-const locales = ["en", "de", "cz", "uk"];
+const locales = ["en", "de", "cs", "uk"];
 
 export default getRequestConfig(async ({ requestLocale }) => {
   // This is called during both static generation and runtime

@@ -130,7 +130,7 @@ export function InviteForm() {
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="cz">Czech</SelectItem>
+                  <SelectItem value="cs">Czech</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />

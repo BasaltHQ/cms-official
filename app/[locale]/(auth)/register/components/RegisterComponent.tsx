@@ -261,7 +261,7 @@ export function RegisterComponent({ availablePlans }: { availablePlans: any[] })
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="flex overflow-y-auto h-56">
-                        {["en", "de", "cz", "uk"].map(
+                        {["en", "de", "cs", "uk"].map(
                           (lng: string, index: number) => (
                             <SelectItem key={index} value={lng}>
                               {t("locale", { locale: lng })}
