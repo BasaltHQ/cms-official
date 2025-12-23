@@ -16,7 +16,7 @@ export default async function CMSFaqPage(props: { params: Promise<{ locale: stri
     const categories = new Set(faqs.map(f => f.category)).size;
 
     return (
-        <div className="p-8 space-y-8 animate-in fade-in duration-500">
+        <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-500">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-4xl font-bold tracking-tight text-white">FAQ Manager</h1>

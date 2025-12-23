@@ -23,7 +23,7 @@ interface LandingPageDashboardProps {
 
 export function LandingPageDashboard({ stats, recentPages, locale }: LandingPageDashboardProps) {
     return (
-        <div className="p-8 max-w-7xl mx-auto w-full space-y-8 animate-in fade-in duration-500">
+        <div className="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-8 animate-in fade-in duration-500">
             {/* Header Area */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>

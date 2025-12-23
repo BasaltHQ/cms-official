@@ -70,7 +70,7 @@ export default function AdminSettingsPage() {
             </div>
 
             <Tabs defaultValue={canManageTeam ? "team" : "profile"} className="w-full">
-                <TabsList className="bg-[#0A0A0B] border border-white/10 mb-8">
+                <TabsList className="bg-[#0A0A0B] border border-white/10 mb-8 w-full justify-start overflow-x-auto no-scrollbar">
                     <TabsTrigger value="profile">My Profile</TabsTrigger>
                     {canManageTeam && <TabsTrigger value="team">User Management</TabsTrigger>}
                     {canManageTeam && <TabsTrigger value="roles">Role Management</TabsTrigger>}

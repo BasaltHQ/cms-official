@@ -19,7 +19,7 @@ export default async function CMSActivityPage() {
     return (
         <div className="p-4 md:p-10 space-y-12 min-h-screen bg-[#000000] text-white">
             {/* Neon Header Container */}
-            <div className="relative overflow-hidden p-10 rounded-[2rem] bg-black border border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+            <div className="relative overflow-hidden p-6 md:p-10 rounded-[2rem] bg-black border border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
                 {/* Animated Neon Background Element */}
                 <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-primary/20 blur-[120px] animate-pulse" />
                 <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-blue-500/10 blur-[100px]" />
@@ -30,10 +30,10 @@ export default async function CMSActivityPage() {
                         <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/80">Live Surveillance System</span>
                     </div>
                     <div>
-                        <h1 className="text-6xl md:text-7xl font-black tracking-tighter bg-gradient-to-b from-white via-white to-white/20 bg-clip-text text-transparent italic uppercase leading-none">
+                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter bg-gradient-to-b from-white via-white to-white/20 bg-clip-text text-transparent italic uppercase leading-none">
                             System <span className="text-primary not-italic">Activity</span>
                         </h1>
-                        <p className="text-slate-500 mt-6 text-xl font-medium max-w-3xl leading-relaxed tracking-tight">
+                        <p className="text-slate-500 mt-4 md:mt-6 text-base md:text-xl font-medium max-w-3xl leading-relaxed tracking-tight">
                             Intercept and monitor every interaction within the infrastructure. Real-time logging of transitions, resource mutations, and security events.
                         </p>
                     </div>

@@ -26,7 +26,7 @@ export default async function CMSUniversityOverviewPage(props: { params: Promise
     // ... existing logic ...
 
     return (
-        <div className="p-8 space-y-8 animate-in fade-in duration-500">
+        <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-500">
             {/* ... Header ... */}
             <div className="flex items-center justify-between">
                 <div>

@@ -131,7 +131,7 @@ export default function SubscriptionClient() {
     };
 
     return (
-        <div className="flex-1 space-y-4 p-8 pt-6">
+        <div className="flex-1 space-y-4 p-4 pt-6 md:p-8 md:pt-6">
             <div className="flex items-center justify-between space-y-2">
                 <div>
                     <h2 className="text-3xl font-bold tracking-tight text-white">Subscriptions</h2>
@@ -163,7 +163,7 @@ export default function SubscriptionClient() {
             </div>
 
             <Card className="bg-[#0A0A0B] border-white/10">
-                <CardContent className="p-0">
+                <CardContent className="p-0 overflow-x-auto">
                     <Table>
                         <TableHeader>
                             <TableRow className="border-white/10 hover:bg-white/5 bg-black/40">

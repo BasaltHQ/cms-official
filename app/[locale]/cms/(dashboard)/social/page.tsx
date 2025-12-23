@@ -205,20 +205,20 @@ export default function SocialAdminPage() {
     );
 
     return (
-        <div className="p-8 max-w-7xl mx-auto space-y-6">
+        <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">Social Command Center</h1>
-                    <p className="text-slate-400 mt-1 text-lg">Manage your digital footprint, SEO, and social presence.</p>
+                    <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Social Command Center</h1>
+                    <p className="text-slate-400 mt-1 text-base md:text-lg">Manage your digital footprint, SEO, and social presence.</p>
                 </div>
-                <Button onClick={handleSave} disabled={saving} variant="gradient" className="text-white bg-teal-600 hover:bg-teal-700">
+                <Button onClick={handleSave} disabled={saving} variant="gradient" className="text-white bg-teal-600 hover:bg-teal-700 w-full md:w-auto">
                     {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                     Save Changes
                 </Button>
             </div>
 
             <Tabs defaultValue="profiles" value={tabParam} onValueChange={handleTabChange} className="space-y-6">
-                <TabsList className="bg-[#0A0A0B] border border-white/10 p-1">
+                <TabsList className="bg-[#0A0A0B] border border-white/10 p-1 w-full justify-start overflow-x-auto no-scrollbar">
                     <TabsTrigger value="profiles" className="data-[state=active]:bg-white/10">Social Profiles</TabsTrigger>
                     <TabsTrigger value="seo" className="data-[state=active]:bg-teal-900/50 data-[state=active]:text-teal-400">SEO & Sharing Cards</TabsTrigger>
                 </TabsList>

@@ -98,7 +98,7 @@ export default function FormsAdminPage() {
     if (loading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin text-teal-500" /></div>;
 
     return (
-        <div className="p-8 max-w-7xl mx-auto space-y-8">
+        <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
             <CreateFormModal
                 isOpen={showCreateModal || !!editingForm}
                 onClose={() => {

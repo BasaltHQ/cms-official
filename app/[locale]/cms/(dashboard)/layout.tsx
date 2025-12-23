@@ -9,6 +9,7 @@ import SignOutButton from "./_components/SignOutButton";
 import { prismadb } from "@/lib/prisma";
 import { CMS_MODULES, CMSModule } from "@/app/[locale]/cms/config";
 import AdminSidebar from "./_components/AdminSidebar";
+import MobileHeader from "./_components/MobileHeader";
 
 export default async function AdminDashboardLayout({
     children,
@@ -76,7 +77,14 @@ export default async function AdminDashboardLayout({
             {/* Ambient Background - Enforced Dark */}
             <div className="absolute inset-0 bg-[#0A0A0B] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] z-0" />
 
-            {/* Admin Sidebar (Client Component) - Handles Desktop & Mobile */}
+            {/* Mobile Header - Visible only on mobile */}
+            <MobileHeader
+                session={session}
+                visibleModules={visibleModules}
+                locale={locale}
+            />
+
+            {/* Admin Sidebar (Client Component) - Handles Desktop & Mobile Sidebar State */}
             <AdminSidebar
                 session={session}
                 dbUser={dbUser}
@@ -85,7 +93,7 @@ export default async function AdminDashboardLayout({
             />
 
             {/* Main Content */}
-            <main className="flex-1 overflow-x-hidden overflow-y-auto relative z-10 pb-20 md:pb-0">
+            <main className="flex-1 overflow-x-hidden overflow-y-auto relative z-10 pb-20 md:pb-0 pt-16 md:pt-0">
                 {children}
             </main>
         </div>

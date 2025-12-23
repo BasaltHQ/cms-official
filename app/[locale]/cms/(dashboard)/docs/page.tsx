@@ -20,14 +20,14 @@ export default async function CMSDocsOverviewPage(props: { params: Promise<{ loc
     });
 
     return (
-        <div className="p-8 space-y-8 animate-in fade-in duration-500">
+        <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-500">
             <div>
-                <h1 className="text-4xl font-bold tracking-tight text-white">Documentation Center</h1>
-                <p className="text-slate-400 mt-2 text-lg">Manage your entire knowledge base from one unified interface.</p>
+                <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-white">Documentation Center</h1>
+                <p className="text-slate-400 mt-2 text-base md:text-lg">Manage your entire knowledge base from one unified interface.</p>
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                 <Link href={`/${params.locale}/cms/docs?view=all`} className="block transition-transform hover:scale-[1.02]">
                     <Card className="bg-[#0A0A0B] backdrop-blur-xl border-white/10 shadow-sm hover:border-blue-500/50 cursor-pointer">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -71,8 +71,8 @@ export default async function CMSDocsOverviewPage(props: { params: Promise<{ loc
             </div>
 
             {/* Dashboard Navigation Tabs */}
-            <div className="border-b border-white/10">
-                <div className="flex items-center gap-6">
+            <div className="border-b border-white/10 overflow-x-auto no-scrollbar">
+                <div className="flex items-center gap-6 min-w-max px-1">
                     <Link
                         href={`/${params.locale}/cms/docs`}
                         className={`pb-3 text-sm font-medium border-b-2 transition-colors ${!searchParams?.view ? "border-blue-500 text-blue-400" : "border-transparent text-slate-400 hover:text-white"}`}

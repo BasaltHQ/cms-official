@@ -211,7 +211,7 @@ export default function BlogAdminPage() {
 
     if (editingPost) {
         return (
-            <div className="p-8 max-w-5xl mx-auto space-y-6 relative">
+            <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6 relative">
                 <NanoBananaImageModal
                     isOpen={showNanoBanana}
                     onClose={() => setShowNanoBanana(false)}
@@ -437,7 +437,7 @@ export default function BlogAdminPage() {
     }
 
     return (
-        <div className="p-8 max-w-6xl mx-auto space-y-8">
+        <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
             <NanoBananaImageModal
                 isOpen={showNanoBanana}
                 onClose={() => setShowNanoBanana(false)}

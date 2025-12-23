@@ -131,14 +131,15 @@ export default function DashboardGrid({ enabledModules = [], isAdmin = false, un
                                 {/* Gradient Blob Background - Desktop Only */}
                                 <div className={cn("hidden md:block absolute -right-20 -top-20 h-40 w-40 rounded-full blur-3xl opacity-20 transition-opacity group-hover:opacity-40", item.iconColor.replace("text-", "bg-"))} />
 
-                                <div className="flex flex-col md:flex-row items-center md:items-start justify-between relative z-10 w-full gap-2 md:gap-0">
-                                    <div className={cn("p-2 md:p-3 rounded-lg md:rounded-xl bg-white/5 border border-white/5 shadow-inner mb-1 md:mb-0", item.iconColor)}>
-                                        <item.icon className="h-5 w-5 md:h-6 md:w-6" />
+                                <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-between relative z-10 w-full gap-3 md:gap-0 mt-2 md:mt-0">
+                                    <div className={cn("p-4 md:p-3 rounded-2xl md:rounded-xl bg-white/5 border border-white/5 shadow-inner mb-0 md:mb-0", item.iconColor)}>
+                                        {/* Large icons for mobile, normal for desktop */}
+                                        <item.icon className="h-8 w-8 md:h-6 md:w-6" />
                                     </div>
 
                                     {/* Notification Badge for Support Inbox */}
                                     {item.slug === "support" && unreadSupportCount > 0 && (
-                                        <div className="absolute top-0 right-0 md:-top-1 md:-right-1 bg-red-500 text-white text-[9px] md:text-[10px] font-bold h-4 w-4 md:h-5 md:min-w-[20px] px-1 flex items-center justify-center rounded-full border border-[#0A0A0B] shadow-lg animate-pulse z-20">
+                                        <div className="absolute top-0 right-10 md:-top-1 md:-right-1 bg-red-500 text-white text-[10px] md:text-[10px] font-bold h-5 w-5 md:min-w-[20px] rounded-full border-2 border-[#0A0A0B] shadow-lg animate-pulse z-20 flex items-center justify-center">
                                             {unreadSupportCount > 99 ? '99+' : unreadSupportCount}
                                         </div>
                                     )}

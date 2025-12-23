@@ -218,7 +218,7 @@ export default function CareersAdminPage() {
 
     if (editingJob) {
         return (
-            <div className="p-8 max-w-5xl mx-auto space-y-6">
+            <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6">
                 <NanoBananaImageModal
                     isOpen={showNanoBanana}
                     onClose={() => setShowNanoBanana(false)}
@@ -384,7 +384,7 @@ export default function CareersAdminPage() {
     }
 
     return (
-        <div className="p-8 max-w-7xl mx-auto space-y-8">
+        <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
             <NanoBananaImageModal
                 isOpen={showNanoBanana}
                 onClose={() => setShowNanoBanana(false)}
@@ -508,7 +508,7 @@ export default function CareersAdminPage() {
                         ))}
                     </div>
                 ) : (
-                    <div className="bg-[#0A0A0B] border border-white/5 rounded-xl overflow-hidden">
+                    <div className="bg-[#0A0A0B] border border-white/5 rounded-xl overflow-x-auto">
                         <table className="w-full text-left text-sm">
                             <thead className="bg-[#0A0A0B] text-slate-400 font-medium">
                                 <tr>
