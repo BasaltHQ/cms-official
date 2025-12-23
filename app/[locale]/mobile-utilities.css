@@ -1,6 +1,50 @@
 /* Mobile-First Responsive Utilities */
 
 /* =================================
+   MOBILE PERFORMANCE OPTIMIZATIONS
+   ================================= */
+
+/* Respect user's reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* GPU acceleration hints for animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Disable heavy effects on mobile */
+@media (max-width: 768px) {
+  /* Reduce blur complexity */
+  .blur-\[60px\],
+  .blur-\[80px\] {
+    filter: none !important;
+    opacity: 0.15;
+  }
+  
+  /* Disable parallax on mobile for performance */
+  .parallax-container {
+    transform: none !important;
+  }
+  
+  /* Reduce animation complexity */
+  .motion-reduce * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =================================
    GLOBAL MOBILE FOUNDATION
    ================================= */
 

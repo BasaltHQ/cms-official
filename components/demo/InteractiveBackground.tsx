@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 interface InteractiveBackgroundProps {
@@ -11,8 +11,19 @@ export default function InteractiveBackground({
 }: InteractiveBackgroundProps) {
     const containerRef = useRef(null);
     const { scrollY } = useScroll();
+    const [isMobile, setIsMobile] = useState(false);
 
-    // Smoother scroll spring
+    // Detect mobile on mount for performance optimization
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    // Smoother scroll spring - disabled on mobile
     const smoothScrollY = useSpring(scrollY, {
         stiffness: 50,
         damping: 20,
@@ -20,10 +31,9 @@ export default function InteractiveBackground({
     });
 
     // Parallax transforms - different speeds for different layers
-    // Negative values move up as you scroll down (standard parallax)
-    const y1 = useTransform(smoothScrollY, [0, 1000], [0, -200]);   // Slowest
-    const y2 = useTransform(smoothScrollY, [0, 1000], [0, -400]);   // Medium
-    const y3 = useTransform(smoothScrollY, [0, 1000], [0, -100]);   // Slow
+    const y1 = useTransform(smoothScrollY, [0, 1000], [0, -200]);
+    const y2 = useTransform(smoothScrollY, [0, 1000], [0, -400]);
+    const y3 = useTransform(smoothScrollY, [0, 1000], [0, -100]);
 
     const themes = {
         default: "from-purple-500/10 via-blue-500/10 to-transparent",
@@ -34,15 +44,29 @@ export default function InteractiveBackground({
 
     const gradientClass = themes[variant] || themes.default;
 
+    // Mobile: Render simplified static background (no blur, no parallax, no animations)
+    if (isMobile) {
+        return (
+            <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none w-full h-full bg-[#020617]">
+                <div className={`absolute inset-0 bg-gradient-to-br ${gradientClass} opacity-50`} />
+                {/* Simplified static orbs with no blur for mobile performance */}
+                <div className="absolute top-[100px] left-[5%] w-[200px] h-[200px] rounded-full bg-purple-600/20" />
+                <div className="absolute top-[150px] right-[10%] w-[180px] h-[180px] rounded-full bg-blue-600/20" />
+                <div className="absolute bottom-[20%] left-[15%] w-[250px] h-[250px] rounded-full bg-indigo-600/15" />
+            </div>
+        );
+    }
+
+    // Desktop: Full parallax experience
     return (
         <div ref={containerRef} className="fixed inset-0 z-0 overflow-hidden pointer-events-none w-full h-full bg-[#020617]">
             {/* Base static gradient for depth */}
             <div className={`absolute inset-0 bg-gradient-to-br ${gradientClass} opacity-50`} />
 
             {/* Parallax Layers - "Blurred Dots" - DISTINCT SHAPES */}
-            
-            {/* Layer 1: Purple (Top Left) - Moved CLEAR of header */}
-            <motion.div 
+
+            {/* Layer 1: Purple (Top Left) */}
+            <motion.div
                 style={{ y: y1 }}
                 className="absolute top-[120px] left-[5%] w-[400px] h-[400px] rounded-full bg-purple-600/40 blur-[60px]"
                 animate={{
@@ -56,10 +80,10 @@ export default function InteractiveBackground({
                 }}
             />
 
-            {/* Layer 2: Blue (Center/Right) - Distinct Orb */}
-            <motion.div 
+            {/* Layer 2: Blue (Center/Right) */}
+            <motion.div
                 style={{ y: y2 }}
-                className="absolute top-[180px] right-[10%] w-[350px] h-[350px] rounded-full bg-blue-600/40 blur-[60px]" 
+                className="absolute top-[180px] right-[10%] w-[350px] h-[350px] rounded-full bg-blue-600/40 blur-[60px]"
                 animate={{
                     scale: [1, 1.2, 1],
                     x: [0, 30, 0],
@@ -73,7 +97,7 @@ export default function InteractiveBackground({
             />
 
             {/* Layer 3: Indigo (Bottom Left) */}
-            <motion.div 
+            <motion.div
                 style={{ y: y3 }}
                 className="absolute bottom-[10%] left-[20%] w-[500px] h-[500px] rounded-full bg-indigo-600/30 blur-[80px]"
                 animate={{
@@ -98,3 +122,4 @@ export default function InteractiveBackground({
         </div>
     );
 }
+

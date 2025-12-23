@@ -2,6 +2,7 @@ import "./globals.css";
 
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { unstable_cache } from "next/cache";
 
 import { ReactNode } from "react";
 import { notFound } from "next/navigation";
@@ -20,8 +21,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import SubscriptionOverlay from "@/app/[locale]/components/SubscriptionOverlay";
 
-
-const inter = Inter({ subsets: ["latin"] });
+// Optimized font loading with display swap for faster text rendering
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 type Props = {
   children: ReactNode;
@@ -59,20 +60,29 @@ function getSafeBaseUrl(): string {
   return trimmed;
 }
 
+// Cache SEO config for 1 hour to avoid database calls on every page load
+const getCachedSeoConfig = unstable_cache(
+  async () => {
+    try {
+      const { getSeoConfig } = await import("@/actions/cms/seo-actions");
+      return await getSeoConfig();
+    } catch (e) {
+      console.warn("Failed to load SEO config:", e);
+      return null;
+    }
+  },
+  ["seo-config"],
+  { revalidate: 3600 } // 1 hour cache
+);
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
   const { locale } = params;
   const messages = await getLocales(locale);
   const t = createTranslator({ locale, messages });
 
-  // Fetch Dynamic SEO Config
-  let seoConfig = null;
-  try {
-    const { getSeoConfig } = await import("@/actions/cms/seo-actions");
-    seoConfig = await getSeoConfig();
-  } catch (e) {
-    console.warn("Failed to load SEO config", e);
-  }
+  // Fetch cached SEO Config (avoids DB call on every page load)
+  const seoConfig = await getCachedSeoConfig();
 
   const siteUrl = getSafeBaseUrl();
 
@@ -134,11 +144,14 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     },
     manifest: "/site.webmanifest",
     alternates: {
-      canonical: `${siteUrl}/${locale === "en" ? "" : locale}`,
+      // Canonical should be the current page URL
+      canonical: locale === "en" ? siteUrl : `${siteUrl}/${locale}`,
       languages: {
-        "en": `${siteUrl}`,
+        // Using proper ISO 639-1 language codes
+        "x-default": siteUrl, // Default for unspecified languages
+        "en": siteUrl,
         "de": `${siteUrl}/de`,
-        "cs": `${siteUrl}/cs`,
+        "cs": `${siteUrl}/cs`, // Czech uses "cs" not "cz"
         "uk": `${siteUrl}/uk`,
       },
     },
@@ -170,6 +183,12 @@ export default async function RootLayout(props: Props) {
           name="viewport"
           content="width=device-width, height=device-height, initial-scale=1, maximum-scale=5, user-scalable=1"
         />
+        {/* Preconnect to external resources for faster loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://uxwing.com" />
+        <link rel="dns-prefetch" href="https://upload.wikimedia.org" />
       </head>
       <body className={inter.className + " min-h-screen"} suppressHydrationWarning>
         <NextTopLoader color="#2563EB" showSpinner={false} />
