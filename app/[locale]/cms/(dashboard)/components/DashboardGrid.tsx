@@ -29,10 +29,10 @@ const items = [
         type: "link"
     },
     {
-        slug: "university",
+        slug: "docs",
         title: "Docs",
-        description: "SOPs & Training",
-        href: "/cms/university",
+        description: "Documentation",
+        href: "/cms/docs",
         icon: BookOpen,
         gradient: "from-emerald-500/20 via-emerald-500/5 to-transparent border-emerald-500/20 hover:border-emerald-500/50",
         iconColor: "text-emerald-400",
@@ -126,7 +126,7 @@ export default function DashboardGrid({ enabledModules = [], isAdmin = false, un
                     const CardContent = (
                         <div className="relative h-full w-full">
                             <div className={cn(
-                                "h-36 md:h-full w-full p-2 md:p-6 rounded-xl md:rounded-2xl bg-[#0A0A0B] border border-white/5 hover:border-white/10 transition-all duration-300 relative overflow-hidden group hover:shadow-2xl hover:shadow-black/50 flex flex-col items-center md:items-start text-center md:text-left justify-start pt-5 md:pt-6 md:justify-start",
+                                "h-28 md:h-full w-full p-2 md:p-6 rounded-xl md:rounded-2xl bg-[#0A0A0B] border border-white/5 hover:border-white/10 transition-all duration-300 relative overflow-hidden group hover:shadow-2xl hover:shadow-black/50 flex flex-col items-center md:items-start text-center md:text-left justify-start pt-3 md:pt-6 md:justify-start",
                             )}>
                                 {/* Gradient Blob Background - Desktop Only */}
                                 <div className={cn("hidden md:block absolute -right-20 -top-20 h-40 w-40 rounded-full blur-3xl opacity-20 transition-opacity group-hover:opacity-40", item.iconColor.replace("text-", "bg-"))} />

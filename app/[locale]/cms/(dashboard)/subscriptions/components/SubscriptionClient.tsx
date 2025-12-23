@@ -132,33 +132,34 @@ export default function SubscriptionClient() {
 
     return (
         <div className="flex-1 space-y-4 p-4 pt-6 md:p-8 md:pt-6">
-            <div className="flex items-center justify-between space-y-2">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-0">
                 <div>
                     <h2 className="text-3xl font-bold tracking-tight text-white">Subscriptions</h2>
                     <p className="text-muted-foreground">Manage subscribers and notification preferences.</p>
                 </div>
-                <div className="flex items-center space-x-2">
-                    <Button className="bg-black border border-white/10 hover:bg-white/5 text-slate-300 hover:text-white" onClick={() => setIsConfigOpen(true)}>
+                <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                    <Button className="bg-black border border-white/10 hover:bg-white/5 text-slate-300 hover:text-white flex-1 md:flex-none" onClick={() => setIsConfigOpen(true)}>
                         <Settings className="mr-2 h-4 w-4" />
-                        Global Settings
+                        <span className="hidden sm:inline">Settings</span>
+                        <span className="inline sm:hidden">Config</span>
                     </Button>
-                    <Button className="bg-black border border-white/10 hover:bg-white/5 text-slate-300 hover:text-white" onClick={handleExport}>
+                    <Button className="bg-black border border-white/10 hover:bg-white/5 text-slate-300 hover:text-white flex-1 md:flex-none" onClick={handleExport}>
                         <Download className="mr-2 h-4 w-4" />
-                        Export CSV
+                        Export
                     </Button>
-                    <Button onClick={() => setIsAddOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                    <Button onClick={() => setIsAddOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white flex-1 md:flex-none whitespace-nowrap">
                         <Plus className="mr-2 h-4 w-4" />
-                        Add Subscriber
+                        Add New
                     </Button>
                 </div>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 w-full md:w-auto">
                 <Input
                     placeholder="Search subscribers..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="max-w-sm bg-[#0A0A0B] border-white/10 text-white placeholder:text-slate-500"
+                    className="w-full md:w-[300px] bg-[#0A0A0B] border-white/10 text-white placeholder:text-slate-500"
                 />
             </div>
 
