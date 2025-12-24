@@ -70,10 +70,10 @@ export default function AdminSettingsPage() {
             </div>
 
             <Tabs defaultValue={canManageTeam ? "team" : "profile"} className="w-full">
-                <TabsList className="bg-[#0A0A0B] md:bg-transparent md:border-none flex flex-nowrap border border-white/10 mb-8 w-full md:w-auto justify-start overflow-x-auto no-scrollbar md:gap-2">
-                    <TabsTrigger value="profile" className="flex-shrink-0 data-[state=active]:bg-white/10 data-[state=active]:text-white">My Profile</TabsTrigger>
-                    {canManageTeam && <TabsTrigger value="team" className="flex-shrink-0 data-[state=active]:bg-white/10 data-[state=active]:text-white">User Management</TabsTrigger>}
-                    {canManageTeam && <TabsTrigger value="roles" className="flex-shrink-0 data-[state=active]:bg-white/10 data-[state=active]:text-white">Role Management</TabsTrigger>}
+                <TabsList className="inline-flex h-auto bg-[#0A0A0B] border border-white/10 rounded-lg p-1 flex-wrap gap-1 mb-8">
+                    <TabsTrigger value="profile" className="px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm">My Profile</TabsTrigger>
+                    {canManageTeam && <TabsTrigger value="team" className="px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm">User Management</TabsTrigger>}
+                    {canManageTeam && <TabsTrigger value="roles" className="px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm">Role Management</TabsTrigger>}
                 </TabsList>
 
                 <TabsContent value="profile" className="focus-visible:ring-0 focus-visible:outline-none">
@@ -337,11 +337,9 @@ function ProfilePhotoUpload() {
 
     return (
         <div className="flex items-center gap-4 p-4 bg-[#0A0A0B] rounded-lg border border-white/5">
-            <div className="h-16 w-16 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center shrink-0">
+            <div className="relative h-16 w-16 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center shrink-0">
                 {avatar ? (
-                    <div className="relative h-full w-full">
-                        <NextImage src={avatar} alt="Avatar" fill className="object-cover" unoptimized />
-                    </div>
+                    <NextImage src={avatar} alt="Avatar" fill className="object-cover" unoptimized />
                 ) : (
                     <User className="h-8 w-8 text-slate-500" />
                 )}

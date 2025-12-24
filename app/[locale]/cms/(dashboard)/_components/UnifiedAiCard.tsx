@@ -88,9 +88,11 @@ const UnifiedAiCard = async () => {
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue="OPENAI">
-                    <TabsList className="grid grid-cols-4 lg:grid-cols-8 mb-4 h-auto flex-wrap gap-2">
+                    <TabsList className="inline-flex h-auto bg-[#0A0A0B] border border-white/10 rounded-lg p-1 flex-wrap gap-1 mb-4">
                         {providers.map(p => (
-                            <TabsTrigger key={p} value={p} className="text-xs">{p}</TabsTrigger>
+                            <TabsTrigger key={p} value={p} className="px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm">
+                                {p}
+                            </TabsTrigger>
                         ))}
                     </TabsList>
                     {providers.map(provider => {

@@ -188,58 +188,60 @@ export function TeamManagement() {
                             : "Manage registered users and viewers."}
                     </p>
                 </div>
-                <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+                <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full md:w-auto">
                     {/* View Toggle for Admins */}
                     {session?.user?.isAdmin && (
-                        <div className="flex bg-slate-900 border border-white/10 rounded-lg p-1 mr-2 shrink-0">
+                        <div className="inline-flex h-auto bg-[#0A0A0B] border border-white/10 rounded-lg p-1 shrink-0">
                             <button
                                 onClick={() => setTeamViewMode("team")}
-                                className={cn("px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-2", teamViewMode === "team" ? "bg-slate-800 text-white shadow-sm" : "text-slate-400 hover:text-white")}
+                                className={cn("px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2", teamViewMode === "team" ? "bg-white/10 text-white shadow-sm" : "text-slate-400 hover:text-white")}
                             >
                                 <UserCog className="h-3.5 w-3.5" />
-                                Team
+                                <span className="hidden xs:inline">Team</span>
                             </button>
                             <button
                                 onClick={() => setTeamViewMode("users")}
-                                className={cn("px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-2", teamViewMode === "users" ? "bg-slate-800 text-white shadow-sm" : "text-slate-400 hover:text-white")}
+                                className={cn("px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2", teamViewMode === "users" ? "bg-white/10 text-white shadow-sm" : "text-slate-400 hover:text-white")}
                             >
                                 <Users className="h-3.5 w-3.5" />
-                                Users
+                                <span className="hidden xs:inline">Users</span>
                             </button>
                         </div>
                     )}
 
-                    <div className="flex bg-slate-900 border border-white/10 rounded-lg p-1">
+                    <div className="inline-flex h-auto bg-[#0A0A0B] border border-white/10 rounded-lg p-1 shrink-0">
                         <button
                             onClick={() => setViewMode("grid")}
-                            className={cn("p-2 rounded-md transition-all", viewMode === "grid" ? "bg-slate-800 text-white shadow-sm" : "text-slate-400 hover:text-white")}
+                            className={cn("px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2", viewMode === "grid" ? "bg-white/10 text-white shadow-sm" : "text-slate-400 hover:text-white")}
                             title="Grid View"
                         >
-                            <LayoutGrid className="h-4 w-4" />
+                            <LayoutGrid className="h-3.5 w-3.5" />
                         </button>
                         <button
                             onClick={() => setViewMode("list")}
-                            className={cn("p-2 rounded-md transition-all", viewMode === "list" ? "bg-slate-800 text-white shadow-sm" : "text-slate-400 hover:text-white")}
+                            className={cn("px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2", viewMode === "list" ? "bg-white/10 text-white shadow-sm" : "text-slate-400 hover:text-white")}
                             title="List View"
                         >
-                            <List className="h-4 w-4" />
+                            <List className="h-3.5 w-3.5" />
                         </button>
                     </div>
-                    <Button onClick={handleCreate} variant="gradient" className="text-white gap-2">
-                        <Plus className="h-4 w-4" /> Add Member
+                    <Button onClick={handleCreate} variant="gradient" className="text-white gap-2 shrink-0 whitespace-nowrap">
+                        <Plus className="h-4 w-4" />
+                        <span className="hidden sm:inline">Add Member</span>
+                        <span className="sm:hidden">Add</span>
                     </Button>
                 </div>
             </div>
 
             {/* Filters */}
-            <div className="flex items-center gap-4 bg-[#0A0A0B] p-2 rounded-xl border border-white/10 w-fit">
-                <div className="relative">
+            <div className="flex items-center gap-4 bg-[#0A0A0B] p-2 rounded-xl border border-white/10 w-full md:w-fit">
+                <div className="relative w-full md:w-auto">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                     <Input
                         placeholder="Search users..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-9 w-[300px] bg-transparent border-none focus-visible:ring-0 text-white placeholder:text-slate-500"
+                        className="pl-9 w-full md:w-[300px] bg-transparent border-none focus-visible:ring-0 text-white placeholder:text-slate-500"
                     />
                 </div>
             </div>
@@ -256,11 +258,11 @@ export function TeamManagement() {
                     <table className="w-full text-left text-sm">
                         <thead className="bg-white/5 text-slate-400 font-medium">
                             <tr>
-                                <th className="p-4">User</th>
-                                <th className="p-4">Role</th>
-                                <th className="p-4">Status</th>
-                                <th className="p-4">Joined</th>
-                                <th className="p-4 text-right">Actions</th>
+                                <th className="p-3 md:p-4">User</th>
+                                <th className="p-3 md:p-4">Role</th>
+                                <th className="p-3 md:p-4 hidden sm:table-cell">Status</th>
+                                <th className="p-3 md:p-4 hidden md:table-cell">Joined</th>
+                                <th className="p-3 md:p-4 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
@@ -306,7 +308,7 @@ export function TeamManagement() {
                                             </Badge>
                                         )}
                                     </td>
-                                    <td className="p-4">
+                                    <td className="p-3 md:p-4 hidden sm:table-cell">
                                         <Badge
                                             variant="outline"
                                             className={
@@ -318,7 +320,7 @@ export function TeamManagement() {
                                             {user.userStatus}
                                         </Badge>
                                     </td>
-                                    <td className="p-4 text-slate-500">
+                                    <td className="p-3 md:p-4 text-slate-500 hidden md:table-cell">
                                         {format(new Date(user.created_on), 'MMM d, yyyy')}
                                     </td>
                                     <td className="p-4 text-right">

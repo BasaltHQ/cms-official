@@ -424,27 +424,30 @@ export default function IntegrationsPage() {
             </div>
 
             <Tabs value={activeTab} className="w-full" onValueChange={setActiveTab}>
-                <TabsList className="grid w-full max-w-2xl grid-cols-1 h-auto md:grid-cols-3 bg-slate-900/50 p-1 rounded-xl border border-white/5">
+                <TabsList className="inline-flex h-auto bg-[#0A0A0B] border border-white/10 rounded-lg p-1 flex-wrap gap-1 mb-8">
                     <TabsTrigger
                         value="ai"
-                        className="data-[state=active]:bg-cyan-500/10 data-[state=active]:text-cyan-400 data-[state=active]:border-cyan-500/20 border border-transparent rounded-lg transition-all"
+                        className="px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm"
                     >
-                        <Brain className="w-4 h-4 mr-2" />
-                        AI Models (BYOK)
+                        <Brain className="w-3.5 h-3.5 hidden sm:block" />
+                        <span className="sm:hidden">AI Models</span>
+                        <span className="hidden sm:inline">AI Models (BYOK)</span>
                     </TabsTrigger>
                     <TabsTrigger
                         value="social"
-                        className="data-[state=active]:bg-purple-500/10 data-[state=active]:text-purple-400 data-[state=active]:border-purple-500/20 border border-transparent rounded-lg transition-all"
+                        className="px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm"
                     >
-                        <Share2 className="w-4 h-4 mr-2" />
-                        Social Integrations
+                        <Share2 className="w-3.5 h-3.5 hidden sm:block" />
+                        <span className="sm:hidden">Social</span>
+                        <span className="hidden sm:inline">Social Integrations</span>
                     </TabsTrigger>
                     <TabsTrigger
                         value="system"
-                        className="data-[state=active]:bg-yellow-500/10 data-[state=active]:text-yellow-400 data-[state=active]:border-yellow-500/20 border border-transparent rounded-lg transition-all"
+                        className="px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm"
                     >
-                        <Lock className="w-3 h-3 mr-2" />
-                        Unified System Config
+                        <Lock className="w-3.5 h-3.5 hidden sm:block" />
+                        <span className="sm:hidden">System</span>
+                        <span className="hidden sm:inline">Unified System Config</span>
                     </TabsTrigger>
                 </TabsList>
 

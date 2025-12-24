@@ -289,7 +289,7 @@ export function RoleManagement() {
                                             <DialogTitle>Configure Modules for {role.name}</DialogTitle>
                                             <DialogDescription>Toggle which sections of the CMS this role can access.</DialogDescription>
                                         </DialogHeader>
-                                        <div className="grid grid-cols-2 gap-4 py-4 max-h-[60vh] overflow-y-auto">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4 max-h-[60vh] overflow-y-auto">
                                             {CMS_MODULES.map(module => {
                                                 const isActive = (role.cmsModules || []).includes(module.slug);
                                                 return (

@@ -124,11 +124,11 @@ export default function NewsletterModal({ isOpen, onClose }: NewsletterModalProp
                     </div>
                 ) : (
                     <Tabs defaultValue="subscribe" className="w-full">
-                        <TabsList className="grid w-full grid-cols-2 bg-black border border-white/10">
-                            <TabsTrigger value="subscribe" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                        <TabsList className="inline-flex h-auto bg-[#0A0A0B] border border-white/10 rounded-lg p-1 flex-wrap gap-1 mb-4">
+                            <TabsTrigger value="subscribe" className="px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm">
                                 Subscribe User
                             </TabsTrigger>
-                            <TabsTrigger value="config" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                            <TabsTrigger value="config" className="px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm">
                                 Configuration
                             </TabsTrigger>
                         </TabsList>

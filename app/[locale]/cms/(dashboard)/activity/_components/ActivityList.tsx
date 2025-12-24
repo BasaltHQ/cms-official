@@ -233,11 +233,11 @@ export default function ActivityList({ initialActivities }: ActivityListProps) {
                                         <div className="flex gap-5 relative z-10 items-center">
                                             <div className="relative h-14 w-14 shrink-0">
                                                 <div className={cn("absolute inset-0 rounded-full blur-md opacity-20 group-hover:opacity-40 transition-opacity", theme.color.replace("text-", "bg-"))} />
-                                                <div className="h-full w-full rounded-full bg-black border border-white/10 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform duration-500 relative z-10">
+                                                <div className="relative h-full w-full rounded-full bg-black border border-white/10 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform duration-500 z-10">
                                                     {log.user?.avatar ? (
                                                         <NextImage src={log.user.avatar} alt="User" fill className="object-cover" unoptimized />
                                                     ) : (
-                                                        <div className={cn("h-full w-full flex items-center justify-center bg-gradient-to-br from-white/5 to-transparent")}>
+                                                        <div className={cn("absolute inset-0 flex items-center justify-center bg-gradient-to-br from-white/5 to-transparent")}>
                                                             <User className="h-7 w-7 text-slate-500 group-hover:text-primary transition-colors" />
                                                         </div>
                                                     )}

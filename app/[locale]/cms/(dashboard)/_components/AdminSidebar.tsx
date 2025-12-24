@@ -117,13 +117,11 @@ export default function AdminSidebar({ session, dbUser, visibleModules, locale }
                 <div className={`p-4 border-t border-white/5 bg-gradient-to-t from-black/40 to-transparent ${!open && "flex flex-col items-center"}`}>
                     {visibleModules.some(m => m.slug === "voice") && <UniversalVoiceAgent />}
                     <div className={`flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 backdrop-blur-md hover:bg-white/10 transition-colors group mb-3 shadow-lg ${!open && "p-0 justify-center w-10 h-10 rounded-full"}`}>
-                        <div className="h-10 w-10 min-w-[2.5rem] rounded-full bg-black/40 border-2 border-[#13151A] overflow-hidden group-hover:border-blue-500/50 transition-colors shadow-inner">
+                        <div className="relative h-10 w-10 min-w-[2.5rem] rounded-full bg-black/40 border-2 border-[#13151A] overflow-hidden group-hover:border-blue-500/50 transition-colors shadow-inner">
                             {session.user.image ? (
-                                <div className="relative h-full w-full">
-                                    <Image src={session.user.image} alt="User" fill className="object-cover" unoptimized />
-                                </div>
+                                <Image src={session.user.image} alt="User" fill className="object-cover" unoptimized />
                             ) : (
-                                <div className="h-full w-full flex items-center justify-center bg-black/40">
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full">
                                     <span className="text-sm font-bold text-slate-400">
                                         {session.user.name?.[0]?.toUpperCase() || "U"}
                                     </span>

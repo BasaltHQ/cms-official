@@ -218,9 +218,9 @@ export default function SocialAdminPage() {
             </div>
 
             <Tabs defaultValue="profiles" value={tabParam} onValueChange={handleTabChange} className="space-y-6">
-                <TabsList className="bg-[#0A0A0B] flex flex-nowrap border border-white/10 p-1 w-full justify-start overflow-x-auto no-scrollbar">
-                    <TabsTrigger value="profiles" className="data-[state=active]:bg-white/10 flex-shrink-0">Social Profiles</TabsTrigger>
-                    <TabsTrigger value="seo" className="data-[state=active]:bg-teal-900/50 data-[state=active]:text-teal-400 flex-shrink-0">SEO &amp; Sharing Cards</TabsTrigger>
+                <TabsList className="inline-flex h-auto bg-[#0A0A0B] border border-white/10 rounded-lg p-1 flex-wrap gap-1 mb-6">
+                    <TabsTrigger value="profiles" className="px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm">Social Profiles</TabsTrigger>
+                    <TabsTrigger value="seo" className="px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm">SEO & Sharing Cards</TabsTrigger>
                 </TabsList>
 
                 {/* --- TAB: PROFILES --- */}

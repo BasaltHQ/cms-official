@@ -190,26 +190,26 @@ export default function AppsPage() {
             </div>
 
             <Tabs value={activeTab} className="w-full" onValueChange={setActiveTab}>
-                <TabsList className="grid w-full max-w-2xl grid-cols-3 bg-slate-900/50 p-1 rounded-xl border border-white/5">
+                <TabsList className="inline-flex h-auto bg-[#0A0A0B] border border-white/10 rounded-lg p-1 flex-wrap gap-1 mb-8">
                     <TabsTrigger
                         value="ecommerce"
-                        className="data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:border-emerald-500/20 border border-transparent rounded-lg transition-all"
+                        className="px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm"
                     >
-                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        <ShoppingCart className="w-3.5 h-3.5 hidden sm:block" />
                         E-Commerce
                     </TabsTrigger>
                     <TabsTrigger
                         value="publishing"
-                        className="data-[state=active]:bg-blue-500/10 data-[state=active]:text-blue-400 data-[state=active]:border-blue-500/20 border border-transparent rounded-lg transition-all"
+                        className="px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm"
                     >
-                        <Globe className="w-4 h-4 mr-2" />
+                        <Globe className="w-3.5 h-3.5 hidden sm:block" />
                         Publishing
                     </TabsTrigger>
                     <TabsTrigger
                         value="utility"
-                        className="data-[state=active]:bg-purple-500/10 data-[state=active]:text-purple-400 data-[state=active]:border-purple-500/20 border border-transparent rounded-lg transition-all"
+                        className="px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm"
                     >
-                        <Wrench className="w-4 h-4 mr-2" />
+                        <Wrench className="w-3.5 h-3.5 hidden sm:block" />
                         Utility
                     </TabsTrigger>
                 </TabsList>
