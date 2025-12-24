@@ -21,9 +21,27 @@ export async function GET(req: NextRequest) {
         // Transform array to object map for easier frontend consumption
         const configMap: Record<string, any> = {};
         configs.forEach(conf => {
+            let maskedKey = "";
+
+            // Gracefully handle API keys that might not be encrypted or in legacy format
+            if (conf.apiKey) {
+                try {
+                    // Check if the key is in the expected encrypted format (iv:encryptedData)
+                    if (conf.apiKey.includes(':')) {
+                        maskedKey = maskApiKey(decryptApiKey(conf.apiKey));
+                    } else {
+                        // Legacy/unencrypted key - just mask it directly
+                        maskedKey = maskApiKey(conf.apiKey);
+                    }
+                } catch (decryptError) {
+                    console.warn(`Could not decrypt API key for ${conf.provider}, showing placeholder`);
+                    maskedKey = "••••••••••••"; // Fallback mask
+                }
+            }
+
             configMap[conf.provider] = {
                 ...conf,
-                apiKey: maskApiKey(decryptApiKey(conf.apiKey)) // Mask for security
+                apiKey: maskedKey
             };
         });
 

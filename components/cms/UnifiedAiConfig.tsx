@@ -316,13 +316,13 @@ export function UnifiedAiConfig({ isAdmin }: { isAdmin: boolean }) {
                     </div>
                 </div>
 
-                <div className="px-6 py-3 bg-yellow-500/10 border-b border-yellow-500/10 text-yellow-200 text-xs flex items-center gap-2">
+                <div className="hidden md:flex px-6 py-3 bg-yellow-500/10 border-b border-yellow-500/10 text-yellow-200 text-xs items-center gap-2">
                     <ShieldCheck className="h-4 w-4" />
                     Note: These settings define the <span className="font-bold text-yellow-100">System Key</span> and <span className="font-bold text-yellow-100">System Defaults</span>. Teams can override these in their own settings.
                 </div>
 
                 {/* Tabs */}
-                <div className="flex border-b border-white/10 overflow-x-auto scrollbar-hide bg-black/40">
+                <div className="hidden md:flex border-b border-white/10 overflow-x-auto scrollbar-hide bg-black/40">
                     {PROVIDERS.map((provider) => (
                         <button
                             key={provider.id}
