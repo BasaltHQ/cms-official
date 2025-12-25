@@ -35,6 +35,20 @@ export function AppConnectModal({ isOpen, onClose, app, onSuccess }: AppConnectM
     const [apiKey, setApiKey] = useState("");
     const [apiSecret, setApiSecret] = useState("");
 
+    // WordPress
+    const [wpUsername, setWpUsername] = useState("");
+    const [wpAppPassword, setWpAppPassword] = useState("");
+
+    // Medium
+    const [mediumToken, setMediumToken] = useState("");
+
+    // Zapier
+    const [zapierWebhook, setZapierWebhook] = useState("");
+
+    // BigCommerce
+    const [bcStoreHash, setBcStoreHash] = useState("");
+    const [bcAccessToken, setBcAccessToken] = useState("");
+
     const handleConnect = async () => {
         setLoading(true);
         try {
@@ -56,7 +70,7 @@ export function AppConnectModal({ isOpen, onClose, app, onSuccess }: AppConnectM
                 router.push(`/api/cms/apps/shopify/auth?shop=${cleanUrl}`);
                 return; // Router takes over
             }
-            else if (app.id === "woocommerce" || app.id === "wordpress") {
+            else if (app.id === "woocommerce") {
                 // Direct API Key Connection
                 const res = await fetch("/api/cms/apps/connect", {
                     method: "POST",
@@ -64,7 +78,7 @@ export function AppConnectModal({ isOpen, onClose, app, onSuccess }: AppConnectM
                     body: JSON.stringify({
                         providerId: app.id,
                         displayName: app.name,
-                        category: app.id === "woocommerce" ? "ECOMMERCE" : "PUBLISHING",
+                        category: "ECOMMERCE",
                         credentials: {
                             url: shopUrl,
                             key: apiKey,
@@ -74,9 +88,100 @@ export function AppConnectModal({ isOpen, onClose, app, onSuccess }: AppConnectM
                 });
 
                 const data = await res.json();
-
                 if (res.ok) {
                     toast.success(`Successfully connected to ${app.name}`);
+                    onSuccess();
+                    onClose();
+                } else {
+                    toast.error(data.error || "Connection failed");
+                }
+            }
+            else if (app.id === "wordpress") {
+                const res = await fetch("/api/cms/apps/connect", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        providerId: app.id,
+                        displayName: app.name,
+                        category: "PUBLISHING",
+                        credentials: {
+                            url: shopUrl,
+                            username: wpUsername,
+                            application_password: wpAppPassword
+                        }
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    toast.success(`Successfully connected to ${app.name}`);
+                    onSuccess();
+                    onClose();
+                } else {
+                    toast.error(data.error || "Connection failed");
+                }
+            }
+            else if (app.id === "medium") {
+                const res = await fetch("/api/cms/apps/connect", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        providerId: app.id,
+                        displayName: app.name,
+                        category: "PUBLISHING",
+                        credentials: {
+                            token: mediumToken
+                        }
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    toast.success(`Connected to Medium`);
+                    onSuccess();
+                    onClose();
+                } else {
+                    toast.error(data.error || "Connection failed");
+                }
+            }
+            else if (app.id === "zapier") {
+                const res = await fetch("/api/cms/apps/connect", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        providerId: app.id,
+                        displayName: app.name,
+                        category: "UTILITY",
+                        credentials: {
+                            webhookUrl: zapierWebhook
+                        }
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    toast.success(`Connected to Zapier`);
+                    onSuccess();
+                    onClose();
+                } else {
+                    toast.error(data.error || "Connection failed");
+                }
+            }
+            else if (app.id === "bigcommerce") {
+                const res = await fetch("/api/cms/apps/connect", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        providerId: app.id,
+                        displayName: app.name,
+                        category: "ECOMMERCE",
+                        credentials: {
+                            storeHash: bcStoreHash,
+                            accessToken: bcAccessToken
+                        }
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    toast.success(`Connected to BigCommerce`);
                     onSuccess();
                     onClose();
                 } else {
@@ -153,6 +258,109 @@ export function AppConnectModal({ isOpen, onClose, app, onSuccess }: AppConnectM
                             <Lock className="h-3 w-3" /> API Permissions
                         </p>
                         Ensure you create keys with "Read/Write" permissions in WooCommerce {'>'} Settings {'>'} Advanced {'>'} REST API.
+                    </div>
+                </div>
+            );
+        }
+
+        if (app.id === "wordpress") {
+            return (
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <Label className="text-white">WordPress Site URL</Label>
+                        <Input
+                            value={shopUrl}
+                            onChange={(e) => setShopUrl(e.target.value)}
+                            placeholder="https://your-wordpress-site.com"
+                            className="bg-black border-white/10 text-white placeholder:text-slate-500 focus:border-blue-500/50"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-white">Admin Username</Label>
+                        <Input
+                            value={wpUsername}
+                            onChange={(e) => setWpUsername(e.target.value)}
+                            placeholder="admin"
+                            className="bg-black border-white/10 text-white placeholder:text-slate-500 focus:border-blue-500/50"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-white">Application Password</Label>
+                        <Input
+                            value={wpAppPassword}
+                            onChange={(e) => setWpAppPassword(e.target.value)}
+                            type="password"
+                            placeholder="xxxx xxxx xxxx xxxx"
+                            className="bg-black border-white/10 text-white placeholder:text-slate-500 focus:border-blue-500/50"
+                        />
+                        <p className="text-[10px] text-slate-500">
+                            Generate in WordPress Admin: Users {'>'} Profile {'>'} Application Passwords.
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        if (app.id === "medium") {
+            return (
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <Label className="text-white">Integration Token</Label>
+                        <Input
+                            value={mediumToken}
+                            onChange={(e) => setMediumToken(e.target.value)}
+                            type="password"
+                            placeholder="Token..."
+                            className="bg-black border-white/10 text-white placeholder:text-slate-500 focus:border-blue-500/50"
+                        />
+                        <p className="text-[10px] text-slate-500">
+                            Go to Settings {'>'} Security and apps {'>'} Integration tokens.
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        if (app.id === "zapier") {
+            return (
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <Label className="text-white">Zapier Webhook URL (Catch Hook)</Label>
+                        <Input
+                            value={zapierWebhook}
+                            onChange={(e) => setZapierWebhook(e.target.value)}
+                            placeholder="https://hooks.zapier.com/..."
+                            className="bg-black border-white/10 text-white placeholder:text-slate-500 focus:border-blue-500/50"
+                        />
+                        <p className="text-[10px] text-slate-500">
+                            Create a Zap with "Webhooks by Zapier" as the trigger event.
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        if (app.id === "bigcommerce") {
+            return (
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <Label className="text-white">Store Hash</Label>
+                        <Input
+                            value={bcStoreHash}
+                            onChange={(e) => setBcStoreHash(e.target.value)}
+                            placeholder="abc12345..."
+                            className="bg-black border-white/10 text-white placeholder:text-slate-500 focus:border-blue-500/50"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-white">Access Token</Label>
+                        <Input
+                            value={bcAccessToken}
+                            onChange={(e) => setBcAccessToken(e.target.value)}
+                            type="password"
+                            placeholder="Token..."
+                            className="bg-black border-white/10 text-white placeholder:text-slate-500 focus:border-blue-500/50"
+                        />
                     </div>
                 </div>
             );

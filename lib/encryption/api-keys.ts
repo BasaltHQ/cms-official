@@ -51,6 +51,7 @@ export function decryptApiKey(encryptedApiKey: string): string {
         // Split IV and encrypted data
         const parts = encryptedApiKey.split(':');
         if (parts.length !== 2) {
+            // Do not log this error as it is likely a legacy unencrypted key
             throw new Error('Invalid encrypted API key format');
         }
 
@@ -74,7 +75,7 @@ export function decryptApiKey(encryptedApiKey: string): string {
 
         return decrypted.toString('utf8');
     } catch (error) {
-        console.error('Decryption error:', error);
+        // console.error('Decryption error:', error); // Silenced for legacy keys
         throw new Error('Failed to decrypt API key');
     }
 }

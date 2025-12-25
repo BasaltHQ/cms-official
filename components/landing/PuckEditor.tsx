@@ -4,6 +4,14 @@ import { useState, useEffect } from "react";
 import { Puck, Data, Render, usePuck } from "@measured/puck";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import "@measured/puck/puck.css";
+import { ArrowLeft, Save, Sparkles, Monitor, Code, Loader2, LayoutTemplate, Tablet, Smartphone, PanelLeft, PanelRight, ArrowUpFromLine, RefreshCw } from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { DeployModal } from "./DeployModal";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select";
+import { TemplateModal } from "./TemplateModal";
+import { Template } from "@/lib/puck.templates";
+import { syncToWordPress } from "@/actions/cms/sync-to-wordpress";
 import "@/components/landing/puck-theme.css"; // Custom Dark Theme
 import { useEditor } from "@/components/landing/EditorContext";
 import { puckConfig } from "@/lib/puck.config";
@@ -11,13 +19,6 @@ import { Button } from "@/components/ui/button";
 import { saveLandingPage } from "@/actions/cms/save-landing-page";
 import { askEditorAi } from "@/actions/cms/ask-editor-ai";
 import { toast } from "sonner";
-import { ArrowLeft, Save, Sparkles, Monitor, Code, Loader2, LayoutTemplate, Tablet, Smartphone, PanelLeft, PanelRight } from "lucide-react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { DeployModal } from "./DeployModal";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select";
-import { TemplateModal } from "./TemplateModal";
-import { Template } from "@/lib/puck.templates";
 
 const VIEWPORTS = [
     { width: 360, height: "auto" as const, label: "Mobile", icon: <Smartphone size={16} /> },
@@ -31,7 +32,9 @@ export default function EditorPage({
     pageSlug,
     lastPublishedAt,
     aiModels = [],
-    allPages = []
+    allPages = [],
+    wordpressPostId,
+    wordpressPostType
 }: {
     params: { id: string };
     initialData: Data | null;
@@ -39,6 +42,8 @@ export default function EditorPage({
     lastPublishedAt?: Date | null;
     aiModels?: { name: string; modelId: string; provider: string }[];
     allPages?: { id: string; title: string; slug: string }[];
+    wordpressPostId?: number | null;
+    wordpressPostType?: string | null;
 }) {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -210,6 +215,38 @@ export default function EditorPage({
         setIsSaving(false);
     };
 
+    const [isSyncing, setIsSyncing] = useState(false);
+    const [showLinkModal, setShowLinkModal] = useState(false);
+    const [manualWpUrl, setManualWpUrl] = useState("");
+
+    const handleSyncToWP = async () => {
+        if (!wordpressPostId && !showLinkModal) {
+            // If not linked, open the link modal first
+            setShowLinkModal(true);
+            return;
+        }
+
+        setIsSyncing(true);
+        // Save first ensure latest state
+        await handlePublish(data);
+
+        // Then sync
+        const result = await syncToWordPress(params.id, data, manualWpUrl); // Pass manual URL if available from modal context (need to refactor sync action to accept it or simple link first)
+
+        // Wait, best approach: 
+        // 1. If linked -> Sync
+        // 2. If not linked -> Open Modal -> User enters URL -> We call "LinkAndSync" action
+
+        if (result.success) {
+            toast.success("Synced to WordPress successfully!");
+            router.refresh(); // Refresh to get new WP ID if it was a create/link op
+        } else {
+            toast.error("Failed to sync: " + result.error);
+        }
+        setIsSyncing(false);
+        setShowLinkModal(false);
+    };
+
     const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
 
     const handleSelectTemplate = (template: Template) => {
@@ -374,6 +411,21 @@ export default function EditorPage({
                                 <Save className="mr-1.5 h-3.5 w-3.5" /> Save
                             </>
                         )}
+                    </Button>
+
+                    {/* Push to WordPress Button */}
+                    <Button
+                        onClick={handleSyncToWP}
+                        disabled={isSyncing || isSaving}
+                        size="sm"
+                        className="mr-2 rounded-full bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 border border-blue-500/20 h-7 px-4 text-xs transition-all"
+                    >
+                        {isSyncing ? (
+                            <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                            <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
+                        )}
+                        {wordpressPostId ? "Push to WP" : "Push to WP"}
                     </Button>
                 </div>
             </div>

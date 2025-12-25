@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import NextImage from "next/image";
 import { toast } from "sonner";
 import { Loader2, Plus, Trash, Edit, Save, X, Sparkles, Image as ImageIcon, Share2 } from "lucide-react";
@@ -27,7 +28,9 @@ interface BlogPost {
     publishedAt: string;
 }
 
-export default function BlogAdminPage() {
+import { Suspense } from "react";
+
+function BlogAdminContent() {
     const [posts, setPosts] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
     const [editingPost, setEditingPost] = useState<Partial<BlogPost> | null>(null);
@@ -62,9 +65,46 @@ export default function BlogAdminPage() {
         }
     }, [showMediaPicker]);
 
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
+
     useEffect(() => {
         fetchPosts();
     }, []);
+
+    // Deep Linking: Sync URL with Editing State
+    useEffect(() => {
+        if (!loading && posts.length > 0) {
+            const editId = searchParams.get("edit");
+            if (editId) {
+                const targetPost = posts.find(p => p.id === editId);
+                // Only set if not already editing or different
+                if (targetPost && editingPost?.id !== targetPost.id) {
+                    setEditingPost(targetPost);
+                }
+            } else if (!editId && editingPost?.id) {
+                // If param removed but state implies editing? 
+                // No, usually state drives URL or vice versa. 
+                // Let's make URL drive State initially, and State drive URL subsequently?
+                // Actually easier: When setEditingPost is called, we update URL.
+            }
+        }
+    }, [loading, posts, searchParams]);
+
+    // Update URL when editing state changes
+    useEffect(() => {
+        const params = new URLSearchParams(searchParams);
+        if (editingPost?.id) {
+            params.set("edit", editingPost.id);
+            router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+        } else {
+            if (params.has("edit")) {
+                params.delete("edit");
+                router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+            }
+        }
+    }, [editingPost, pathname]); // Intentionally not including searchParams/router to avoid cycles if possible, though router should be stable.
 
     const fetchPosts = async () => {
         try {
@@ -526,5 +566,13 @@ export default function BlogAdminPage() {
                 ))}
             </div>
         </div>
+    );
+}
+
+export default function BlogAdminPage() {
+    return (
+        <Suspense fallback={<div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>}>
+            <BlogAdminContent />
+        </Suspense>
     );
 }

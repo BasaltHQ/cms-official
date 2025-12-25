@@ -51,10 +51,11 @@ export default function MediaLibraryPage() {
     // Initialize scope based on URL tab, default to "mine"
     const getInitialScope = () => {
         if (initialTab === "landing_pages") return "landing_pages";
+        if (initialTab === "wordpress") return "wordpress";
         return "mine";
     };
 
-    const [scope, setScope] = useState<"mine" | "public" | "landing_pages">(getInitialScope() as any);
+    const [scope, setScope] = useState<"mine" | "public" | "landing_pages" | "wordpress">(getInitialScope() as any);
     const [landingPages, setLandingPages] = useState<any[]>([]);
     const [showNanoBanana, setShowNanoBanana] = useState(false);
     const [nanoBananaPrompt, setNanoBananaPrompt] = useState("");
@@ -380,6 +381,9 @@ export default function MediaLibraryPage() {
                             </button>
                             <button onClick={() => setScope("public")} className={cn("px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-2", scope === "public" ? "bg-white/10 text-white shadow-sm" : "text-slate-400 hover:text-white")}>
                                 <Globe className="h-3.5 w-3.5" /> Public
+                            </button>
+                            <button onClick={() => setScope("wordpress")} className={cn("px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-2", scope === "wordpress" ? "bg-white/10 text-white shadow-sm" : "text-slate-400 hover:text-white")}>
+                                <ImageIcon className="h-3.5 w-3.5" /> WordPress
                             </button>
                             {/* Landing Pages - Admin Only */}
                             {isAdmin && (

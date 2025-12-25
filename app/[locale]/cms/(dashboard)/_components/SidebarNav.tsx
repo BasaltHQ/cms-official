@@ -40,25 +40,25 @@ interface SidebarNavProps {
 }
 
 // Color mapping for hover effects (Text + Glow)
-export const COLOR_VARIANTS: Record<string, { hover: string, active: string, raw: string }> = {
-    sky: { raw: "rgba(56,189,248,0.8)", hover: "hover:text-sky-400 hover:drop-shadow-[0_0_10px_rgba(56,189,248,0.8)]", active: "text-sky-400 drop-shadow-[0_0_12px_rgba(56,189,248,0.9)]" },
-    amber: { raw: "rgba(251,191,36,0.8)", hover: "hover:text-amber-400 hover:drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]", active: "text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.9)]" },
-    purple: { raw: "rgba(192,132,252,0.8)", hover: "hover:text-purple-400 hover:drop-shadow-[0_0_10px_rgba(192,132,252,0.8)]", active: "text-purple-400 drop-shadow-[0_0_12px_rgba(192,132,252,0.9)]" },
-    pink: { raw: "rgba(244,114,182,0.8)", hover: "hover:text-pink-400 hover:drop-shadow-[0_0_10px_rgba(244,114,182,0.8)]", active: "text-pink-400 drop-shadow-[0_0_12px_rgba(244,114,182,0.9)]" },
-    orange: { raw: "rgba(251,146,60,0.8)", hover: "hover:text-orange-400 hover:drop-shadow-[0_0_10px_rgba(251,146,60,0.8)]", active: "text-orange-400 drop-shadow-[0_0_12px_rgba(251,146,60,0.9)]" },
-    blue: { raw: "rgba(96,165,250,0.8)", hover: "hover:text-blue-400 hover:drop-shadow-[0_0_10px_rgba(96,165,250,0.8)]", active: "text-blue-400 drop-shadow-[0_0_12px_rgba(96,165,250,0.9)]" },
-    rose: { raw: "rgba(251,113,133,0.8)", hover: "hover:text-rose-400 hover:drop-shadow-[0_0_10px_rgba(251,113,133,0.8)]", active: "text-rose-400 drop-shadow-[0_0_12px_rgba(251,113,133,0.9)]" },
-    teal: { raw: "rgba(45,212,191,0.8)", hover: "hover:text-teal-400 hover:drop-shadow-[0_0_10px_rgba(45,212,191,0.8)]", active: "text-teal-400 drop-shadow-[0_0_12px_rgba(45,212,191,0.9)]" },
-    indigo: { raw: "rgba(129,140,248,0.8)", hover: "hover:text-indigo-400 hover:drop-shadow-[0_0_10px_rgba(129,140,248,0.8)]", active: "text-indigo-400 drop-shadow-[0_0_12px_rgba(129,140,248,0.9)]" },
-    cyan: { raw: "rgba(34,211,238,0.8)", hover: "hover:text-cyan-400 hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]", active: "text-cyan-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.9)]" },
-    lime: { raw: "rgba(163,230,53,0.8)", hover: "hover:text-lime-400 hover:drop-shadow-[0_0_10px_rgba(163,230,53,0.8)]", active: "text-lime-400 drop-shadow-[0_0_12px_rgba(163,230,53,0.9)]" },
-    yellow: { raw: "rgba(250,204,21,0.8)", hover: "hover:text-yellow-400 hover:drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]", active: "text-yellow-400 drop-shadow-[0_0_12px_rgba(250,204,21,0.9)]" },
-    fuchsia: { raw: "rgba(232,121,249,0.8)", hover: "hover:text-fuchsia-400 hover:drop-shadow-[0_0_10px_rgba(232,121,249,0.8)]", active: "text-fuchsia-400 drop-shadow-[0_0_12px_rgba(232,121,249,0.9)]" },
-    violet: { raw: "rgba(167,139,250,0.8)", hover: "hover:text-violet-400 hover:drop-shadow-[0_0_10px_rgba(167,139,250,0.8)]", active: "text-violet-400 drop-shadow-[0_0_12px_rgba(167,139,250,0.9)]" },
-    emerald: { raw: "rgba(52,211,153,0.8)", hover: "hover:text-emerald-400 hover:drop-shadow-[0_0_10px_rgba(52,211,153,0.8)]", active: "text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.9)]" },
-    red: { raw: "rgba(248,113,113,0.8)", hover: "hover:text-red-400 hover:drop-shadow-[0_0_10px_rgba(248,113,113,0.8)]", active: "text-red-400 drop-shadow-[0_0_12px_rgba(248,113,113,0.9)]" },
-    slate: { raw: "rgba(203,213,225,0.6)", hover: "hover:text-slate-300 hover:drop-shadow-[0_0_10px_rgba(203,213,225,0.6)]", active: "text-slate-300 drop-shadow-[0_0_12px_rgba(203,213,225,0.7)]" },
-    gray: { raw: "rgba(209,213,219,0.6)", hover: "hover:text-gray-300 hover:drop-shadow-[0_0_10px_rgba(209,213,219,0.6)]", active: "text-gray-300 drop-shadow-[0_0_12px_rgba(209,213,219,0.7)]" },
+export const COLOR_VARIANTS: Record<string, { hover: string, active: string, raw: string, bg: string, border: string }> = {
+    sky: { raw: "rgba(56,189,248,0.8)", hover: "hover:text-sky-400 hover:drop-shadow-[0_0_10px_rgba(56,189,248,0.8)]", active: "text-sky-400 drop-shadow-[0_0_12px_rgba(56,189,248,0.9)]", bg: "bg-sky-500/10", border: "border-sky-500/20" },
+    amber: { raw: "rgba(251,191,36,0.8)", hover: "hover:text-amber-400 hover:drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]", active: "text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.9)]", bg: "bg-amber-500/10", border: "border-amber-500/20" },
+    purple: { raw: "rgba(192,132,252,0.8)", hover: "hover:text-purple-400 hover:drop-shadow-[0_0_10px_rgba(192,132,252,0.8)]", active: "text-purple-400 drop-shadow-[0_0_12px_rgba(192,132,252,0.9)]", bg: "bg-purple-500/10", border: "border-purple-500/20" },
+    pink: { raw: "rgba(244,114,182,0.8)", hover: "hover:text-pink-400 hover:drop-shadow-[0_0_10px_rgba(244,114,182,0.8)]", active: "text-pink-400 drop-shadow-[0_0_12px_rgba(244,114,182,0.9)]", bg: "bg-pink-500/10", border: "border-pink-500/20" },
+    orange: { raw: "rgba(251,146,60,0.8)", hover: "hover:text-orange-400 hover:drop-shadow-[0_0_10px_rgba(251,146,60,0.8)]", active: "text-orange-400 drop-shadow-[0_0_12px_rgba(251,146,60,0.9)]", bg: "bg-orange-500/10", border: "border-orange-500/20" },
+    blue: { raw: "rgba(96,165,250,0.8)", hover: "hover:text-blue-400 hover:drop-shadow-[0_0_10px_rgba(96,165,250,0.8)]", active: "text-blue-400 drop-shadow-[0_0_12px_rgba(96,165,250,0.9)]", bg: "bg-blue-500/10", border: "border-blue-500/20" },
+    rose: { raw: "rgba(251,113,133,0.8)", hover: "hover:text-rose-400 hover:drop-shadow-[0_0_10px_rgba(251,113,133,0.8)]", active: "text-rose-400 drop-shadow-[0_0_12px_rgba(251,113,133,0.9)]", bg: "bg-rose-500/10", border: "border-rose-500/20" },
+    teal: { raw: "rgba(45,212,191,0.8)", hover: "hover:text-teal-400 hover:drop-shadow-[0_0_10px_rgba(45,212,191,0.8)]", active: "text-teal-400 drop-shadow-[0_0_12px_rgba(45,212,191,0.9)]", bg: "bg-teal-500/10", border: "border-teal-500/20" },
+    indigo: { raw: "rgba(129,140,248,0.8)", hover: "hover:text-indigo-400 hover:drop-shadow-[0_0_10px_rgba(129,140,248,0.8)]", active: "text-indigo-400 drop-shadow-[0_0_12px_rgba(129,140,248,0.9)]", bg: "bg-indigo-500/10", border: "border-indigo-500/20" },
+    cyan: { raw: "rgba(34,211,238,0.8)", hover: "hover:text-cyan-400 hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]", active: "text-cyan-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.9)]", bg: "bg-cyan-500/10", border: "border-cyan-500/20" },
+    lime: { raw: "rgba(163,230,53,0.8)", hover: "hover:text-lime-400 hover:drop-shadow-[0_0_10px_rgba(163,230,53,0.8)]", active: "text-lime-400 drop-shadow-[0_0_12px_rgba(163,230,53,0.9)]", bg: "bg-lime-500/10", border: "border-lime-500/20" },
+    yellow: { raw: "rgba(250,204,21,0.8)", hover: "hover:text-yellow-400 hover:drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]", active: "text-yellow-400 drop-shadow-[0_0_12px_rgba(250,204,21,0.9)]", bg: "bg-yellow-500/10", border: "border-yellow-500/20" },
+    fuchsia: { raw: "rgba(232,121,249,0.8)", hover: "hover:text-fuchsia-400 hover:drop-shadow-[0_0_10px_rgba(232,121,249,0.8)]", active: "text-fuchsia-400 drop-shadow-[0_0_12px_rgba(232,121,249,0.9)]", bg: "bg-fuchsia-500/10", border: "border-fuchsia-500/20" },
+    violet: { raw: "rgba(167,139,250,0.8)", hover: "hover:text-violet-400 hover:drop-shadow-[0_0_10px_rgba(167,139,250,0.8)]", active: "text-violet-400 drop-shadow-[0_0_12px_rgba(167,139,250,0.9)]", bg: "bg-violet-500/10", border: "border-violet-500/20" },
+    emerald: { raw: "rgba(52,211,153,0.8)", hover: "hover:text-emerald-400 hover:drop-shadow-[0_0_10px_rgba(52,211,153,0.8)]", active: "text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.9)]", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
+    red: { raw: "rgba(248,113,113,0.8)", hover: "hover:text-red-400 hover:drop-shadow-[0_0_10px_rgba(248,113,113,0.8)]", active: "text-red-400 drop-shadow-[0_0_12px_rgba(248,113,113,0.9)]", bg: "bg-red-500/10", border: "border-red-500/20" },
+    slate: { raw: "rgba(203,213,225,0.6)", hover: "hover:text-slate-300 hover:drop-shadow-[0_0_10px_rgba(203,213,225,0.6)]", active: "text-slate-300 drop-shadow-[0_0_12px_rgba(203,213,225,0.7)]", bg: "bg-slate-500/10", border: "border-slate-500/20" },
+    gray: { raw: "rgba(209,213,219,0.6)", hover: "hover:text-gray-300 hover:drop-shadow-[0_0_10px_rgba(209,213,219,0.6)]", active: "text-gray-300 drop-shadow-[0_0_12px_rgba(209,213,219,0.7)]", bg: "bg-gray-500/10", border: "border-gray-500/20" },
 };
 
 export default function SidebarNav({ modules, className, onLinkClick, compact = false }: SidebarNavProps) {
@@ -110,13 +110,14 @@ export default function SidebarNav({ modules, className, onLinkClick, compact = 
                                 const IconComponent = ICON_MAP[mod.icon] || LayoutDashboard;
                                 const isParentActive = pathname === mod.href || (mod.href !== "#" && mod.href.length > 3 && pathname.startsWith(mod.href));
 
-                                const variant = mod.color && COLOR_VARIANTS[mod.color] ? COLOR_VARIANTS[mod.color] : { raw: "", hover: "hover:text-white", active: "text-white" };
+                                const variant = mod.color && COLOR_VARIANTS[mod.color] ? COLOR_VARIANTS[mod.color] : { raw: "", hover: "hover:text-white", active: "text-white", bg: "bg-white/5", border: "border-white/10" };
 
                                 // Parent should always have a subtle version of the color if any option is active
                                 const isAnyOptionActive = !!mod.options?.some(opt => isLinkActive(opt.href));
                                 const shouldHighlightParent = isParentActive || isAnyOptionActive;
 
                                 const parentStyle = shouldHighlightParent ? variant.active : variant.hover.replace(/hover:/g, "group-hover/item:");
+                                const parentBg = shouldHighlightParent ? cn(variant.bg, variant.border) : "hover:bg-white/5 hover:border-white/5";
 
                                 if (mod.slug === "newsletter") {
                                     return (
@@ -127,9 +128,10 @@ export default function SidebarNav({ modules, className, onLinkClick, compact = 
                                                 if (onLinkClick) onLinkClick();
                                             }}
                                             className={cn(
-                                                "w-full flex items-center gap-3 px-3 py-1.5 text-sm font-semibold rounded-xl hover:bg-white/5 backdrop-blur-md transition-all duration-300 border border-transparent hover:border-white/5 group/item",
+                                                "w-full flex items-center gap-3 px-3 py-1.5 text-sm font-semibold rounded-xl backdrop-blur-md transition-all duration-300 border border-transparent group/item",
                                                 compact ? "justify-center px-0" : "",
-                                                shouldHighlightParent ? "bg-white/5 text-white" : "text-slate-400"
+                                                parentBg,
+                                                shouldHighlightParent ? "text-white shadow-[0_0_15px_rgba(255,255,255,0.02)]" : "text-slate-400"
                                             )}
                                             title={compact ? mod.label : undefined}
                                         >
@@ -152,8 +154,9 @@ export default function SidebarNav({ modules, className, onLinkClick, compact = 
                                                 href={mod.href}
                                                 onClick={onLinkClick}
                                                 className={cn(
-                                                    "flex items-center gap-3 px-3 py-1.5 text-sm font-semibold rounded-xl hover:bg-white/5 backdrop-blur-md transition-all duration-300 border border-transparent hover:border-white/5 w-full",
+                                                    "flex items-center gap-3 px-3 py-1.5 text-sm font-semibold rounded-xl backdrop-blur-md transition-all duration-300 border border-transparent w-full",
                                                     compact ? "justify-center px-0" : "",
+                                                    parentBg,
                                                     group_item_active_state(shouldHighlightParent)
                                                 )}
                                                 title={compact ? mod.label : undefined}
@@ -191,7 +194,7 @@ export default function SidebarNav({ modules, className, onLinkClick, compact = 
                                                                 className={cn(
                                                                     "flex items-center gap-3 px-2 py-2 text-sm rounded-lg transition-all duration-200 group/sub",
                                                                     isSubActive
-                                                                        ? cn("bg-white/10 shadow-inner", variant.active)
+                                                                        ? cn("shadow-inner", variant.active, variant.bg, "border border-transparent", variant.border)
                                                                         : cn("text-slate-400 hover:bg-white/5", variant.hover)
                                                                 )}
                                                             >
@@ -221,5 +224,5 @@ export default function SidebarNav({ modules, className, onLinkClick, compact = 
 }
 
 function group_item_active_state(active: boolean) {
-    return active ? "bg-white/5 text-white shadow-[0_0_15px_rgba(255,255,255,0.03)]" : "text-slate-400 group/item";
+    return active ? "text-white shadow-[0_0_15px_rgba(255,255,255,0.02)]" : "text-slate-400 group/item";
 }

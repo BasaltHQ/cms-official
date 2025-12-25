@@ -45,7 +45,12 @@ const nextConfig = {
         protocol: "https",
         hostname: "avatars.githubusercontent.com",
       },
+      {
+        protocol: "https",
+        hostname: "*.plesk.page",
+      },
     ],
+    formats: ['image/avif', 'image/webp'],
     qualities: [75, 85],
   },
   env: {

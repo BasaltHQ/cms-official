@@ -133,6 +133,10 @@ export type Props = {
         animationType: "none" | "animate-pulse" | "animate-spin" | "animate-bounce" | "animate-float" | "animate-wiggle" | "animate-ping";
         speed: string;
     } & CommonStyleProps;
+    RichTextBlock: {
+        content: string;
+        className?: string;
+    } & CommonStyleProps;
 };
 
 export const puckConfig: Config<Props> = {
@@ -160,7 +164,7 @@ export const puckConfig: Config<Props> = {
             title: "My Landing Page",
             font: "Inter",
         },
-            render: ({ children, font = "Inter" }) => {
+        render: ({ children, font = "Inter" }) => {
             // Generate Google Fonts URL dynamically
             const fontUrl = `https://fonts.googleapis.com/css2?family=${font.replace(/\s+/g, "+")}:wght@300;400;600;700;800&display=swap`;
 
@@ -188,7 +192,7 @@ export const puckConfig: Config<Props> = {
         },
         basic: {
             title: "Basic",
-            components: ["HeadingBlock", "TextBlock", "ButtonBlock", "ImageBlock", "VideoBlock", "IconBlock", "CardBlock", "CodeBlock"]
+            components: ["HeadingBlock", "TextBlock", "RichTextBlock", "ButtonBlock", "ImageBlock", "VideoBlock", "IconBlock", "CardBlock", "CodeBlock"]
         },
     },
     components: {
@@ -391,6 +395,35 @@ export const puckConfig: Config<Props> = {
                 >
                     {content}
                 </p>
+            ),
+        },
+
+
+
+        // ===== RICH TEXT BLOCK =====
+        RichTextBlock: {
+            label: "Rich Text (HTML)",
+            fields: {
+                content: { type: "textarea" }, // Simple textarea for HTML
+                ...spacingFields,
+                ...backgroundFields,
+                ...borderFields,
+                ...typographyFields,
+            },
+            defaultProps: {
+                content: "<p>Enter <b>rich text</b> or HTML here...</p>",
+                marginBottom: "4",
+            },
+            render: ({ content, id, ...styleProps }) => (
+                <div
+                    id={id}
+                    className={cn(
+                        "prose prose-invert max-w-none", // Tailwind Typography
+                        getCommonStyleClasses(styleProps)
+                    )}
+                    style={getCommonInlineStyles(styleProps)}
+                    dangerouslySetInnerHTML={{ __html: content }}
+                />
             ),
         },
 

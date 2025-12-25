@@ -9,6 +9,7 @@ import { CreateFormModal } from "@/components/cms/CreateFormModal";
 import { cn } from "@/lib/utils";
 import Link from "next/link"; // Correct import for Link
 import { Badge } from "@/components/ui/badge";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 interface Form {
     id: string;
@@ -30,9 +31,42 @@ interface Form {
 export default function FormsAdminPage() {
     const [forms, setForms] = useState<Form[]>([]);
     const [loading, setLoading] = useState(true);
-    const [showCreateModal, setShowCreateModal] = useState(false);
     const [editingForm, setEditingForm] = useState<Form | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
+
+    // URL State
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
+    const shouldShowCreate = searchParams.get("action") === "create";
+
+    // Internal state to track if modal is open (sync with URL usually, but for closing we need to push URL)
+    const [showCreateModalInternal, setShowCreateModalInternal] = useState(false);
+
+    // Sync URL param to internal state
+    useEffect(() => {
+        if (shouldShowCreate) {
+            setShowCreateModalInternal(true);
+        }
+    }, [shouldShowCreate]);
+
+    const handleCloseCreateModal = () => {
+        setShowCreateModalInternal(false);
+        setEditingForm(null);
+        // Remove query param
+        const params = new URLSearchParams(searchParams.toString());
+        params.delete("action");
+        router.push(pathname + "?" + params.toString());
+        fetchForms();
+    };
+
+    const handleOpenCreateModal = () => {
+        setShowCreateModalInternal(true);
+        // Add query param
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("action", "create");
+        router.push(pathname + "?" + params.toString());
+    };
 
     // New State
     const [activeTab, setActiveTab] = useState<"public" | "private" | "drafts">("public");
@@ -100,12 +134,8 @@ export default function FormsAdminPage() {
     return (
         <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
             <CreateFormModal
-                isOpen={showCreateModal || !!editingForm}
-                onClose={() => {
-                    setShowCreateModal(false);
-                    setEditingForm(null);
-                    fetchForms();
-                }}
+                isOpen={showCreateModalInternal || !!editingForm}
+                onClose={handleCloseCreateModal}
                 initialData={editingForm || undefined}
             />
 
@@ -137,7 +167,7 @@ export default function FormsAdminPage() {
                         </div>
                     </div>
                     <Button
-                        onClick={() => setShowCreateModal(true)}
+                        onClick={handleOpenCreateModal}
                         className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-lg shadow-teal-900/20"
                     >
                         <Plus className="h-4 w-4" /> New Form
@@ -298,7 +328,7 @@ export default function FormsAdminPage() {
                         <h3 className="text-white font-medium">No forms found</h3>
                         <p className="text-slate-500 text-sm mt-1">Try changing tabs or creating a new form.</p>
                         <Button
-                            onClick={() => setShowCreateModal(true)}
+                            onClick={handleOpenCreateModal}
                             variant="link"
                             className="text-teal-400 mt-2"
                         >

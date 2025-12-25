@@ -34,7 +34,7 @@
         "slug": "content-management",
         "category": "Core Concepts",
         "type": "docs",
-        "content": "# Content Management\n\n## The Visual Editor\nLedger1CMS introduces a unique \"Block-Based\" visual editor for creating rich content pages. Unlike a simple WYSIWYG editor, the Block Editor allows you to compose pages using pre-defined React components.\n\n### Available Blocks\n- **Hero Section**: Full-width header with title, subtitle, and CTA.\n- **Feature Grid**: A responsive grid layout for displaying key information.\n- **Rich Text**: Standard markdown-supported text block.\n- **Media**: Embed images or videos with options for aspect ratio and lazy loading.\n\n## Blog Engine\nThe blog system is designed for high SEO performance. It supports:\n- **Tags & Categories**: Organize posts efficiently.\n- **Author Profiles**: Link posts to user profiles.\n- **Related Articles**: Automatically suggest relevant content.",
+        "content": "# Content Management\n\n## The Visual Editor\nLedger1CMS introduces a unique \"Block-Based\" visual editor for creating rich content pages. Unlike a simple WYSIWYG editor, the Block Editor allows you to compose pages using pre-defined React components.\n\n### Available Blocks\n- **Hero Section**: Full-width header with title, subtitle, and CTA.\n- **Feature Grid**: A responsive grid layout for displaying key information.\n- **Rich Text**: Standard markdown-supported text block.\n- **Media**: Embed images or videos with options for aspect ratio and lazy loading.\n- **Testimonials**: Customer quotes with avatar and attribution.\n- **Call to Action**: Conversion-focused sections with buttons.\n- **Pricing Tables**: Compare plans and features.\n\n## Landing Pages\nThe **Landing Pages** module allows you to create full marketing pages using the Puck visual editor.\n\n### Puck Editor\n- **Drag & Drop**: Visually arrange components on your page.\n- **Live Preview**: See changes in real-time across devices.\n- **Templates**: Start from pre-built templates or blank canvas.\n- **WordPress Sync**: Push pages directly to your WordPress site.\n\n## Blog Engine\nThe blog system is designed for high SEO performance. It supports:\n- **Tags & Categories**: Organize posts efficiently.\n- **Author Profiles**: Link posts to user profiles.\n- **AI-Assisted Writing**: Generate and revise content with AI.\n- **Cover Images**: AI image generation via Nano Banana.\n- **Analytics Integration**: Track clicks, shares, and engagement.\n- **Related Articles**: Automatically suggest relevant content.",
         "videoUrl": null,
         "resources": {},
         "order": 4
@@ -94,7 +94,7 @@
         "slug": "apps-architecture",
         "category": "Integrations",
         "type": "docs",
-        "content": "# Apps & Plugins Architecture\n\n## Overview\nThe Apps system is designed to facilitate **Omnichannel Content Distribution**. It allows the CMS to act as a \"Headless\" source of truth that pushes content to various downstream platforms (Shopify, WooCommerce, WordPress, etc.).\n\n## Data Schema\n\n### `AppConnection`\nStores the credentials and configuration for a connected third-party app.\n```prisma\nmodel AppConnection {\n  providerId  String      // e.g. \"shopify\", \"woocommerce\"\n  category    AppCategory // ECOMMERCE | PUBLISHING\n  credentials Json        // Encrypted payload\n  config      Json?       // App-specific settings\n  isActive    Boolean\n}\n```\n\n## Security Model\n\n### Encryption at Rest\nWe use **AES-256-CBC** to encrypt sensitive fields within the `credentials` JSON object before saving to MongoDB. This includes:\n- Shopify Access Tokens\n- WooCommerce Consumer Secrets\n- WordPress Application Passwords\n\nThe encryption key `API_KEY_ENCRYPTION_KEY` is injected via environment variables and never exposed to the client.\n\n### Audit Logging\nEvery interaction with the Apps system is logged to `SystemActivity` and `AppSyncLog`.\n- **Connection Events**: Logged when a user connects/disconnects an app.\n- **Sync Events**: Logged whenever content is pushed to an external provider.\n\n## Adding New Integrations\nTo add a new integration:\n1.  **Frontend**: Add a new card to `apps/page.tsx` and configure the `AppConnectModal`.\n2.  **Backend**: Implement the auth flow (OAuth or API Key) in `api/cms/apps/connect`.\n3.  **Client**: Create a new client class in `lib/apps/[provider]/client.ts` to handle content transformations.",
+        "content": "# Apps & Plugins Architecture\n\n## Overview\nThe Apps system is designed to facilitate **Omnichannel Content Distribution**. It allows the CMS to act as a \"Headless\" source of truth that pushes content to various downstream platforms (Shopify, WooCommerce, WordPress, etc.).\n\n## Category Tabs\nApps are organized into four categories:\n- **E-Commerce**: Shopify, WooCommerce, Stripe integrations.\n- **Base Broadcast**: Social media distribution to Farcaster, Lens Protocol, and other decentralized networks.\n- **Publishing**: WordPress, Medium, and content syndication platforms.\n- **Utility**: Zapier, webhooks, and automation tools.\n\n## Data Schema\n\n### `AppConnection`\nStores the credentials and configuration for a connected third-party app.\n```prisma\nmodel AppConnection {\n  providerId  String      // e.g. \"shopify\", \"woocommerce\"\n  category    AppCategory // ECOMMERCE | PUBLISHING | UTILITY\n  credentials Json        // Encrypted payload\n  config      Json?       // App-specific settings\n  isActive    Boolean\n}\n```\n\n## Security Model\n\n### Encryption at Rest\nWe use **AES-256-CBC** to encrypt sensitive fields within the `credentials` JSON object before saving to MongoDB. This includes:\n- Shopify Access Tokens\n- WooCommerce Consumer Secrets\n- WordPress Application Passwords\n- Social media API keys\n\nThe encryption key `API_KEY_ENCRYPTION_KEY` is injected via environment variables and never exposed to the client.\n\n### Audit Logging\nEvery interaction with the Apps system is logged to `SystemActivity` and `AppSyncLog`.\n- **Connection Events**: Logged when a user connects/disconnects an app.\n- **Sync Events**: Logged whenever content is pushed to an external provider.\n\n## Adding New Integrations\nTo add a new integration:\n1.  **Frontend**: Add a new card to `apps/page.tsx` and configure the `AppConnectModal`.\n2.  **Backend**: Implement the auth flow (OAuth or API Key) in `api/cms/apps/connect`.\n3.  **Client**: Create a new client class in `lib/apps/[provider]/client.ts` to handle content transformations.",
         "videoUrl": null,
         "resources": {},
         "order": 10
@@ -128,5 +128,95 @@
         "videoUrl": null,
         "resources": {},
         "order": 13
+    },
+    {
+        "title": "Footer & SEO Management",
+        "slug": "footer-seo-management",
+        "category": "Features",
+        "type": "docs",
+        "content": "# Footer & SEO Management\n\n## Overview\nThe Footer & SEO module provides a centralized interface for managing your site's footer content, social media profiles, and global SEO settings. Access it via **Footer & SEO** in the sidebar.\n\n## Tab Navigation\nThe module is organized into three tabs:\n\n### 1. Footer Content\nConfigure the visual footer that appears on your public pages.\n- **Tagline**: Your brand's tagline or mission statement.\n- **Copyright Text**: Legal copyright notice (e.g., \"© 2024 Ledger1\").\n- **Footer Logo**: Upload a custom logo for the footer.\n- **Sections**: Create unlimited footer columns with custom links.\n\n### 2. Social Profiles\nManage all your social media and contact links in one place:\n- **Social Networks**: X/Twitter, Discord, LinkedIn, Instagram, Facebook, YouTube, TikTok, GitHub, Telegram, Reddit, Threads, Mastodon.\n- **Contact Info**: Support email, sales email, phone number.\n- **App Store Links**: iOS App Store and Google Play Store URLs.\n\n### 3. SEO Settings\nControl global SEO metadata for your entire site:\n- **Global Title**: Default page title for all pages.\n- **Global Description**: Meta description for SEO.\n- **Open Graph**: OG image, title, and description for social sharing.\n- **Twitter Card**: Twitter-specific sharing settings.\n- **Favicon**: Upload your site's favicon.\n\n## AI-Assisted SEO\nClick the **Sparkles** icon to generate AI-optimized SEO metadata based on your site content.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 14
+    },
+    {
+        "title": "WordPress Integration",
+        "slug": "wordpress-integration",
+        "category": "Integrations",
+        "type": "docs",
+        "content": "# WordPress Integration\n\n## Overview\nThe WordPress Command Center provides a powerful two-way sync between Ledger1CMS and your WordPress site. Import existing content from WordPress or push new content created in the CMS.\n\n## Setup\n1. Navigate to **Apps & Plugins** > Connect **WordPress**.\n2. Enter your WordPress site URL.\n3. Provide your WordPress **Application Password** (Settings > Security > Application Passwords).\n4. Click **Connect** to establish the link.\n\n## Command Center Features\n\n### Dashboard Tab\nView your WordPress site status at a glance:\n- Connection status indicator\n- Total posts, pages, and media count\n- Last sync timestamp\n\n### Posts Tab\nManage WordPress posts:\n- View all posts from your WordPress site\n- Import individual posts or bulk import\n- See import status indicators\n\n### Pages Tab\nManage WordPress pages:\n- Import existing pages into Landing Pages\n- Sync CMS Landing Pages to WordPress\n- Convert WordPress content to Puck visual blocks\n\n### Media Tab\nSync media assets:\n- Import WordPress media library items\n- Push CMS media to WordPress\n- Track sync status per item\n\n## Import by URL\nQuickly import any WordPress page by pasting its URL. The system will:\n1. Fetch the page content\n2. Convert HTML to Puck visual blocks\n3. Create a new Landing Page in the CMS",
+        "videoUrl": null,
+        "resources": {},
+        "order": 15
+    },
+    {
+        "title": "Blog Analytics",
+        "slug": "blog-analytics",
+        "category": "Features",
+        "type": "docs",
+        "content": "# Blog Analytics\n\n## Overview\nThe Analytics module provides insights into how your blog content is performing. Track user engagement through clicks, shares, and trends over time.\n\n## Accessing Analytics\n- **Analytics Dashboard**: Navigate to **Analytics** in the sidebar for the full dashboard.\n- **Quick View**: Click the chart icon on any blog post for a quick analytics modal.\n\n## Key Metrics\n\n### Summary Cards\n- **Total Clicks**: Number of times blog posts have been clicked.\n- **Total Shares**: Number of times content has been shared.\n- **Posts with Events**: Count of posts that have engagement data.\n\n### Time Series Chart\nVisualize clicks and shares over time with an interactive area chart. Data is aggregated daily to show trends.\n\n### Top Posts\nSee your best-performing content ranked by total engagement (clicks + shares). Each entry shows:\n- Post title\n- Individual clicks and shares\n- Total engagement score\n\n## Restore Defaults\nIf analytics data appears incorrect, use the **Restore Defaults** button to reset the dashboard view. This clears any custom filters or date ranges without affecting underlying data.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 16
+    },
+    {
+        "title": "Careers & Jobs Module",
+        "slug": "careers-jobs",
+        "category": "Features",
+        "type": "docs",
+        "content": "# Careers & Jobs Module\n\n## Overview\nThe Careers module allows you to manage job listings and track applications directly within the CMS. Create compelling job postings with AI assistance and manage the hiring pipeline.\n\n## Creating Job Postings\n\n### Manual Creation\n1. Navigate to **Careers** in the sidebar.\n2. Click **Create New +**.\n3. Fill in the job details:\n   - **Title**: Job position name.\n   - **Department**: Engineering, Marketing, Sales, etc.\n   - **Location**: Office location or \"Remote\".\n   - **Type**: Full-time, Part-time, Contract.\n   - **Summary**: Brief job description (shown in listings).\n   - **Content**: Full job description (Markdown supported).\n   - **Requirements**: Skills and qualifications.\n   - **Apply Link**: External application URL.\n\n### AI-Assisted Creation\n1. Click the **Sparkles** icon.\n2. Describe the role you're hiring for.\n3. AI generates a complete job posting draft.\n4. Review and edit as needed.\n\n## Cover Images\n- Use the **Nano Banana** AI to generate custom cover images.\n- Or select from your **Media Library**.\n\n## Applications Tab\nView and manage incoming job applications:\n- Filter by job posting\n- View applicant details\n- Track application status\n\n## Publishing\nToggle jobs between **Active** and **Inactive** status to control visibility on your careers page.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 17
+    },
+    {
+        "title": "Landing Pages Builder",
+        "slug": "landing-pages",
+        "category": "Features",
+        "type": "docs",
+        "content": "# Landing Pages Builder\n\n## Overview\nThe Landing Pages module enables you to create stunning marketing pages using the **Puck** visual editor—no coding required. Build conversion-optimized pages with drag-and-drop simplicity.\n\n## Getting Started\n\n### Create a New Page\n1. Navigate to **Landing Pages** in the sidebar.\n2. Click **Create Page**.\n3. Choose a template or start with a blank canvas.\n4. Enter your page title and slug.\n\n### Using the Visual Editor\nThe Puck editor provides a live preview while you build:\n\n- **Component Panel** (left): Drag components onto the canvas.\n- **Canvas** (center): Visual representation of your page.\n- **Properties Panel** (right): Configure selected component settings.\n\n### Available Components\n- **Hero**: Large banner with headline, subtext, and CTA buttons.\n- **Features**: Grid layouts for product features.\n- **Testimonials**: Customer quotes and reviews.\n- **Pricing**: Pricing tables with feature comparison.\n- **FAQ**: Accordion-style frequently asked questions.\n- **Contact Form**: Embedded forms (via Form Builder).\n- **Media**: Images, videos, and galleries.\n- **Rich Text**: Free-form content blocks.\n\n## Templates\nStart faster with pre-designed templates:\n- **Product Launch**: Showcase new products.\n- **SaaS Landing**: Software demo pages.\n- **Event Registration**: Conference and webinar pages.\n\n## WordPress Sync\nPush landing pages directly to your WordPress site. See **WordPress Integration** for setup.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 18
+    },
+    {
+        "title": "Subscriptions & Newsletter",
+        "slug": "subscriptions-newsletter",
+        "category": "Features",
+        "type": "docs",
+        "content": "# Subscriptions & Newsletter\n\n## Overview\nThe Subscriptions module helps you manage your customer base and newsletter subscribers. Track clients and send targeted email campaigns.\n\n## Clients Tab\nManage your subscriber and client list:\n- **Add Clients**: Manually add subscribers or import from CSV.\n- **View Details**: See subscription status, signup date, and engagement history.\n- **Segments**: Organize clients into groups for targeted campaigns.\n- **Export**: Download subscriber lists for external tools.\n\n## Newsletter Tab\nCreate and manage email campaigns:\n\n### Creating a Campaign\n1. Navigate to **Subscriptions** > **Newsletter**.\n2. Click **Create Campaign**.\n3. Configure your email:\n   - **Subject Line**: Email subject.\n   - **Preview Text**: Text shown in email client previews.\n   - **Content**: Rich text or HTML email body.\n   - **Recipients**: Choose a segment or all subscribers.\n\n### Sending\n- **Send Now**: Immediately dispatch to recipients.\n- **Schedule**: Set a future date and time.\n- **Test Send**: Send a preview to yourself first.\n\n## Integration\nSubscription forms can be embedded on any page using the **Form Builder** module. New submissions automatically appear in your Clients list.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 19
+    },
+    {
+        "title": "FAQ Manager",
+        "slug": "faq-manager",
+        "category": "Features",
+        "type": "docs",
+        "content": "# FAQ Manager\n\n## Overview\nThe FAQ Manager allows you to create and organize frequently asked questions for your public website. FAQs are displayed in an accordion format and can be embedded in Landing Pages.\n\n## Creating FAQs\n\n### Add New FAQ\n1. Navigate to **FAQ Manager** in the sidebar.\n2. Click **Create New +**.\n3. Fill in the fields:\n   - **Question**: The FAQ question.\n   - **Answer**: The response (Markdown supported).\n   - **Category**: Group related FAQs together.\n   - **Order**: Display order within the category.\n\n### AI Assistance\nClick the **Sparkles** icon to:\n- Generate FAQ suggestions based on your content.\n- Expand brief answers into comprehensive responses.\n- Rephrase questions for clarity.\n\n## Organization\n\n### Categories\nGroup FAQs by topic:\n- **General**: Common questions about your company.\n- **Billing**: Payment and subscription questions.\n- **Technical**: Product usage and troubleshooting.\n- **Custom**: Create your own categories.\n\n### Ordering\nDrag and drop FAQs to reorder within their category. The order controls how they appear on the public FAQ page.\n\n## Embedding\nFAQs can be embedded in Landing Pages using the **FAQ Component** in the Puck editor. Select which categories to display.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 20
+    },
+    {
+        "title": "Activity Log & Audit Trail",
+        "slug": "activity-log",
+        "category": "System",
+        "type": "docs",
+        "content": "# Activity Log & Audit Trail\n\n## Overview\nThe Activity Log provides real-time surveillance of all actions within the CMS. Every create, update, and delete operation is logged with user attribution and timestamps.\n\n## Accessing the Log\n\n### Full Activity Log\nNavigate to **Activity Log** in the sidebar for the complete audit trail.\n\n### Live Log Widget\nThe dashboard displays a **Live Log** widget showing the 3 most recent activities with real-time updates.\n\n## Log Entry Details\nEach activity entry contains:\n- **User**: Who performed the action (with avatar).\n- **Action**: What was done (CREATE, UPDATE, DELETE).\n- **Resource**: What was affected (e.g., \"BlogPost\", \"User\").\n- **Details**: Additional context about the change.\n- **Timestamp**: When the action occurred.\n\n## Action Themes\nActivities are color-coded for quick scanning:\n- **Green**: Create/Add/Upload actions.\n- **Blue**: Update/Edit/Modify actions.\n- **Red**: Delete/Remove actions.\n- **Amber**: Other actions.\n\n## Export\nClick the **Download** icon to export the activity log as a CSV file. This is useful for:\n- Compliance audits\n- Security reviews\n- Team activity reports\n\n## Security\nThe Activity Log cannot be edited or deleted by any user, ensuring a tamper-proof audit trail for compliance requirements.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 21
+    },
+    {
+        "title": "Media Library Advanced Features",
+        "slug": "media-library-advanced",
+        "category": "Features",
+        "type": "docs",
+        "content": "# Media Library Advanced Features\n\n## Overview\nThe Media Library is your central hub for managing all digital assets. Beyond basic uploads, it offers advanced organization, AI features, and integrations.\n\n## Tab Organization\nMedia is organized into four tabs:\n\n### My Files\nPersonal uploads visible only to you.\n- Private workspace for drafts\n- Not shared with team members\n\n### Public Assets\nShared media accessible to all team members.\n- Company logos and brand assets\n- Stock images for common use\n- Team-shared resources\n\n### Page Assets\nMedia specifically used in Landing Pages.\n- Automatically categorized when uploaded via Puck editor\n- Easy to find assets associated with specific pages\n\n### WordPress\nMedia synced from your WordPress site.\n- Imported images and videos\n- Maintains WordPress metadata\n\n## AI Features\n\n### AI SEO Generation\nAutomatically generate SEO metadata for images:\n1. Select an image.\n2. Click the **Sparkles** icon.\n3. AI generates:\n   - **Alt Text**: Accessible description.\n   - **Title**: SEO-friendly title.\n   - **Caption**: Display caption.\n   - **Description**: Detailed description.\n\n### Vendor Card Scanning\nUpload business cards to automatically:\n1. Extract contact information.\n2. Create a draft Vendor Profile.\n3. Link the card image to the vendor.\n\n## File Management\n- **Drag & Drop**: Upload multiple files at once.\n- **URL Import**: Add images via URL.\n- **Mobile Camera**: Capture directly from mobile devices.\n- **Metadata Editing**: Update title, alt text, and descriptions.\n- **Copy URL**: Quick clipboard copy for sharing.",
+        "videoUrl": null,
+        "resources": {},
+        "order": 22
     }
 ]

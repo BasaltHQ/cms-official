@@ -37,5 +37,15 @@ export default async function LandingEditorPage({
         };
     });
 
-    return <PuckEditor params={{ id }} initialData={page.content as any} pageSlug={page.slug} lastPublishedAt={page.updatedAt || undefined} aiModels={aiModels} allPages={pagesList} />;
+    const wpPage = page as any;
+    return <PuckEditor
+        params={{ id }}
+        initialData={page.content as any}
+        pageSlug={page.slug}
+        lastPublishedAt={page.updatedAt || undefined}
+        aiModels={aiModels}
+        allPages={pagesList}
+        wordpressPostId={wpPage.wordpressPostId}
+        wordpressPostType={wpPage.wordpressPostType}
+    />;
 }

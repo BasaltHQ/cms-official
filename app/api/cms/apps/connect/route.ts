@@ -19,6 +19,31 @@ export async function POST(req: Request) {
             return new NextResponse("Missing fields", { status: 400 });
         }
 
+        // Validation per provider
+        if (providerId === "wordpress") {
+            if (!credentials.url || !credentials.username || !credentials.application_password) {
+                return NextResponse.json({ error: "Missing WordPress credentials (url, username, application_password)" }, { status: 400 });
+            }
+            // Encrypt immediately for consistency with other sensitive fields
+            credentials.application_password = encryptApiKey(credentials.application_password);
+        } else if (providerId === "woocommerce") {
+            if (!credentials.url || !credentials.key || !credentials.secret) {
+                return NextResponse.json({ error: "Missing WooCommerce credentials (url, key, secret)" }, { status: 400 });
+            }
+        } else if (providerId === "medium") {
+            if (!credentials.token) {
+                return NextResponse.json({ error: "Missing Medium integration token" }, { status: 400 });
+            }
+        } else if (providerId === "zapier") {
+            if (!credentials.webhookUrl) {
+                return NextResponse.json({ error: "Missing Zapier Webhook URL" }, { status: 400 });
+            }
+        } else if (providerId === "bigcommerce") {
+            if (!credentials.storeHash || !credentials.accessToken) {
+                return NextResponse.json({ error: "Missing BigCommerce credentials (storeHash, accessToken)" }, { status: 400 });
+            }
+        }
+
         // Check for existing active connection
         const existing = await prismadb.appConnection.findFirst({
             where: {
@@ -27,10 +52,6 @@ export async function POST(req: Request) {
                 isActive: true
             }
         });
-
-        if (existing) {
-            return NextResponse.json({ error: "App already connected" }, { status: 409 });
-        }
 
         // Encrypt sensitive fields
         const safeCredentials = { ...credentials };
@@ -45,23 +66,45 @@ export async function POST(req: Request) {
             safeCredentials.accessToken = encryptApiKey(safeCredentials.accessToken);
         }
 
-        const connection = await prismadb.appConnection.create({
-            data: {
-                userId: session.user.id,
-                providerId,
-                displayName: displayName || providerId,
-                category,
-                credentials: safeCredentials,
-                isActive: true
-            }
-        });
+        let connection;
 
-        await logActivityInternal(
-            session.user.id,
-            "CONNECT_APP",
-            "APPS",
-            `Connected ${displayName} (${providerId})`
-        );
+        if (existing) {
+            // Update existing connection
+            connection = await prismadb.appConnection.update({
+                where: { id: existing.id },
+                data: {
+                    credentials: safeCredentials,
+                    displayName: displayName || existing.displayName,
+                    category: category || existing.category,
+                    isActive: true
+                }
+            });
+            await logActivityInternal(
+                session.user.id,
+                "UPDATE_APP",
+                "APPS",
+                `Updated ${displayName || providerId} connection`
+            );
+        } else {
+            // Create new connection
+            connection = await prismadb.appConnection.create({
+                data: {
+                    userId: session.user.id,
+                    providerId,
+                    displayName: displayName || providerId,
+                    category,
+                    credentials: safeCredentials,
+                    isActive: true
+                }
+            });
+
+            await logActivityInternal(
+                session.user.id,
+                "CONNECT_APP",
+                "APPS",
+                `Connected ${displayName} (${providerId})`
+            );
+        }
 
         return NextResponse.json({ success: true, connection });
 

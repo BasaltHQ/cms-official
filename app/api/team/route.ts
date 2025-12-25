@@ -23,17 +23,17 @@ export async function GET() {
                     title: "Leadership",
                     order: 0,
                     members: [
-                        { name: "Krishna Patel", role: "Chairman & CTO", imageSrc: "/images/team/member1.png", linkedin: "https://www.linkedin.com/in/krishna-patel-89039120/", twitter: "https://x.com/GenRevoeth" },
-                        { name: "Eric Turner", role: "Chief Executive Officer (CEO)", imageSrc: "/images/team/member6.png", linkedin: "https://www.linkedin.com/in/ericturner85/", twitter: "https://x.com/sinisterxtwitr" },
-                        { name: "Michael Milton", role: "Chief Marketing Officer (CMO)", imageSrc: "/images/team/member3.png", linkedin: "https://www.linkedin.com/in/mayordelmar/", twitter: "https://x.com/mayordelmar" },
+                        { name: "Krishna Patel", role: "Chairman & CTO", imageSrc: "/images/team/member1.jpg", linkedin: "https://www.linkedin.com/in/krishna-patel-89039120/", twitter: "https://x.com/GenRevoeth" },
+                        { name: "Eric Turner", role: "Chief Executive Officer (CEO)", imageSrc: "/images/team/member6.jpg", linkedin: "https://www.linkedin.com/in/ericturner85/", twitter: "https://x.com/sinisterxtwitr" },
+                        { name: "Michael Milton", role: "Chief Marketing Officer (CMO)", imageSrc: "/images/team/member3.jpg", linkedin: "https://www.linkedin.com/in/mayordelmar/", twitter: "https://x.com/mayordelmar" },
                     ]
                 },
                 {
                     title: "Engineering & Research",
                     order: 1,
                     members: [
-                        { name: "John Garcia", role: "SVP, AI Research", imageSrc: "/images/team/member5.png", linkedin: "https://www.linkedin.com/in/john-garcia-54ab73398/", twitter: "https://x.com/JohnG1isit" },
-                        { name: "Shahir Monjour", role: "SVP, Engineering", imageSrc: "/images/team/member4.png", linkedin: "https://www.linkedin.com/in/shahir-monjur/", twitter: "https://x.com/shahir1395" },
+                        { name: "John Garcia", role: "SVP, AI Research", imageSrc: "/images/team/member5.jpg", linkedin: "https://www.linkedin.com/in/john-garcia-54ab73398/", twitter: "https://x.com/JohnG1isit" },
+                        { name: "Shahir Monjour", role: "SVP, Engineering", imageSrc: "/images/team/member4.jpg", linkedin: "https://www.linkedin.com/in/shahir-monjur/", twitter: "https://x.com/shahir1395" },
                     ]
                 }
             ];

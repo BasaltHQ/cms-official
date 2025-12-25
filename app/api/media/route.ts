@@ -35,6 +35,7 @@ export async function POST(req: Request) {
                 isBusinessCard: isBusinessCard || false,
                 vendorId: vendorId || null,
                 userId: (session.user as any).id,
+                source: body.source || "cms",
             },
         });
 
@@ -84,6 +85,8 @@ export async function GET(req: Request) {
             andConditions.push({ isBusinessCard: false });
         } else if (scope === "vendors") {
             where.isBusinessCard = true;
+        } else if (scope === "wordpress") {
+            where.source = "wordpress";
         }
 
         if (andConditions.length > 0) {

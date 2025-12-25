@@ -17,7 +17,6 @@ export interface CMSModule {
 
 export const CMS_MODULES: CMSModule[] = [
     { slug: "dashboard", href: (l: string) => `/${l}/cms`, icon: "LayoutDashboard", label: "Dashboard", section: null, color: "sky" },
-    { slug: "applications", href: (l: string) => `/${l}/cms/applications`, icon: "Users", label: "Applications", section: "Recruitment", color: "amber" },
     { slug: "analytics", href: (l: string) => `/${l}/cms/analytics`, icon: "Activity", label: "Analytics", section: "Content", color: "purple" },
     {
         slug: "blog",
@@ -35,11 +34,12 @@ export const CMS_MODULES: CMSModule[] = [
         slug: "careers",
         href: (l: string) => `/${l}/cms/careers`,
         icon: "Briefcase",
-        label: "Jobs (Postings)",
+        label: "Careers",
         section: "Content",
         color: "orange",
         options: [
             { label: "All Positions", href: (l: string) => `/${l}/cms/careers`, icon: "List" },
+            { label: "Applications", href: (l: string) => `/${l}/cms/careers?tab=applications`, icon: "Users" },
             { label: "Create New", href: (l: string) => `/${l}/cms/careers`, icon: "PlusCircle" },
         ]
     },
@@ -66,10 +66,22 @@ export const CMS_MODULES: CMSModule[] = [
         options: [
             { label: "My Files", href: (l: string) => `/${l}/cms/media?tab=mine`, icon: "Folder" },
             { label: "Public Assets", href: (l: string) => `/${l}/cms/media?tab=public`, icon: "Globe" },
-            { label: "Page Assets", href: (l: string) => `/${l}/cms/media?tab=landing_pages`, icon: "Layout" }
+            { label: "Page Assets", href: (l: string) => `/${l}/cms/media?tab=landing_pages`, icon: "Layout" },
+            { label: "WordPress", href: (l: string) => `/${l}/cms/media?tab=wordpress`, icon: "FileImage" }
         ]
     },
-    { slug: "forms", href: (l: string) => `/${l}/cms/forms`, icon: "FileInput", label: "Form Builder", section: "Content", color: "teal" },
+    {
+        slug: "forms",
+        href: (l: string) => `/${l}/cms/forms`,
+        icon: "FileInput",
+        label: "Form Builder",
+        section: "Content",
+        color: "teal",
+        options: [
+            { label: "All Forms", href: (l: string) => `/${l}/cms/forms`, icon: "List" },
+            { label: "Create New", href: (l: string) => `/${l}/cms/forms?action=create`, icon: "PlusCircle" }
+        ]
+    },
     {
         slug: "landing",
         href: (l: string) => `/${l}/cms/landing`,
@@ -80,7 +92,8 @@ export const CMS_MODULES: CMSModule[] = [
         options: [
             { label: "All Pages", href: (l: string) => `/${l}/cms/landing`, icon: "File" },
             { label: "Create Page", href: (l: string) => `/${l}/cms/landing/new`, icon: "PlusCircle" },
-            { label: "Templates", href: (l: string) => `/${l}/cms/landing/templates`, icon: "LayoutTemplate" }
+            { label: "Templates", href: (l: string) => `/${l}/cms/landing/templates`, icon: "LayoutTemplate" },
+            { label: "My WP Site", href: (l: string) => `/${l}/cms/apps/wordpress`, icon: "Globe" }
         ]
     },
     {
@@ -95,21 +108,30 @@ export const CMS_MODULES: CMSModule[] = [
             { label: "Newsletter", href: (l: string) => `/${l}/cms/subscriptions/newsletter`, icon: "Mail" }
         ]
     },
-    { slug: "footer", href: (l: string) => `/${l}/cms/footer`, icon: "Globe", label: "Footer", section: "Content", color: "lime" },
-    { slug: "manage", href: (l: string) => `/${l}/cms/manage`, icon: "Users2", label: "Team Members", section: "Content", color: "yellow" },
     {
-        slug: "social",
-        href: (l: string) => `/${l}/cms/social`,
-        icon: "Share2",
-        label: "Social & SEO",
+        slug: "footer",
+        href: (l: string) => `/${l}/cms/footer`,
+        icon: "Globe",
+        label: "Footer & SEO",
         section: "Content",
-        color: "fuchsia",
+        color: "lime",
         options: [
-            { label: "Social Profiles", href: (l: string) => `/${l}/cms/social?tab=profiles`, icon: "Share2" },
-            { label: "SEO Settings", href: (l: string) => `/${l}/cms/social?tab=seo`, icon: "Search" }
+            { label: "Footer Content", href: (l: string) => `/${l}/cms/footer?tab=content`, icon: "Layout" },
+            { label: "Social Profiles", href: (l: string) => `/${l}/cms/footer?tab=profiles`, icon: "Share2" },
+            { label: "SEO Settings", href: (l: string) => `/${l}/cms/footer?tab=seo`, icon: "Search" }
         ]
     },
+    { slug: "manage", href: (l: string) => `/${l}/cms/manage`, icon: "Users2", label: "Team Members", section: "Content", color: "yellow" },
     { slug: "university", href: (l: string) => `/${l}/cms/university`, icon: "GraduationCap", label: "University", section: "System", color: "violet" },
+    {
+        slug: "wordpress",
+        href: (l: string) => `/${l}/cms/apps/wordpress`,
+        icon: "Layout",
+        label: "My WP Site",
+        section: "Content",
+        color: "emerald",
+        hidden: true
+    },
     {
         slug: "apps",
         href: (l: string) => `/${l}/cms/apps`,
@@ -119,6 +141,7 @@ export const CMS_MODULES: CMSModule[] = [
         color: "emerald",
         options: [
             { label: "E-Commerce", href: (l: string) => `/${l}/cms/apps?tab=ecommerce`, icon: "ShoppingCart" },
+            { label: "Base Broadcast", href: (l: string) => `/${l}/cms/apps?tab=broadcast`, icon: "Radio" },
             { label: "Publishing", href: (l: string) => `/${l}/cms/apps?tab=publishing`, icon: "PenTool" },
             { label: "Utility", href: (l: string) => `/${l}/cms/apps?tab=utility`, icon: "Wrench" }
         ]

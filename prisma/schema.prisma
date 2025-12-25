@@ -937,6 +937,13 @@ model SocialSettings {
   // App Stores
   appStoreUrl       String?  @default("")
   playStoreUrl      String?  @default("")
+  // Base / Farcaster Integration
+  baseSignerUuid    String?  @default("")
+  baseApiKey        String?  @default("") // Deprecated in favor of neynarApiKey
+  neynarApiKey      String?  @default("")
+  // Creator Earnings (Zora)
+  pinataJwt         String?  @default("")
+  zoraPrivateKey    String?  @default("")
   // Newsletter/CTA
   newsletterEnabled Boolean  @default(true)
   blogUpdatesEnabled Boolean @default(true)
@@ -1034,6 +1041,9 @@ model MediaItem {
   isBusinessCard Boolean? @default(false)
   vendorId       String? @db.ObjectId
   vendor         VendorProfile? @relation(fields: [vendorId], references: [id])
+  
+  // Source tracking (cms, wordpress, etc)
+  source         String?  @default("cms") 
 }
 
 model BlogEvent {
@@ -1096,6 +1106,11 @@ model LandingPage {
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  // WordPress Sync
+  wordpressPostId   Int?
+  wordpressPostType String? // 'page' | 'post'
+  wordpressPostDate DateTime?
 }
 
 model Country {

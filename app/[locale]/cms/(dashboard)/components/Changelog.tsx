@@ -1,5 +1,7 @@
 "use client";
 
+
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getRecentActivities } from "@/actions/audit";
 import NextImage from "next/image";
@@ -90,29 +92,29 @@ export default function Changelog() {
     }
 
     return (
-        <Card className="h-full bg-black border border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-[2rem] flex flex-col overflow-hidden group/card text-white">
-            <div className="flex items-center justify-between p-6 border-b border-white/5 flex-shrink-0 bg-black">
-                <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg group-hover/card:border-primary/50 transition-colors">
-                        <Radio className="h-5 w-5 text-primary animate-pulse" />
+        <Card className="h-full bg-[#0A0A0B]/60 backdrop-blur-xl border border-white/5 shadow-2xl rounded-[2rem] flex flex-col overflow-hidden group/card text-white">
+            <div className="flex items-center justify-between p-4 px-5 border-b border-white/5 flex-shrink-0 bg-transparent">
+                <Link href="/cms/activity" className="flex items-center gap-4 cursor-pointer hover:opacity-80 transition-opacity">
+                    <div className="h-8 w-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg group-hover/card:border-primary/50 transition-colors">
+                        <Radio className="h-4 w-4 text-primary animate-pulse" />
                     </div>
                     <div>
-                        <h2 className="text-xl font-black italic uppercase tracking-tighter leading-tight">Live <span className="text-primary not-italic tracking-normal">Log</span></h2>
-                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Active Surveillance</p>
+                        <h2 className="text-lg font-black italic uppercase tracking-tighter leading-tight">Live <span className="text-primary not-italic tracking-normal">Log</span></h2>
+                        <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">Active Surveillance</p>
                     </div>
-                </div>
+                </Link>
                 <button
                     onClick={() => window.open('/api/cms/activity/export', '_blank')}
-                    className="p-2.5 hover:bg-white/5 rounded-xl text-slate-500 hover:text-primary transition-all duration-300 border border-transparent hover:border-white/10"
+                    className="p-2 hover:bg-white/5 rounded-xl text-slate-500 hover:text-primary transition-all duration-300 border border-transparent hover:border-white/10"
                     title="Export Sequence"
                 >
                     <Download className="h-4 w-4" />
                 </button>
             </div>
 
-            <ScrollArea className="flex-1 bg-black">
-                <div className="relative p-6 space-y-6">
-                    {activities.length === 0 ? (
+            <ScrollArea className="flex-1 bg-transparent">
+                <div className="min-h-full flex flex-col justify-end relative p-5 space-y-6">
+                    {activities.slice(0, 3).length === 0 ? (
                         <div className="text-[10px] font-bold text-slate-700 text-center py-20 uppercase tracking-[0.4em]">
                             End of Data Stream
                         </div>
@@ -121,13 +123,13 @@ export default function Changelog() {
                             <div className="absolute left-[39px] top-8 bottom-8 w-px bg-white/5" />
 
                             <div className="space-y-8">
-                                {activities.map((activity) => {
+                                {activities.slice(0, 3).map((activity) => {
                                     const theme = getActionTheme(activity.action);
                                     return (
                                         <div key={activity.id} className="relative flex gap-5 group">
                                             {/* Vertical Timeline Node */}
                                             <div className="relative z-10 flex-shrink-0">
-                                                <div className="relative h-10 w-10 rounded-full bg-black border border-white/10 shadow-lg flex items-center justify-center overflow-hidden group-hover:border-primary/30 transition-all duration-500">
+                                                <div className="relative h-12 w-12 rounded-full bg-black border border-white/10 shadow-lg flex items-center justify-center overflow-hidden group-hover:border-primary/30 transition-all duration-500">
                                                     {activity.user.avatar ? (
                                                         <NextImage
                                                             src={activity.user.avatar}

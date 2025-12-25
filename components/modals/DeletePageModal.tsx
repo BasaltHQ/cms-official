@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Trash2, AlertTriangle } from "lucide-react";
 import { deleteLandingPage } from "@/actions/cms/delete-landing-page";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { toast } from "react-hot-toast";
 
 interface DeletePageModalProps {
@@ -25,6 +25,7 @@ interface DeletePageModalProps {
 export function DeletePageModal({ isOpen, onClose, pageId, pageTitle }: DeletePageModalProps) {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+    const pathname = usePathname();
 
     const handleDelete = async () => {
         setIsLoading(true);
@@ -32,6 +33,15 @@ export function DeletePageModal({ isOpen, onClose, pageId, pageTitle }: DeletePa
             const result = await deleteLandingPage(pageId);
             if (result.success) {
                 toast.success("Page deleted successfully");
+
+                // If we are currently on the page we just deleted, redirect to the dashboard
+                if (pathname.includes(pageId)) {
+                    // Extract locale from pathname if possible, or just use a relative path
+                    const parts = pathname.split('/');
+                    const locale = parts[1] || 'en';
+                    router.push(`/${locale}/cms/landing`);
+                }
+
                 router.refresh();
                 onClose();
             } else {
