@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
+import { createScheduledPost } from "@/actions/cms/scheduled-posts";
 import {
     Popover,
     PopoverContent,
@@ -57,6 +58,7 @@ export function UniversalPostEditor({ onPostSuccess }: UniversalPostEditorProps)
     const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
     const [attachments, setAttachments] = useState<string[]>([]);
     const [scheduledDate, setScheduledDate] = useState<Date | undefined>(undefined);
+    const [calendarOpen, setCalendarOpen] = useState(false);
 
     // AI State
     const [isAiGenerating, setIsAiGenerating] = useState(false);
@@ -135,23 +137,40 @@ export function UniversalPostEditor({ onPostSuccess }: UniversalPostEditorProps)
             return;
         }
 
+        if (selectedPlatforms.length === 0) {
+            toast.error("Select at least one platform");
+            return;
+        }
+
         setIsPosting(true);
 
         try {
-            // Simulator
-            await new Promise(r => setTimeout(r, 2000));
-
             if (scheduledDate) {
-                toast.success(`Scheduled for ${format(scheduledDate, "PPP p")}`);
+                // Save to database for scheduled post
+                const result = await createScheduledPost({
+                    content,
+                    platforms: selectedPlatforms,
+                    attachments,
+                    scheduledFor: scheduledDate
+                });
+
+                if (result.success) {
+                    toast.success(`Scheduled for ${format(scheduledDate, "PPP p")}`);
+                    setContent("");
+                    setAttachments([]);
+                    setScheduledDate(undefined);
+                    if (onPostSuccess) onPostSuccess();
+                } else {
+                    toast.error(result.error || "Failed to schedule post");
+                }
             } else {
+                // Immediate post (mock for now - platform APIs would be called here)
+                await new Promise(r => setTimeout(r, 1500));
                 toast.success(`Broadcast sent to ${selectedPlatforms.length} platforms!`);
+                setContent("");
+                setAttachments([]);
+                if (onPostSuccess) onPostSuccess();
             }
-
-            setContent("");
-            setAttachments([]);
-            setScheduledDate(undefined);
-            if (onPostSuccess) onPostSuccess();
-
         } catch (error) {
             toast.error("Failed to post");
         } finally {
@@ -273,20 +292,23 @@ export function UniversalPostEditor({ onPostSuccess }: UniversalPostEditorProps)
                             </Button>
 
                             {/* Schedule Popover */}
-                            <Popover>
+                            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                                 <PopoverTrigger asChild>
                                     <Button variant="ghost" size="icon" className={cn("text-slate-400 hover:text-white hover:bg-white/10", scheduledDate && "text-blue-400")}>
                                         <CalendarIcon className="w-5 h-5" />
                                     </Button>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-auto p-4 border border-white/10 bg-[#1A1B1E] shadow-2xl rounded-xl" align="start">
+                                <PopoverContent
+                                    className="w-auto p-4 border border-white/20 bg-black/60 backdrop-blur-xl shadow-2xl rounded-2xl"
+                                    align="start"
+                                >
                                     <div className="space-y-4">
                                         <div className="space-y-2">
                                             <h4 className="font-medium text-white text-sm flex items-center gap-2">
                                                 <CalendarIcon className="w-4 h-4 text-blue-400" />
                                                 Pick Date & Time
                                             </h4>
-                                            <div className="bg-black/20 rounded-lg p-2 border border-white/5">
+                                            <div className="bg-white/5 rounded-xl p-2 border border-white/10">
                                                 <Calendar
                                                     mode="single"
                                                     selected={scheduledDate}
@@ -294,6 +316,8 @@ export function UniversalPostEditor({ onPostSuccess }: UniversalPostEditorProps)
                                                     initialFocus
                                                     className="rounded-md"
                                                     disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                                                    fromDate={new Date()}
+                                                    toDate={new Date(new Date().setMonth(new Date().getMonth() + 6))}
                                                 />
                                             </div>
                                         </div>
@@ -303,7 +327,7 @@ export function UniversalPostEditor({ onPostSuccess }: UniversalPostEditorProps)
                                                     <label className="text-xs text-slate-400 ml-1">Time</label>
                                                     <Input
                                                         type="time"
-                                                        className="bg-black/20 border-white/10 text-white focus:border-blue-500"
+                                                        className="bg-white/5 border-white/10 text-white focus:border-blue-500 backdrop-blur-sm"
                                                         defaultValue="09:00"
                                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                             if (scheduledDate) {
@@ -316,7 +340,31 @@ export function UniversalPostEditor({ onPostSuccess }: UniversalPostEditorProps)
                                                     />
                                                 </div>
                                             </div>
-                                            {!scheduledDate && <p className="text-xs text-amber-500 p-2 bg-amber-500/10 rounded">Please select a date first.</p>}
+                                            {!scheduledDate && <p className="text-xs text-amber-500 p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">Please select a date first.</p>}
+                                        </div>
+
+                                        {/* Action Buttons */}
+                                        <div className="flex gap-2 pt-2 border-t border-white/10">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => {
+                                                    setScheduledDate(undefined);
+                                                    setCalendarOpen(false);
+                                                }}
+                                                className="flex-1 text-slate-400 hover:text-white hover:bg-white/10"
+                                            >
+                                                Clear
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                onClick={() => setCalendarOpen(false)}
+                                                disabled={!scheduledDate}
+                                                className="flex-1 bg-blue-500 hover:bg-blue-600 text-white gap-1.5"
+                                            >
+                                                <Check className="w-4 h-4" />
+                                                Confirm
+                                            </Button>
                                         </div>
                                     </div>
                                 </PopoverContent>

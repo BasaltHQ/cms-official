@@ -34,11 +34,14 @@ export function DeletePageModal({ isOpen, onClose, pageId, pageTitle }: DeletePa
             if (result.success) {
                 toast.success("Page deleted successfully");
 
-                // If we are currently on the page we just deleted, redirect to the dashboard
-                if (pathname.includes(pageId)) {
-                    // Extract locale from pathname if possible, or just use a relative path
-                    const parts = pathname.split('/');
-                    const locale = parts[1] || 'en';
+                // Extract locale from pathname
+                const parts = pathname.split('/');
+                const locale = parts[1] || 'en';
+
+                // Redirect to next available page if it exists, otherwise to dashboard
+                if (result.nextPageId) {
+                    router.push(`/${locale}/cms/landing/${result.nextPageId}`);
+                } else {
                     router.push(`/${locale}/cms/landing`);
                 }
 

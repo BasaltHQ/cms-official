@@ -154,7 +154,9 @@ export const CMS_MODULES: CMSModule[] = [
         color: "indigo",
         options: [
             { label: "Studio", href: (l: string) => `/${l}/cms/apps?tab=broadcast`, icon: "Radio" },
-            { label: "Calendar", href: (l: string) => `/${l}/cms/apps?tab=broadcast&view=calendar`, icon: "Calendar" }
+            { label: "X (Twitter)", href: (l: string) => `/${l}/cms/apps?tab=store&category=Social`, icon: "Twitter" },
+            { label: "Farcaster", href: (l: string) => `/${l}/cms/apps?tab=store&category=Web3`, icon: "Radio" },
+            { label: "LinkedIn", href: (l: string) => `/${l}/cms/apps?tab=store&category=Social`, icon: "Linkedin" }
         ]
     },
     {
