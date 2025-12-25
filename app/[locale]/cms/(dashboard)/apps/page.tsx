@@ -9,6 +9,7 @@ import { AppMarketplaceItem, AppItem } from "@/components/cms/apps/AppMarketplac
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { UniversalPostEditor } from "@/components/cms/social/UniversalPostEditor";
+import { ScheduledPostsDashboard } from "@/components/cms/social/ScheduledPostsDashboard";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useEmblaCarousel from "embla-carousel-react";
 // @ts-ignore
@@ -452,6 +453,8 @@ export default function AppsPage() {
     const router = useRouter();
     // Use tab param to control view: "store" | "broadcast"
     const currentTab = searchParams.get("tab") === "broadcast" ? "broadcast" : "store";
+    // Use view param to control broadcast sub-view: "compose" | "scheduled"
+    const broadcastView = searchParams.get("view") === "scheduled" ? "scheduled" : "compose";
 
     // Initialize state with MOCK_APPS to allow local mutations (disconnecting)
     const [apps, setApps] = useState<AppItem[]>(MOCK_APPS);
@@ -477,9 +480,17 @@ export default function AppsPage() {
         const params = new URLSearchParams(searchParams.toString());
         if (val === "store") {
             params.delete("tab");
+            params.delete("view"); // Clean up view param when switching to store
         } else {
             params.set("tab", val);
         }
+        router.push(`?${params.toString()}`, { scroll: false });
+    };
+
+    const handleViewChange = (val: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("tab", "broadcast"); // Ensure we are in broadcast tab
+        params.set("view", val);
         router.push(`?${params.toString()}`, { scroll: false });
     };
 
@@ -616,16 +627,49 @@ export default function AppsPage() {
                 </div>
             ) : (
                 <div className="animate-in fade-in-50 slide-in-from-right-4 duration-500">
-                    <div className="mb-6 flex flex-col items-center text-center">
-                        <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 mb-4">
-                            <Radio className="w-8 h-8 text-indigo-400" />
+                    <div className="flex flex-col items-center mb-8 space-y-6">
+                        <div className="text-center">
+                            <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 mb-4">
+                                <Radio className="w-8 h-8 text-indigo-400" />
+                            </div>
+                            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Universal Broadcast Studio</h2>
+                            <p className="text-slate-400 max-w-lg mx-auto">
+                                Create, schedule, and publish content across all your social/web3 channels from one powerful interface.
+                            </p>
                         </div>
-                        <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Universal Broadcast Studio</h2>
-                        <p className="text-slate-400 max-w-lg">
-                            Create, schedule, and publish content across all your social/web3 channels from one powerful interface.
-                        </p>
+
+                        {/* SUB-NAV for Broadcast Studio */}
+                        <div className="bg-[#0A0A0B] p-1 rounded-lg border border-white/10 inline-flex">
+                            <button
+                                onClick={() => handleViewChange("compose")}
+                                className={cn(
+                                    "px-4 py-2 rounded-md text-sm font-medium transition-all",
+                                    broadcastView === "compose"
+                                        ? "bg-white/10 text-white shadow-sm"
+                                        : "text-slate-400 hover:text-white hover:bg-white/5"
+                                )}
+                            >
+                                Compose
+                            </button>
+                            <button
+                                onClick={() => handleViewChange("scheduled")}
+                                className={cn(
+                                    "px-4 py-2 rounded-md text-sm font-medium transition-all",
+                                    broadcastView === "scheduled"
+                                        ? "bg-white/10 text-white shadow-sm"
+                                        : "text-slate-400 hover:text-white hover:bg-white/5"
+                                )}
+                            >
+                                Scheduled Posts
+                            </button>
+                        </div>
                     </div>
-                    <UniversalPostEditor />
+
+                    {broadcastView === "compose" ? (
+                        <UniversalPostEditor onPostSuccess={() => handleViewChange("scheduled")} />
+                    ) : (
+                        <ScheduledPostsDashboard />
+                    )}
                 </div>
             )}
         </div>
