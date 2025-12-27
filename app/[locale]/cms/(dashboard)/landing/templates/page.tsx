@@ -15,7 +15,7 @@ export default function TemplatesPage({ params }: { params: { locale: string } }
         if (template.thumbnail) return template.thumbnail;
         
         // Try to find a HeroBlock or similar with an image
-        const heroBlock = template.data.content.find((b: any) => b.type === "HeroBlock" && b.props?.bgImage);
+        const heroBlock = template.data.content.find((b: any) => b.type === "HeroBlock" && b.props?.bgImage) as any;
         if (heroBlock) return heroBlock.props.bgImage;
 
         return null;
