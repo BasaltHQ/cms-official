@@ -38,7 +38,7 @@ export function MediaPickerModal({ isOpen, onClose, onSelect }: MediaPickerModal
     const fetchMedia = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`/api/media?search=${search}&limit=50`);
+            const res = await fetch(`/api/media?search=${search}&limit=50&scope=all`);
             const data = await res.json();
             setMediaItems(data.items || []);
         } catch (error) {
@@ -181,7 +181,7 @@ export function MediaPickerModal({ isOpen, onClose, onSelect }: MediaPickerModal
                         </div>
                     </TabsContent>
 
-                    <TabsContent value="upload" className="flex-1 p-0 m-0 flex items-center justify-center bg-black/10">
+                    <TabsContent value="upload" className="flex-1 p-0 m-0 flex items-center justify-center bg-transparent">
                         <div className="text-center p-8 max-w-sm border-2 border-dashed border-white/10 rounded-2xl hover:border-indigo-500/50 hover:bg-slate-900/50 transition-all cursor-pointer group" onClick={() => document.getElementById('modal-upload-input')?.click()}>
                             <input
                                 id="modal-upload-input"

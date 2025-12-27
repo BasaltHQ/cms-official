@@ -85,6 +85,9 @@ const nextConfig = {
     // CSS optimization - disabled because it requires the deprecated 'critters' package
     // Next.js doesn't yet support 'beasties' (the maintained fork) as a replacement
     // optimizeCss: true,
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
   },
   // Add preconnect headers for external resources
   async headers() {

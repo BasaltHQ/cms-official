@@ -7,7 +7,7 @@ import "@measured/puck/puck.css";
 import { ArrowLeft, Save, Sparkles, Monitor, Code, Loader2, LayoutTemplate, Tablet, Smartphone, PanelLeft, PanelRight, ArrowUpFromLine, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { DeployModal } from "./DeployModal";
+import { DeploymentDropdown } from "./DeploymentDropdown";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select";
 import { TemplateModal } from "./TemplateModal";
 import { Template } from "@/lib/puck.templates";
@@ -392,8 +392,6 @@ export default function EditorPage({
 
                     <div className="w-px h-6 bg-white/10 mx-1" />
 
-                    <DeployModal pageId={params.id} pageSlug={pageSlug} lastPublishedAt={lastPublishedAt} />
-
                     <Button
                         onClick={async () => {
                             await handlePublish(data);
@@ -414,20 +412,15 @@ export default function EditorPage({
                         )}
                     </Button>
 
-                    {/* Push to WordPress Button */}
-                    <Button
-                        onClick={handleSyncToWP}
-                        disabled={isSyncing || isSaving}
-                        size="sm"
-                        className="mr-2 rounded-full bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 border border-blue-500/20 h-7 px-4 text-xs transition-all"
-                    >
-                        {isSyncing ? (
-                            <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                            <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
-                        )}
-                        {wordpressPostId ? "Push to WP" : "Push to WP"}
-                    </Button>
+                    <DeploymentDropdown 
+                        pageId={params.id} 
+                        pageSlug={pageSlug} 
+                        lastPublishedAt={lastPublishedAt} 
+                        data={data}
+                        wordPressPostId={wordpressPostId}
+                        onSyncSuccess={() => router.refresh()}
+                    />
+
                 </div>
             </div>
 

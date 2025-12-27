@@ -10,7 +10,7 @@ import { prismadb } from "@/lib/prisma";
 import { CMS_MODULES, CMSModule } from "@/app/[locale]/cms/config";
 import AdminSidebar from "./_components/AdminSidebar";
 import MobileHeader from "./_components/MobileHeader";
-import { PageTracker } from "@/components/cms/PageTracker";
+
 
 export default async function AdminDashboardLayout({
     children,
@@ -95,7 +95,7 @@ export default async function AdminDashboardLayout({
 
             {/* Main Content */}
             <main className="flex-1 overflow-x-hidden overflow-y-auto relative z-10 pb-20 md:pb-0 pt-16 md:pt-0">
-                <PageTracker />
+
                 {children}
             </main>
         </div>

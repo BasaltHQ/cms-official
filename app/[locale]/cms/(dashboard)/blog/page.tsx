@@ -51,7 +51,7 @@ function BlogAdminContent() {
 
     const fetchMediaForPicker = async () => {
         try {
-            const res = await fetch("/api/media?limit=20");
+            const res = await fetch("/api/media?limit=50&scope=all");
             const data = await res.json();
             setMediaItems(data.items || []);
         } catch (e) {

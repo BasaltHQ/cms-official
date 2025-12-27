@@ -88,6 +88,21 @@ export default function RecentContent({ items }: RecentContentProps) {
         if (path.includes("/cms/broadcast")) return "Base Broadcast";
         if (path.includes("/cms/oauth")) return "Integrations";
         if (path.includes("/cms/docs")) return "Documentation";
+        if (path.includes("/cms/careers")) return "Careers";
+        if (path.includes("/cms/university")) return "University";
+        if (path.includes("/cms/ai-builder")) return "AI Page Builder";
+        if (path.includes("/cms/manage")) return "Management";
+
+        // Dynamic Fallback: capitalize the last segment
+        try {
+            const segments = path.split('/').filter(Boolean);
+            const lastSegment = segments[segments.length - 1];
+            if (lastSegment && lastSegment !== "cms") {
+                return lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1).replace(/-/g, ' ');
+            }
+        } catch (e) {
+            // ignore
+        }
 
         return "Dashboard Page";
     };

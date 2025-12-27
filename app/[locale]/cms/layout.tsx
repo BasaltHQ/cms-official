@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { LayoutDashboard, FileText, Briefcase, BookOpen, Settings, LogOut, Globe } from "lucide-react";
 import { headers } from "next/headers";
+import { PageTracker } from "@/components/cms/PageTracker";
 
 
 
@@ -56,6 +57,7 @@ export default async function AdminLayout({
     // Let's do the move. It's cleaner.
     return (
         <div className="min-h-screen bg-black text-slate-200">
+            <PageTracker />
             {children}
         </div>
     );

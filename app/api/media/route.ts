@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     try {
         const session = await getServerSession(authOptions);
         if (!session || !session.user) {
-            return new NextResponse("Unauthorized", { status: 401 });
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const body = await req.json();
@@ -51,7 +51,7 @@ export async function GET(req: Request) {
     try {
         const session = await getServerSession(authOptions);
         if (!session || !session.user) {
-            return new NextResponse("Unauthorized", { status: 401 });
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const { searchParams } = new URL(req.url);
@@ -77,12 +77,21 @@ export async function GET(req: Request) {
         // Scope filter
         if (scope === "mine") {
             where.userId = (session.user as any).id;
-            // Exclude business cards (data is backfilled, so simple check works)
+             // Exclude business cards
             andConditions.push({ isBusinessCard: false });
         } else if (scope === "public") {
             where.isPublic = true;
-            // Exclude business cards from public too
+             // Exclude business cards
             andConditions.push({ isBusinessCard: false });
+        } else if (scope === "all") {
+            // "All" = My Private Files OR Any Public Files
+             andConditions.push({
+                OR: [
+                    { isPublic: true },
+                    { userId: (session.user as any).id }
+                ],
+                isBusinessCard: false 
+             });
         } else if (scope === "vendors") {
             where.isBusinessCard = true;
         } else if (scope === "wordpress") {
@@ -113,7 +122,7 @@ export async function PUT(req: Request) {
     try {
         const session = await getServerSession(authOptions);
         if (!session || !session.user) {
-            return new NextResponse("Unauthorized", { status: 401 });
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const body = await req.json();
@@ -152,7 +161,7 @@ export async function DELETE(req: Request) {
     try {
         const session = await getServerSession(authOptions);
         if (!session || !session.user) {
-            return new NextResponse("Unauthorized", { status: 401 });
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const { searchParams } = new URL(req.url);

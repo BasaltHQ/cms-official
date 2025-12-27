@@ -10,10 +10,17 @@ export function useRecentVisits() {
     useEffect(() => {
         if (!pathname || !pathname.includes("/cms/")) return;
 
-        // Skip non-content pages
-        if (pathname.endsWith("/cms") || pathname.includes("/cms/media") || pathname.includes("/cms/settings")) return;
+        // Skip non-content pages (only skip the root dashboard itself to avoid clutter)
+        if (pathname.endsWith("/cms")) return;
 
-        const visited = JSON.parse(localStorage.getItem("cms_recent_visits") || "[]");
+        let visited: any[] = [];
+        try {
+            visited = JSON.parse(localStorage.getItem("cms_recent_visits") || "[]");
+            if (!Array.isArray(visited)) visited = [];
+        } catch (e) {
+            console.warn("Failed to parse recent visits, resetting", e);
+            visited = [];
+        }
 
         // Construct full path with significant query params
         const currentParams = searchParams.toString();

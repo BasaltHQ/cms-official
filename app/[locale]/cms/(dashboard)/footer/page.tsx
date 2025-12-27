@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, Plus, Trash, Save, Lock, GripVertical, Trash2, RotateCcw, ExternalLink, Sparkles, Image as ImageIcon, Laptop, Smartphone, Check } from "lucide-react";
+import { Loader2, Plus, Trash, Save, Lock, GripVertical, Trash2, RotateCcw, ExternalLink, Sparkles, Image as ImageIcon, Laptop, Smartphone, Check, Upload } from "lucide-react";
 import {
     FaXTwitter, FaDiscord, FaLinkedin, FaInstagram, FaFacebook,
     FaYoutube, FaTiktok, FaGithub, FaTelegram, FaReddit, FaThreads, FaMastodon,
@@ -228,6 +228,108 @@ export default function FooterAdminPage() {
         });
     };
 
+
+    // --- Image Upload Helpers ---
+    const handleSmartUpload = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: 'ogImage' | 'twitterImage' | 'faviconUrl', targetWidth: number, targetHeight: number) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (file.size > 10 * 1024 * 1024) {
+             toast.error("File size must be less than 10MB");
+             return;
+        }
+
+        const loadingToast = toast.loading(`Processing ${fieldName}...`);
+
+        try {
+            // 1. Resize Image
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target?.result as string;
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = targetWidth;
+                    canvas.height = targetHeight;
+                    const ctx = canvas.getContext("2d");
+                    if (!ctx) {
+                         toast.error("Failed to process image", { id: loadingToast });
+                         return;
+                    }
+
+                    // Draw and resize (Fill / Cover strategy)
+                    // Calculate aspect ratios
+                    const imgRatio = img.width / img.height;
+                    const targetRatio = targetWidth / targetHeight;
+
+                    let drawWidth = targetWidth;
+                    let drawHeight = targetHeight;
+                    let offsetX = 0;
+                    let offsetY = 0;
+
+                    // "Cover" fit
+                    if (imgRatio > targetRatio) {
+                         drawHeight = targetHeight;
+                         drawWidth = img.width * (targetHeight / img.height);
+                         offsetX = (targetWidth - drawWidth) / 2;
+                    } else {
+                         drawWidth = targetWidth;
+                         drawHeight = img.height * (targetWidth / img.width);
+                         offsetY = (targetHeight - drawHeight) / 2;
+                    }
+
+                    // Background fill (optional, using black to be safe)
+                    ctx.fillStyle = "#000000";
+                    ctx.fillRect(0, 0, targetWidth, targetHeight);
+                    
+                    ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+                    
+                    // 2. Convert to Blob and Upload
+                    const base64 = canvas.toDataURL(file.type === "image/png" ? "image/png" : "image/jpeg", 0.9);
+
+                    // Upload via existing media API
+                    fetch("/api/media", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            url: base64,
+                            filename: `${fieldName}-${Date.now()}.${file.type === "image/png" ? "png" : "jpg"}`,
+                            mimeType: file.type === "image/png" ? "image/png" : "image/jpeg",
+                            size: Math.round((base64.length * 3) / 4), 
+                            title: fieldName === 'ogImage' ? 'OG Image' : (fieldName === 'twitterImage' ? 'Twitter Image' : 'Favicon'),
+                            isPublic: true
+                        }),
+                    })
+                    .then(async res => {
+                        if (!res.ok) {
+                            const err = await res.json().catch(() => ({ error: res.statusText }));
+                            throw new Error(err.error || res.statusText);
+                        }
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data.url) {
+                            setSeoSettings(prev => ({ ...prev, [fieldName]: data.url }));
+                            toast.success(`${fieldName} updated!`, { id: loadingToast });
+                        } else {
+                            throw new Error("No URL returned");
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Upload failed", err);
+                        toast.error(`Failed to upload ${fieldName}`, { id: loadingToast });
+                    });
+                };
+            };
+        } catch (error) {
+            console.error("Upload error", error);
+            toast.error("Error processing image", { id: loadingToast });
+        }
+    };
+
+    // Kept for backward compat but simply calls smart upload now (or removed if not needed since we replaced usage)
+    const handleFaviconUpload = (e: React.ChangeEvent<HTMLInputElement>) => handleSmartUpload(e, 'faviconUrl', 64, 64);
+    
     // --- Footer Helper Functions ---
 
     const updateSection = (index: number, field: keyof FooterSection, value: any) => {
@@ -563,15 +665,38 @@ export default function FooterAdminPage() {
                                         <div className="space-y-2">
                                             <Label className="text-slate-300">Open Graph Image URL</Label>
                                             <div className="flex gap-2">
-                                                <Input
-                                                    value={seoSettings.ogImage}
-                                                    onChange={e => setSeoSettings(p => ({ ...p, ogImage: e.target.value }))}
-                                                    className="bg-black/50 border-white/10"
-                                                />
+                                                <div className="flex-1 flex gap-2">
+                                                    <Input
+                                                        value={seoSettings.ogImage}
+                                                        onChange={e => setSeoSettings(p => ({ ...p, ogImage: e.target.value }))}
+                                                        className="bg-black/50 border-white/10 flex-1"
+                                                    />
+                                                    <div className="relative">
+                                                        <Input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            className="hidden"
+                                                            id="og-upload"
+                                                            onChange={(e) => handleSmartUpload(e, 'ogImage', 1200, 630)}
+                                                        />
+                                                        <Button
+                                                            variant="outline"
+                                                            className="h-10 w-10 border-dashed border-white/20 hover:border-indigo-500 hover:text-indigo-400 p-0"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                document.getElementById('og-upload')?.click();
+                                                            }}
+                                                            title="Upload & Resize to 1200x630"
+                                                            type="button"
+                                                        >
+                                                            <Upload className="h-4 w-4" />
+                                                        </Button>
+                                                    </div>
+                                                </div>
                                                 <Button
                                                     variant="secondary"
                                                     size="icon"
-                                                    title="Select Image from Library or Upload"
+                                                    title="Select from Library"
                                                     onClick={() => setMediaPickerOpen(true)}
                                                 >
                                                     <ImageIcon className="h-4 w-4" />
@@ -598,12 +723,35 @@ export default function FooterAdminPage() {
                                         <Label className="text-slate-300 text-base font-medium">Favicon URL (BETA)</Label>
                                         <div className="flex flex-col gap-3">
                                             <div className="flex gap-3">
-                                                <Input
-                                                    value={seoSettings.faviconUrl}
-                                                    onChange={e => setSeoSettings(p => ({ ...p, faviconUrl: e.target.value }))}
-                                                    placeholder="/favicon.ico or https://..."
-                                                    className="bg-black/50 border-white/10 flex-1 h-12"
-                                                />
+                                                <div className="flex-1 flex gap-2">
+                                                    <Input
+                                                        value={seoSettings.faviconUrl}
+                                                        onChange={e => setSeoSettings(p => ({ ...p, faviconUrl: e.target.value }))}
+                                                        placeholder="/favicon.ico or https://..."
+                                                        className="bg-black/50 border-white/10 flex-1 h-12"
+                                                    />
+                                                    <div className="relative">
+                                                        <Input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            className="hidden"
+                                                            id="favicon-upload"
+                                                            onChange={handleFaviconUpload}
+                                                        />
+                                                        <Button
+                                                            variant="outline"
+                                                            className="h-12 w-12 border-dashed border-white/20 hover:border-indigo-500 hover:text-indigo-400 p-0"
+                                                            onClick={(e) => {
+                                                                e.preventDefault(); // Prevent accidental form submit
+                                                                document.getElementById('favicon-upload')?.click();
+                                                            }}
+                                                            title="Upload & Auto-Resize Image"
+                                                            type="button"
+                                                        >
+                                                            <Upload className="h-5 w-5" />
+                                                        </Button>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             {/* Enlarged Preview Box */}
@@ -655,12 +803,37 @@ export default function FooterAdminPage() {
                                     </div>
                                     <div className="space-y-2">
                                         <Label className="text-slate-300">Twitter Specific Image</Label>
-                                        <Input
-                                            value={seoSettings.twitterImage}
-                                            onChange={e => setSeoSettings(p => ({ ...p, twitterImage: e.target.value }))}
-                                            placeholder="Leave empty to use Global OG Image"
-                                            className="bg-black/50 border-white/10"
-                                        />
+                                        <div className="flex gap-2">
+                                            <div className="flex-1 flex gap-2">
+                                                <Input
+                                                    value={seoSettings.twitterImage}
+                                                    onChange={e => setSeoSettings(p => ({ ...p, twitterImage: e.target.value }))}
+                                                    placeholder="Leave empty to use Global OG Image"
+                                                    className="bg-black/50 border-white/10 flex-1"
+                                                />
+                                                 <div className="relative">
+                                                    <Input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        id="twitter-upload"
+                                                        onChange={(e) => handleSmartUpload(e, 'twitterImage', 1200, 600)}
+                                                    />
+                                                    <Button
+                                                        variant="outline"
+                                                        className="h-10 w-10 border-dashed border-white/20 hover:border-indigo-500 hover:text-indigo-400 p-0"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            document.getElementById('twitter-upload')?.click();
+                                                        }}
+                                                        title="Upload & Resize to 1200x600"
+                                                        type="button"
+                                                    >
+                                                        <Upload className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="space-y-2">
                                         <Label className="text-slate-300">OG Specific Title (Optional)</Label>
@@ -693,26 +866,29 @@ export default function FooterAdminPage() {
                                         </div>
                                     </div>
                                     <div className="bg-[#2B2D31] rounded-[4px] overflow-hidden border border-[#1E1F22]">
-                                        <div className="grid grid-cols-[auto_1fr] bg-[#2B2D31] items-center p-3 gap-3 border-l-[4px] border-[#2B2D31]">
-                                            <div className="col-span-2">
-                                                <div className="font-semibold text-[#DBDEE1] text-sm hover:underline cursor-pointer truncate">
-                                                    {seoSettings.ogTitle || seoSettings.globalTitle}
+                                        {/* Image at top */}
+                                        <div className="relative aspect-[1.91/1] w-full overflow-hidden">
+                                            {(seoSettings.ogImage || seoSettings.twitterImage) ? (
+                                                <img 
+                                                    src={seoSettings.ogImage || seoSettings.twitterImage} 
+                                                    alt="OG Preview" 
+                                                    className="w-full h-full object-cover" 
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full bg-gradient-to-br from-indigo-900/50 to-purple-900/50 flex items-center justify-center">
+                                                    <ImageIcon className="h-12 w-12 text-white/20" />
                                                 </div>
-                                                <div className="text-[#B5BAC1] text-xs mt-1 line-clamp-2">
-                                                    {seoSettings.ogDescription || seoSettings.globalDescription}
-                                                </div>
+                                            )}
+                                        </div>
+                                        {/* Title and Description below */}
+                                        <div className="p-3 border-l-4 border-indigo-500">
+                                            <div className="text-[#DBDEE1] font-semibold text-sm truncate hover:underline cursor-pointer">
+                                                {seoSettings.ogTitle || seoSettings.globalTitle || "Site Title"}
+                                            </div>
+                                            <div className="text-[#B5BAC1] text-xs mt-1 line-clamp-2">
+                                                {seoSettings.ogDescription || seoSettings.globalDescription || "Site description will appear here..."}
                                             </div>
                                         </div>
-                                        {seoSettings.ogImage && (
-                                            <div className="relative aspect-[1.91/1] w-full bg-black">
-                                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                <img
-                                                    src={seoSettings.ogImage}
-                                                    alt="Preview"
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            </div>
-                                        )}
                                     </div>
                                     <p className="text-[10px] text-slate-500 mt-2 text-right">Discord / Embed Style</p>
                                 </div>

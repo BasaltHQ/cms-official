@@ -87,11 +87,12 @@ export const CMS_MODULES: CMSModule[] = [
         slug: "landing",
         href: (l: string) => `/${l}/cms/landing`,
         icon: "LayoutTemplate",
-        label: "Landing Pages",
+        label: "Websites",
         section: "Content",
         color: "indigo",
         options: [
             { label: "All Pages", href: (l: string) => `/${l}/cms/landing`, icon: "File" },
+            { label: "AI Builder", href: (l: string) => `/${l}/cms/ai-builder`, icon: "Sparkles" },
             { label: "Create Page", href: (l: string) => `/${l}/cms/landing/new`, icon: "PlusCircle" },
             { label: "Templates", href: (l: string) => `/${l}/cms/landing/templates`, icon: "LayoutTemplate" },
             { label: "My WP Site", href: (l: string) => `/${l}/cms/apps/wordpress`, icon: "Globe" }
