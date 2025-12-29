@@ -21,16 +21,16 @@ import * as Motion from 'framer-motion/client';
 import MarketingLayout from "@/components/marketing/MarketingLayout";
 
 export const metadata: Metadata = {
-    title: 'VoiceHub - Real-Time AI Voice Conversations',
+    title: 'Echo - Real-Time AI Voice Conversations',
     description: 'Professional-grade, ultra-low latency voice AI powered by the world\'s most advanced real-time models. Pay per second with ETH.',
     openGraph: {
-        title: 'VoiceHub - Real-Time AI Voice Conversations',
+        title: 'Echo - Real-Time AI Voice Conversations',
         description: 'Professional-grade, ultra-low latency voice AI powered by the world\'s most advanced real-time models. Pay per second with ETH.',
         images: ['https://voice.basalthq.com/vhlogo.png'],
     },
 };
 
-export default async function VoiceHubPage() {
+export default async function EchoPage() {
     return (
         <MarketingLayout variant="blue">
 

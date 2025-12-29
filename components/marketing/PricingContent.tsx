@@ -50,7 +50,7 @@ const tiers = [
         description: "For organizations requiring maximum power.",
         features: [
             "Unlimited Users",
-            "VoiceHub AI Agent Access",
+            "Echo AI Agent Access",
             "Unlimited Generations",
             "Dedicated Infrastructure",
             "SSO & Advanced Security",

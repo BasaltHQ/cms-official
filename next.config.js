@@ -103,6 +103,21 @@ const nextConfig = {
       },
     ];
   },
+  // Redirects for renamed routes
+  async redirects() {
+    return [
+      {
+        source: '/voicehub',
+        destination: '/echo',
+        permanent: true,
+      },
+      {
+        source: '/voicehub/:path*',
+        destination: '/echo/:path*',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = withNextIntl(nextConfig);

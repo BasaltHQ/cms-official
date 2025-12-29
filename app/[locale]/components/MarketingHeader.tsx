@@ -75,16 +75,18 @@ export default function MarketingHeader({ socialSettings }: MarketingHeaderProps
 
     return (
         <>
-            <div className={cn(
-                "fixed top-0 left-0 right-0 z-[999] flex flex-col w-full transition-all duration-300",
-                isScrolled ? "bg-[#0F0F1A]/80 backdrop-blur-md border-b border-white/10 shadow-lg pb-2" : "bg-transparent pb-0"
-            )}>
+            <div
+                suppressHydrationWarning
+                className={cn(
+                    "fixed top-0 left-0 right-0 z-[999] flex flex-col w-full transition-all duration-300",
+                    isScrolled ? "bg-[#0F0F1A]/80 backdrop-blur-md border-b border-white/10 shadow-lg pb-2" : "bg-transparent pb-0"
+                )}>
                 {/* Secondary Navbar - Transitions height/opacity on scroll if desired, or stays. 
                     Let's keep it visible but maybe smaller padding? 
                     Actually standard pattern: Secondary often hides or integrates. 
                     For now, let's keep it simply stacked.
                 */}
-                <div className={cn("transition-all duration-300", isScrolled ? "opacity-0 h-0 overflow-hidden" : "opacity-100 h-auto")}>
+                <div suppressHydrationWarning className={cn("transition-all duration-300", isScrolled ? "opacity-0 h-0 overflow-hidden" : "opacity-100 h-auto")}>
                     <SecondaryNavbar />
                 </div>
 

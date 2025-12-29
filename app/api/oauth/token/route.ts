@@ -127,21 +127,21 @@ export async function POST(req: NextRequest) {
     const accessToken = `access_${userId}_${Math.random().toString(36).slice(2)}`;
     const refreshToken = `refresh_${userId}_${Math.random().toString(36).slice(2)}`;
 
-    // Auto-detect and persist VoiceHub base URL from redirect_uri so CRM can forward prompts without env config
+    // Auto-detect and persist Echo base URL from redirect_uri so CRM can forward prompts without env config
     try {
-      const voicehubOrigin = new URL(redirectUri).origin.replace(/\/+$/, "");
-      if (voicehubOrigin && /^https?:\/\//i.test(voicehubOrigin)) {
+      const echoOrigin = new URL(redirectUri).origin.replace(/\/+$/, "");
+      if (echoOrigin && /^https?:\/\//i.test(echoOrigin)) {
         const existing = await prismadb.systemServices.findFirst({
-          where: { name: "voicehub" },
+          where: { name: "echo" },
         });
         if (existing) {
           await prismadb.systemServices.update({
             where: { id: existing.id },
-            data: { serviceUrl: voicehubOrigin, servicePassword: userId },
+            data: { serviceUrl: echoOrigin, servicePassword: userId },
           });
         } else {
           await prismadb.systemServices.create({
-            data: { name: "voicehub", serviceUrl: voicehubOrigin, servicePassword: userId, v: 0 },
+            data: { name: "echo", serviceUrl: echoOrigin, servicePassword: userId, v: 0 },
           });
         }
       }
@@ -155,7 +155,7 @@ export async function POST(req: NextRequest) {
         expires_in: expiresIn,
         scope: authCode.scope || "softphone:control outreach:write leads:read",
         issued_at: now,
-        user_id: userId, // Include userId in response for VoiceHub to use
+        user_id: userId, // Include userId in response for Echo to use
       },
       { status: 200 }
     );

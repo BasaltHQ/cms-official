@@ -55,7 +55,7 @@ export default function PricingClient() {
                     "Lead Generation: 2,500 / month",
                     "Email Campaigns: 12,500 / month",
                     "Advanced AI Lead Enrichment",
-                    "VoiceHub AI Calling (billed per minute)",
+                    "Echo AI Calling (billed per minute)",
                     "SMS Campaigns add-on",
                     "Priority Support & Advanced Reporting",
                 ],
@@ -92,7 +92,7 @@ export default function PricingClient() {
                 features: [
                     "Lead Generation: 50,000 / month",
                     "Email Campaigns: 400,000 / month",
-                    "Advanced VoiceHub Features",
+                    "Advanced Echo Features",
                     "Custom Reporting & Analytics",
                     "Priority 24/7 Support",
                     "API Access (up to 20 users)",
@@ -210,7 +210,7 @@ export default function PricingClient() {
                                     <Check className="h-6 w-6 text-primary" />
                                 </div>
                                 <div>
-                                    <h4 className="text-lg font-semibold mb-2 text-white group-hover:text-primary transition-colors">VoiceHub AI Calling</h4>
+                                    <h4 className="text-lg font-semibold mb-2 text-white group-hover:text-primary transition-colors">Echo AI Calling</h4>
                                     <p className="text-gray-400 text-sm leading-relaxed">
                                         Billed per minute. Scale your outreach with unlimited AI agents available 24/7.
                                     </p>
@@ -459,7 +459,7 @@ function IndividualComparisonTable() {
             values: ["—", "Basic", "Advanced"]
         },
         {
-            category: "VoiceHub AI Calling",
+            category: "Echo AI Calling",
             values: ["—", "—", "✓ (per-minute billing)"]
         },
         {
@@ -556,7 +556,7 @@ function ProfessionalComparisonTable() {
             values: ["Advanced", "Advanced", "Custom AI Models"]
         },
         {
-            category: "VoiceHub AI Calling",
+            category: "Echo AI Calling",
             values: ["Standard features", "Advanced features", "Custom integrations"]
         },
         {

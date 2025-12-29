@@ -173,8 +173,8 @@ export default function LandingPage() {
                     </div>
                 </section>
 
-                {/* VoiceHub Section */}
-                <section id="voicehub" className="w-full py-24 md:py-32 bg-[#020617] relative overflow-hidden text-white border-y border-white/10">
+                {/* Echo Section */}
+                <section id="echo" className="w-full py-24 md:py-32 bg-[#020617] relative overflow-hidden text-white border-y border-white/10">
                     {/* Background Effects */}
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-950 to-slate-950" />
                     <div className="absolute inset-0 bg-[url('https://voice.basalthq.com/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
@@ -191,7 +191,7 @@ export default function LandingPage() {
                             </div>
 
                             <h2 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white via-cyan-100 to-cyan-500/50 drop-shadow-2xl">
-                                VoiceHub – Real-Time AI<br />
+                                Echo – Real-Time AI<br />
                                 Voice Conversations on <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Ethereum</span>
                             </h2>
 
@@ -201,9 +201,9 @@ export default function LandingPage() {
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-6 pt-4">
-                                <Link href="/voicehub">
+                                <Link href="/echo">
                                     <Button size="lg" className="h-14 px-10 text-lg rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold shadow-[0_0_40px_rgba(6,182,212,0.4)] hover:shadow-[0_0_60px_rgba(6,182,212,0.6)] transition-all duration-300">
-                                        Explore VoiceHub
+                                        Explore Echo
                                         <ArrowRight className="ml-2 h-5 w-5" />
                                     </Button>
                                 </Link>
@@ -272,7 +272,7 @@ export default function LandingPage() {
                         <div className="mt-20 flex justify-center opacity-80 hover:opacity-100 transition-opacity duration-500">
                             <Image
                                 src="https://voice.basalthq.com/vhlogo.png"
-                                alt="VoiceHub Logo"
+                                alt="Echo Logo"
                                 width={0}
                                 height={0}
                                 sizes="100vw"

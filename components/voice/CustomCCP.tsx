@@ -24,7 +24,7 @@ export default function CustomCCP({
   className,
   leadId,
   contactId,
-  autoStartVoiceHub,
+  autoStartEcho,
 }: {
   instanceUrl?: string;
   theme?: "dark" | "light";
@@ -35,7 +35,7 @@ export default function CustomCCP({
   className?: string;
   leadId?: string;
   contactId?: string;
-  autoStartVoiceHub?: boolean;
+  autoStartEcho?: boolean;
 }) {
   // Hidden CCP container for Streams provider
   const ccpContainerRef = useRef<HTMLDivElement | null>(null);
@@ -496,16 +496,16 @@ export default function CustomCCP({
       if (!/^\+[1-9]\d{1,14}$/.test(n)) throw new Error("Invalid E.164");
       phoneNumberRef.current = n;
 
-      // Auto-start VoiceHub session for Engage AI panel if enabled
+      // Auto-start Echo session for Engage AI panel if enabled
       try {
-        if (autoStartVoiceHub) {
-          const walletOverride = String(localStorage.getItem("voicehub:wallet") || "").trim().toLowerCase();
+        if (autoStartEcho) {
+          const walletOverride = String(localStorage.getItem("echo:wallet") || "").trim().toLowerCase();
           const payload: any = { leadId, contactId, source: "CustomCCP" };
 
           // Silent credit check + robust start with retries and correlationId
           let unlimited = false;
           try {
-            const credRes = await fetch("/api/voicehub/credits", {
+            const credRes = await fetch("/api/echo/credits", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ walletOverride: walletOverride || undefined }),
@@ -514,7 +514,7 @@ export default function CustomCCP({
             if (credRes.ok) {
               const bal = Number((cred as any)?.balance?.balanceSeconds ?? 0);
               unlimited = !!(cred as any)?.balance?.unlimited;
-              logInfoMsg(`VoiceHub credits: balanceSeconds=${bal}${unlimited ? " (unlimited)" : ""}`);
+              logInfoMsg(`Echo credits: balanceSeconds=${bal}${unlimited ? " (unlimited)" : ""}`);
             } else {
               logInfoMsg(`Credit check failed: ${(cred as any)?.error || credRes.status}`);
             }
@@ -534,40 +534,40 @@ export default function CustomCCP({
             // Open Console on first attempt only if credits not unlimited and not SuperAdmin
             if (attempt === 1 && !unlimited && !isOwner) {
               try {
-                const vhBase = String(process.env.NEXT_PUBLIC_VOICEHUB_BASE_URL || "").trim();
+                const vhBase = String(process.env.NEXT_PUBLIC_ECHO_BASE_URL || "").trim();
                 if (vhBase) {
                   const win = window.open(`${vhBase}/console`, "_blank", "noopener,noreferrer");
                   if (!win) {
-                    logInfoMsg("Popup blocked for VoiceHub Console; enable popups to approve credits");
+                    logInfoMsg("Popup blocked for Echo Console; enable popups to approve credits");
                   }
                 } else {
-                  logInfoMsg("NEXT_PUBLIC_VOICEHUB_BASE_URL not set; cannot open Console for credit approval");
+                  logInfoMsg("NEXT_PUBLIC_ECHO_BASE_URL not set; cannot open Console for credit approval");
                 }
               } catch (openErr: any) {
-                logInfoMsg(`Failed to open VoiceHub Console: ${openErr?.message || String(openErr)}`);
+                logInfoMsg(`Failed to open Echo Console: ${openErr?.message || String(openErr)}`);
               }
             }
 
-            const res = await fetch("/api/voicehub/control", {
+            const res = await fetch("/api/echo/control", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ command: "start", payload, walletOverride: walletOverride || undefined, correlationId }),
             });
             if (res.ok) {
               started = true;
-              logInfoMsg(`Requested VoiceHub auto-start (attempt ${attempt})`);
+              logInfoMsg(`Requested Echo auto-start (attempt ${attempt})`);
             } else {
-              logInfoMsg(`VoiceHub start request failed (attempt ${attempt}): ${res.status}`);
+              logInfoMsg(`Echo start request failed (attempt ${attempt}): ${res.status}`);
               await sleep(400 * attempt); // exponential backoff
             }
           }
 
           if (!started) {
-            logInfoMsg("VoiceHub start failed after retries");
+            logInfoMsg("Echo start failed after retries");
           }
         }
       } catch (e: any) {
-        logInfoMsg(`VoiceHub auto-start failed: ${e?.message || String(e)}`);
+        logInfoMsg(`Echo auto-start failed: ${e?.message || String(e)}`);
       }
 
       // Use Streams Agent.connect with Endpoint.byPhoneNumber for outbound
@@ -601,21 +601,21 @@ export default function CustomCCP({
     } catch (e: any) {
       setError(e?.message || "Dial failed");
     }
-  }, [autoStartVoiceHub, leadId, contactId]);
+  }, [autoStartEcho, leadId, contactId]);
 
   const hangupActive = React.useCallback(async () => {
     try {
-      // Request VoiceHub stop listening when Hang Up is pressed
+      // Request Echo stop listening when Hang Up is pressed
       try {
-        const walletOverride = String(localStorage.getItem("voicehub:wallet") || "").trim().toLowerCase();
+        const walletOverride = String(localStorage.getItem("echo:wallet") || "").trim().toLowerCase();
         const payload: any = { leadId, contactId, source: "CustomCCP" };
-        void fetch("/api/voicehub/control", {
+        void fetch("/api/echo/control", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ command: "stop", payload, walletOverride: walletOverride || undefined }),
         })
-          .then(() => logInfoMsg("Requested VoiceHub stop listening"))
-          .catch((e) => logInfoMsg(`VoiceHub stop failed: ${e?.message || String(e)}`));
+          .then(() => logInfoMsg("Requested Echo stop listening"))
+          .catch((e) => logInfoMsg(`Echo stop failed: ${e?.message || String(e)}`));
       } catch { }
       const c = contactRef.current;
       if (!c) throw new Error("No active contact");

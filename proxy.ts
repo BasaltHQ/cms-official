@@ -61,7 +61,7 @@ const authMiddleware = withAuth(
 export function proxy(req: NextRequest) {
     // Regex to check if the path is a public file or next internals
     // We exclude API from this check because we WANT to run auth middleware on API
-    const excludePattern = /^(\/_next|\/voicehub|.*\\..*)/;
+    const excludePattern = /^(\/_next|\/echo|.*\\..*)/;
 
     if (excludePattern.test(req.nextUrl.pathname)) {
         return;
@@ -72,5 +72,5 @@ export function proxy(req: NextRequest) {
 
 export const config = {
     // Match all paths except internal next stuff and static files
-    matcher: ["/((?!_next|voicehub|.*\\..*).*)"],
+    matcher: ["/((?!_next|echo|.*\\..*).*)"],
 };

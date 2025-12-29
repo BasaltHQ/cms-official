@@ -120,10 +120,10 @@ You are a senior SDR on a live sales call for BasaltCMS.
     }
   }
 
-  // VoiceHub connection status for Engage AI panel
+  // Echo connection status for Engage AI panel
   const [connLoading, setConnLoading] = useState<boolean>(false);
-  const [voicehubConnected, setVoicehubConnected] = useState<boolean>(false);
-  const [voicehubWallet, setVoicehubWallet] = useState<string | null>(null);
+  const [echoConnected, setEchoConnected] = useState<boolean>(false);
+  const [echoWallet, setEchoWallet] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -133,8 +133,8 @@ You are a senior SDR on a live sales call for BasaltCMS.
         const res = await fetch("/api/integration/status");
         const j: any = await res.json().catch(()=> ({}));
         if (!cancelled) {
-          setVoicehubConnected(!!j?.voicehub_connected);
-          setVoicehubWallet((j?.voicehub_wallet || null) as any);
+          setEchoConnected(!!j?.echo_connected);
+          setEchoWallet((j?.echo_wallet || null) as any);
         }
       } catch {
       } finally {
@@ -145,10 +145,10 @@ You are a senior SDR on a live sales call for BasaltCMS.
     return () => { cancelled = true; };
   }, []);
 
-  async function pushToVoiceHub() {
+  async function pushToEcho() {
     try {
-      const w = String(voicehubWallet || "").trim().toLowerCase();
-      if (!w) { setError("No connected VoiceHub wallet"); setTimeout(()=>setError(null), 2500); return; }
+      const w = String(echoWallet || "").trim().toLowerCase();
+      if (!w) { setError("No connected Echo wallet"); setTimeout(()=>setError(null), 2500); return; }
       const meta = { roleKey, customRoleName, roleNotes, language, leadId, contactId, source: "AzureSalesAgentPanel" };
       const res = await fetch("/api/crm/prompt/push", {
         method: "POST",
@@ -165,12 +165,12 @@ You are a senior SDR on a live sales call for BasaltCMS.
     }
   }
 
-  // CRM→VoiceHub control actions
-  async function applyToVoiceHub() {
+  // CRM→Echo control actions
+  async function applyToEcho() {
     try {
-      const w = String(voicehubWallet || "").trim().toLowerCase();
+      const w = String(echoWallet || "").trim().toLowerCase();
       if (!w) {
-        setError("No connected VoiceHub wallet");
+        setError("No connected Echo wallet");
         setTimeout(() => setError(null), 2500);
         return;
       }
@@ -188,7 +188,7 @@ You are a senior SDR on a live sales call for BasaltCMS.
         contactId,
         source: "AzureSalesAgentPanel",
       };
-      const res = await fetch("/api/voicehub/control", {
+      const res = await fetch("/api/echo/control", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ command: "apply", payload, walletOverride: w }),
@@ -203,11 +203,11 @@ You are a senior SDR on a live sales call for BasaltCMS.
     }
   }
 
-  async function startVoiceHub() {
+  async function startEcho() {
     try {
-      const w = String(voicehubWallet || "").trim().toLowerCase();
+      const w = String(echoWallet || "").trim().toLowerCase();
       if (!w) {
-        setError("No connected VoiceHub wallet");
+        setError("No connected Echo wallet");
         setTimeout(() => setError(null), 2500);
         return;
       }
@@ -221,7 +221,7 @@ You are a senior SDR on a live sales call for BasaltCMS.
       };
       // Silent credit check prior to start
       try {
-        const credRes = await fetch("/api/voicehub/credits", {
+        const credRes = await fetch("/api/echo/credits", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ walletOverride: w }),
@@ -234,47 +234,47 @@ You are a senior SDR on a live sales call for BasaltCMS.
         console.warn("Credit check error:", e?.message || String(e));
       }
 
-      const res = await fetch("/api/voicehub/control", {
+      const res = await fetch("/api/echo/control", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ command: "start", payload, walletOverride: w }),
       });
 
-      // Open VoiceHub Console to surface credit approval modal on user gesture (Start Listening)
+      // Open Echo Console to surface credit approval modal on user gesture (Start Listening)
       try {
-        const vhBase = String(process.env.NEXT_PUBLIC_VOICEHUB_BASE_URL || "").trim();
+        const vhBase = String(process.env.NEXT_PUBLIC_ECHO_BASE_URL || "").trim();
         if (vhBase) {
           const win = window.open(`${vhBase}/console`, "_blank", "noopener,noreferrer");
           if (!win) {
-            setError("Popup blocked for VoiceHub Console; allow popups to approve credits");
+            setError("Popup blocked for Echo Console; allow popups to approve credits");
             setTimeout(() => setError(null), 3000);
           }
         } else {
           // Env not set, log hint for configuration
-          console.warn("NEXT_PUBLIC_VOICEHUB_BASE_URL not set; cannot open Console for credit approval");
+          console.warn("NEXT_PUBLIC_ECHO_BASE_URL not set; cannot open Console for credit approval");
         }
       } catch (openErr: any) {
-        console.warn("Failed to open VoiceHub Console:", openErr?.message || String(openErr));
+        console.warn("Failed to open Echo Console:", openErr?.message || String(openErr));
       }
       if (!res.ok) {
         const t = await res.text().catch(() => "");
         throw new Error(t || `Start failed (${res.status})`);
       }
     } catch (e: any) {
-      setError(e?.message || "Failed to start VoiceHub");
+      setError(e?.message || "Failed to start Echo");
       setTimeout(() => setError(null), 3000);
     }
   }
 
-  async function stopVoiceHub() {
+  async function stopEcho() {
     try {
-      const w = String(voicehubWallet || "").trim().toLowerCase();
+      const w = String(echoWallet || "").trim().toLowerCase();
       if (!w) {
-        setError("No connected VoiceHub wallet");
+        setError("No connected Echo wallet");
         setTimeout(() => setError(null), 2500);
         return;
       }
-      const res = await fetch("/api/voicehub/control", {
+      const res = await fetch("/api/echo/control", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ command: "stop", walletOverride: w }),
@@ -284,7 +284,7 @@ You are a senior SDR on a live sales call for BasaltCMS.
         throw new Error(t || `Stop failed (${res.status})`);
       }
     } catch (e: any) {
-      setError(e?.message || "Failed to stop VoiceHub");
+      setError(e?.message || "Failed to stop Echo");
       setTimeout(() => setError(null), 3000);
     }
   }
@@ -297,17 +297,17 @@ You are a senior SDR on a live sales call for BasaltCMS.
         dialerLeft
         leadId={leadId}
         contactId={contactId}
-        autoStartVoiceHub
+        autoStartEcho
       />
       <div className="flex items-center justify-between mb-2">
         <div className="text-xs font-semibold">Agent Prompt (for external Azure Realtime)</div>
         <div className="text-[11px]">
           {connLoading ? (
-            <span className="text-muted-foreground">Checking VoiceHub…</span>
-              ) : voicehubConnected ? (
-            <span className="text-green-600">VoiceHub Connected · Wallet {voicehubWallet ? `${voicehubWallet.slice(0,6)}...${voicehubWallet.slice(-4)}` : "-"}</span>
+            <span className="text-muted-foreground">Checking Echo…</span>
+              ) : echoConnected ? (
+            <span className="text-green-600">Echo Connected · Wallet {echoWallet ? `${echoWallet.slice(0,6)}...${echoWallet.slice(-4)}` : "-"}</span>
           ) : (
-            <span className="text-red-600">VoiceHub Not Connected</span>
+            <span className="text-red-600">Echo Not Connected</span>
           )}
         </div>
       </div>
@@ -367,10 +367,10 @@ You are a senior SDR on a live sales call for BasaltCMS.
             {generating ? "Generating..." : "Generate Power Prompt"}
           </Button>
           <Button size="sm" variant="secondary" onClick={copyToClipboard}>{copied ? "Copied" : "Copy to Clipboard"}</Button>
-          <Button size="sm" variant="default" onClick={pushToVoiceHub} disabled={!voicehubConnected}>Push to VoiceHub</Button>
-          <Button size="sm" variant="default" onClick={applyToVoiceHub} disabled={!voicehubConnected}>Apply to VoiceHub</Button>
-          <Button size="sm" variant="default" onClick={startVoiceHub} disabled={!voicehubConnected}>Start on VoiceHub</Button>
-          <Button size="sm" variant="outline" onClick={stopVoiceHub} disabled={!voicehubConnected}>Stop on VoiceHub</Button>
+          <Button size="sm" variant="default" onClick={pushToEcho} disabled={!echoConnected}>Push to Echo</Button>
+          <Button size="sm" variant="default" onClick={applyToEcho} disabled={!echoConnected}>Apply to Echo</Button>
+          <Button size="sm" variant="default" onClick={startEcho} disabled={!echoConnected}>Start on Echo</Button>
+          <Button size="sm" variant="outline" onClick={stopEcho} disabled={!echoConnected}>Stop on Echo</Button>
           <Button size="sm" variant="outline" onClick={emitPromptEvent}>Emit Prompt Event</Button>
           <Button size="sm" variant="outline" onClick={savePromptAsNote} disabled={saving || !leadId}>{saving ? "Saving..." : "Save to CRM Notes"}</Button>
           {error ? <span className="text-[11px] text-red-600">{error}</span> : null}

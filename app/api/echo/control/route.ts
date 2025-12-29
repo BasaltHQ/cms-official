@@ -2,22 +2,22 @@ import { NextResponse } from "next/server";
 import { prismadb } from "@/lib/prisma";
 
 /**
- * CRM -> VoiceHub control bridge
+ * CRM -> Echo control bridge
  *
- * POST /api/voicehub/control
- *  Forward control commands to VoiceHub for the currently registered wallet.
+ * POST /api/echo/control
+ *  Forward control commands to Echo for the currently registered wallet.
  *
  * Body:
  * {
  *   command: "apply" | "start" | "stop",
  *   payload?: any,              // e.g., { prompt, settings: { voice, vadThreshold, ... } }
  *   correlationId?: string,
- *   walletOverride?: string     // optional override of VoiceHub wallet (lowercased hex)
+ *   walletOverride?: string     // optional override of Echo wallet (lowercased hex)
  * }
  *
  * Behavior:
- *  - Reads systemServices(name='voicehub') to determine serviceId (wallet) and serviceUrl (VoiceHub base origin)
- *  - Falls back to NEXT_PUBLIC_VOICEHUB_BASE_URL or VOICEHUB_BASE_URL if serviceUrl is not set
+ *  - Reads systemServices(name='echo') to determine serviceId (wallet) and serviceUrl (Echo base origin)
+ *  - Falls back to NEXT_PUBLIC_ECHO_BASE_URL or ECHO_BASE_URL if serviceUrl is not set
  *  - Sends POST to {serviceUrl}/api/crm/control with header x-wallet set to wallet
  */
 
@@ -47,8 +47,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: "invalid_command" }, { status: 400 });
     }
 
-    // Load VoiceHub registration from CRM DB
-    const svc = await prismadb.systemServices.findFirst({ where: { name: "voicehub" } });
+    // Load Echo registration from CRM DB
+    const svc = await prismadb.systemServices.findFirst({ where: { name: "echo" } });
     const walletDb = (svc?.serviceId || "").trim().toLowerCase();
     const urlDb = normalizeOrigin(svc?.serviceUrl || null);
 
@@ -56,20 +56,20 @@ export async function POST(req: Request) {
     const walletOverride = String(body?.walletOverride || "").trim().toLowerCase();
     const wallet = (walletOverride || walletDb).toLowerCase();
 
-    // Derive VoiceHub base from DB or env fallback
+    // Derive Echo base from DB or env fallback
     const envRaw =
-      (process.env.NEXT_PUBLIC_VOICEHUB_BASE_URL || process.env.VOICEHUB_BASE_URL || "").trim();
+      (process.env.NEXT_PUBLIC_ECHO_BASE_URL || process.env.ECHO_BASE_URL || "").trim();
     const urlEnv = normalizeOrigin(envRaw);
-    const voicehubBase = urlDb || urlEnv;
-    if (!voicehubBase) {
-      return NextResponse.json({ ok: false, error: "voicehub_base_unconfigured" }, { status: 500 });
+    const echoBase = urlDb || urlEnv;
+    if (!echoBase) {
+      return NextResponse.json({ ok: false, error: "echo_base_unconfigured" }, { status: 500 });
     }
     if (!wallet) {
-      return NextResponse.json({ ok: false, error: "voicehub_wallet_missing" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "echo_wallet_missing" }, { status: 400 });
     }
 
-    // Forward to VoiceHub
-    const res = await fetch(`${voicehubBase}/api/crm/control`, {
+    // Forward to Echo
+    const res = await fetch(`${echoBase}/api/crm/control`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -96,7 +96,7 @@ export async function POST(req: Request) {
 
     if (!res.ok) {
       return NextResponse.json(
-        { ok: false, status: res.status, error: (out && out.error) || out || "voicehub_forward_failed" },
+        { ok: false, status: res.status, error: (out && out.error) || out || "echo_forward_failed" },
         { status: 502 }
       );
     }
@@ -104,7 +104,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         ok: true,
-        forwarded: { base: voicehubBase, wallet },
+        forwarded: { base: echoBase, wallet },
         result: out,
       },
       { status: 200 }

@@ -12,7 +12,7 @@ export default function PricingComparisonTable() {
         { name: "AI Text Enrichment", starter: <Minus className="text-slate-600 w-5 h-5 mx-auto" />, growth: "500 / mo", scale: "Unlimited" },
         { name: "AI Image Generation", starter: <Minus className="text-slate-600 w-5 h-5 mx-auto" />, growth: "100 / mo", scale: "Unlimited" },
 
-        { name: "VoiceHub AI Agent", starter: <Minus className="text-slate-600 w-5 h-5 mx-auto" />, growth: <Minus className="text-slate-600 w-5 h-5 mx-auto" />, scale: "✓ Custom Access" },
+        { name: "Echo AI Agent", starter: <Minus className="text-slate-600 w-5 h-5 mx-auto" />, growth: <Minus className="text-slate-600 w-5 h-5 mx-auto" />, scale: "✓ Custom Access" },
         { name: "Content API Limit", starter: <Minus className="text-slate-600 w-5 h-5 mx-auto" />, growth: "10k calls / mo", scale: "Unlimited" },
 
         { name: "Workflow Automation", starter: <Minus className="text-slate-600 w-5 h-5 mx-auto" />, growth: <Check className="text-green-400 w-5 h-5 mx-auto" />, scale: <Check className="text-green-400 w-5 h-5 mx-auto" /> },
