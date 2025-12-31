@@ -6,7 +6,8 @@ import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from 'uuid';
 import { logActivity } from "@/actions/audit";
 
-export async function createLandingPage(locale: string, templateId?: string) {
+export async function createLandingPage(locale: string, templateIdOrFormData?: string | FormData) {
+    const templateId = typeof templateIdOrFormData === 'string' ? templateIdOrFormData : undefined;
     const slug = `page-${uuidv4().slice(0, 8)}`;
 
     let initialContent = {
