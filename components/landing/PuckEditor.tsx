@@ -412,10 +412,10 @@ export default function EditorPage({
                         )}
                     </Button>
 
-                    <DeploymentDropdown 
-                        pageId={params.id} 
-                        pageSlug={pageSlug} 
-                        lastPublishedAt={lastPublishedAt} 
+                    <DeploymentDropdown
+                        pageId={params.id}
+                        pageSlug={pageSlug}
+                        lastPublishedAt={lastPublishedAt}
                         data={data}
                         wordPressPostId={wordpressPostId}
                         onSyncSuccess={() => router.refresh()}
@@ -435,18 +435,6 @@ export default function EditorPage({
                         viewports={VIEWPORTS}
                         overrides={{
                             headerActions: () => <></>,
-                            iframe: ({ children, document }) => {
-                                // eslint-disable-next-line react-hooks/rules-of-hooks
-                                useEffect(() => {
-                                    if (document) {
-                                        document.documentElement.style.height = "100%";
-                                        document.body.style.height = "100%";
-                                        document.body.style.margin = "0";
-                                        document.body.style.background = "#0a0a0a";
-                                    }
-                                }, [document]);
-                                return <>{children}</>;
-                            }
                         }}
                     >
                         <div className="puck-editor-layout flex-1 flex min-h-0 w-full overflow-hidden">
@@ -467,8 +455,8 @@ export default function EditorPage({
                                     {/* Page Canvas - Center */}
                                     <Panel defaultSize={54} minSize={30} style={{ overflow: 'hidden' }}>
                                         <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }} className="bg-black/50">
-                                            <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden' }} className="custom-scrollbar p-8" id="puck-preview-container">
-                                                <div 
+                                            <div style={{ flex: 1, minHeight: 0, overflowY: 'hidden', overflowX: 'hidden' }} className="" id="puck-preview-container">
+                                                <div
                                                     className="preview-isolation"
                                                     style={{
                                                         width: activeViewport.width === 2400 ? '100%' : activeViewport.width,
@@ -477,7 +465,7 @@ export default function EditorPage({
                                                         backgroundColor: '#0a0a0a',
                                                         color: '#ffffff',
                                                         boxShadow: activeViewport.width !== 2400 && activeViewport.width !== 1280 ? '0 0 40px -10px rgba(0,0,0,0.5)' : 'none',
-                                                        isolation: 'isolate',
+                                                        position: 'relative', // Changed from isolation: isolate
                                                     }}>
                                                     <Puck.Preview />
                                                 </div>
@@ -493,12 +481,12 @@ export default function EditorPage({
                                     </Panel>
                                 </PanelGroup>
                             )}
-                            
+
                             {/* Immersive Mode - No sidebars */}
                             {!showSidebars && (
                                 <div className="flex-1 relative bg-black/50 overflow-hidden flex flex-col min-h-0">
-                                    <div className="flex-1 overflow-y-auto p-0 custom-scrollbar relative" id="puck-preview-container">
-                                        <div 
+                                    <div className="flex-1 overflow-y-hidden p-0 custom-scrollbar relative" id="puck-preview-container">
+                                        <div
                                             className="preview-isolation"
                                             style={{
                                                 width: activeViewport.width === 2400 ? '100%' : activeViewport.width,
@@ -507,7 +495,7 @@ export default function EditorPage({
                                                 backgroundColor: '#0a0a0a',
                                                 color: '#ffffff',
                                                 boxShadow: activeViewport.width !== 2400 && activeViewport.width !== 1280 ? '0 0 40px -10px rgba(0,0,0,0.5)' : 'none',
-                                                isolation: 'isolate',
+                                                position: 'relative', // Changed from isolation: isolate
                                             }}>
                                             <Puck.Preview />
                                         </div>

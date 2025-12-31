@@ -432,7 +432,7 @@ export const puckConfig: Config<Props> = {
                     .replace(/background(-color)?\s*:\s*(teal|cyan|aqua|turquoise)[^;]*;?/gi, '')
                     .replace(/background(-color)?\s*:\s*#(?:0d9488|14b8a6|2dd4bf|5eead4|99f6e4|115e59|134e4a|062a2a|0f2b31|146d7a|33b1c6|7bd3e6|0a1e21|0c2024|13323a)[^;]*;?/gi, '')
                     .replace(/background(-color)?\s*:\s*rgba?\s*\(\s*[0-9]{1,2}\s*,\s*1[2-9][0-9]\s*,\s*1[2-9][0-9][^)]*\)[^;]*;?/gi, '');
-                
+
                 return (
                     <div
                         id={id}
@@ -722,8 +722,8 @@ export const puckConfig: Config<Props> = {
                 const lockHeight = heightMap[minHeight || ""] || "500px"; // Default to 500px rigid
 
                 return (
-                    <div style={{ height: lockHeight, width: '100%', overflow: 'hidden', contain: 'strict', isolation: 'isolate' }}>
-                        <div id={id} className={cn(
+                    <div id={id} style={{ height: lockHeight, width: '100%', overflow: 'hidden', position: 'relative' }}>
+                        <div className={cn(
                             "relative px-8 text-center text-white overflow-hidden rounded-xl mx-4",
                             "h-full", // Force fill cage
                             "flex items-center justify-center",
