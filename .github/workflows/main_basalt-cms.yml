@@ -103,6 +103,14 @@ jobs:
           cd node_modules && tar -czf ../node_modules.tar.gz . && cd ..
           rm -rf node_modules
 
+          # Create Oryx manifest for Azure to detect and extract tarball
+          cat > oryx-manifest.toml << 'MANIFEST'
+          NodeVersion = "24"
+          CompressedNodeModulesFile = "node_modules.tar.gz"
+          MANIFEST
+          echo "Created oryx-manifest.toml:"
+          cat oryx-manifest.toml
+
           zip -r ../release.zip .
           cd ..
       - name: Upload artifact for deployment job
