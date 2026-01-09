@@ -18,8 +18,7 @@ pipeline {
     stage('Lint & Test') {
       steps {
         nodejs('NodeJS-18') {
-          sh 'npm install -g pnpm'
-          sh 'pnpm install'
+          sh 'npm install --force'
           sh 'npm run lint || true' // Warning only
           sh 'npx vitest run'
         }

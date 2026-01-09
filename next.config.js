@@ -71,17 +71,17 @@ const nextConfig = {
   // Performance optimizations
   experimental: {
     // Optimize imports for tree-shaking (reduces unused JS)
-    optimizePackageImports: [
-      'framer-motion',
-      'lucide-react',
-      '@measured/puck',
-      '@tremor/react',
-      'date-fns',
-      'dayjs',
-      'react-icons',
-      '@radix-ui/react-icons',
-      'recharts'
-    ],
+    // optimizePackageImports: [
+    //   'framer-motion',
+    //   'lucide-react',
+    //   '@measured/puck',
+    //   '@tremor/react',
+    //   'date-fns',
+    //   'dayjs',
+    //   'react-icons',
+    //   '@radix-ui/react-icons',
+    //   'recharts'
+    // ],
     // CSS optimization - disabled because it requires the deprecated 'critters' package
     // Next.js doesn't yet support 'beasties' (the maintained fork) as a replacement
     // optimizeCss: true,

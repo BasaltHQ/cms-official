@@ -66,7 +66,7 @@ export async function launchBrowser(): Promise<Browser> {
       "   macOS: /Applications/Google Chrome.app/Contents/MacOS/Google Chrome\n" +
       "   Linux: /usr/bin/google-chrome\n" +
       "2. Or ensure 'puppeteer' package is installed (already in package.json)\n" +
-      "Run: pnpm install"
+      "Run: npm install"
     );
   }
 

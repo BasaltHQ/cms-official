@@ -24,7 +24,6 @@ A Next.js 16 + React 19 Monolithic CRM & CMS application.
 ### Prerequisites
 
 -   Node.js 20+
--   pnpm
 -   MongoDB Instance (Atlas or Local)
 
 ### Installation
@@ -37,8 +36,6 @@ A Next.js 16 + React 19 Monolithic CRM & CMS application.
 
 2.  **Install dependencies:**
     ```bash
-    pnpm install
-    # OR
     npm install --force # Due to React 19 alpha peer deps
     ```
 
