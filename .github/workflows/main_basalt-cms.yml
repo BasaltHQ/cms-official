@@ -125,7 +125,8 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: "cms"
+          app-name: "basalt-cms"
           slot-name: "Production"
           package: release.zip
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_10465936071D4A7AA627DEB04C65156B }}
+
