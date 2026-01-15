@@ -37,6 +37,9 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
           GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+          API_KEY_ENCRYPTION_KEY: ${{ secrets.API_KEY_ENCRYPTION_KEY }}
+          CMS_DATABASE_URL: ${{ secrets.CMS_DATABASE_URL }}
         run: |
           npm install
           npx prisma generate
