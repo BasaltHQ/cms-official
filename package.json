@@ -2,9 +2,8 @@
   "name": "basalt-cms",
   "version": "1.0.5f",
   "private": true,
-  "packageManager": "pnpm@10.26.1",
   "scripts": {
-    "dev": "NODE_OPTIONS='--no-deprecation' next dev",
+    "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "node .next/standalone/server.js",
     "db:push:named": "node ./scripts/prisma-db-push-named.cjs",
@@ -158,37 +157,18 @@
     "postcss": "^8.5.6",
     "prettier": "^3.7.4",
     "prisma": "6.19.1",
-    "tailwindcss": "3.4.17",
-    "ts-node": "^10.9.2",
+    "tailwindcss": "^3.4.19",
+    "ts-node": "^1.7.1",
     "tsx": "^4.21.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.51.0",
     "vitest": "^4.0.15"
   },
-  "pnpm": {
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "react": "19",
-        "react-dom": "19"
-      }
-    },
-    "overrides": {
-      "d3-color": "^3.1.0",
-      "semver": "^5.7.2"
-    },
-    "onlyBuiltDependencies": [
-      "@prisma/client",
-      "@prisma/engines",
-      "@swc/core",
-      "aws-crt",
-      "bcrypt",
-      "cypress",
-      "esbuild",
-      "prisma",
-      "protobufjs",
-      "puppeteer",
-      "sharp"
-    ]
+  "overrides": {
+    "react": "$react",
+    "react-dom": "$react-dom",
+    "d3-color": "^3.1.0",
+    "semver": "^5.7.2"
   },
   "browserslist": [
     "last 2 Chrome versions",
