@@ -143,7 +143,7 @@ export default async function AboutPage() {
                                 </div>
 
                                 {/* Row 2: 2 columns centered */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
+                                {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
                                     <TeamMember
                                         name="John Garcia"
                                         role="SVP, AI Research"
@@ -158,7 +158,7 @@ export default async function AboutPage() {
                                         linkedin="https://www.linkedin.com/in/shahir-monjur/"
                                         twitter="https://x.com/shahir1395"
                                     />
-                                </div>
+                                </div> */}
                             </>
                         )}
                     </div>
