@@ -1,19 +1,28 @@
 "use server";
 
-import { prismadb } from "@/lib/prisma";
+import { getTenantContext } from "@/lib/tenant";
 
 export async function getSystemStatus() {
+    const context = await getTenantContext(false);
+    if (!context) return null;
+
+    const { teamId } = context;
+
     try {
         const start = Date.now();
         // Simple query to test DB latency
         // @ts-ignore
-        await prismadb.pageView.findFirst({ select: { id: true } });
+        await prismadb.pageView.findFirst({
+            where: { team_id: teamId },
+            select: { id: true }
+        });
         const latency = Date.now() - start;
 
         const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
         // @ts-ignore
         const requests = await prismadb.pageView.count({
             where: {
+                team_id: teamId,
                 createdAt: {
                     gte: twentyFourHoursAgo
                 }
@@ -22,7 +31,7 @@ export async function getSystemStatus() {
 
         // Mocking connections as Prisma doesn't expose pool stats easily on serverless
         // But making it dynamic based on activity
-        const connections = Math.floor(Math.random() * (20 - 5 + 1) + 5);
+        const connections = 1; // Reporting the current active system connection
 
         return {
             latency,

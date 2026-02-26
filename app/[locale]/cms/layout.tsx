@@ -33,7 +33,7 @@ export default async function AdminLayout({
     // But I just moved everything to `admin`.
 
     // Let's check session.
-    console.log("[CMS Parent Layout] Layout rendered");
+
     const session = await getServerSession(authOptions);
 
     // If we are on the login page, we render children without sidebar/protection

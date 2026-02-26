@@ -25,11 +25,11 @@ export function AnalyticsDashboard() {
                         <Eye className="w-4 h-4 text-cyan-400" />
                     </div>
                     <div className="z-10">
-                        <div className="text-2xl font-bold text-white mb-1">2.4M</div>
-                        <div className="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
-                            <ArrowUp className="w-3 h-3" />
-                            <span>12.5%</span>
-                            <span className="text-slate-500 ml-1">vs last mo</span>
+                        <div className="text-2xl font-bold text-white mb-1">---</div>
+                        <div className="flex items-center gap-1 text-[10px] text-slate-500 font-medium">
+                            <Activity className="w-3 h-3" />
+                            <span>0%</span>
+                            <span className="text-slate-600 ml-1">vs last mo</span>
                         </div>
                     </div>
                 </div>
@@ -42,11 +42,11 @@ export function AnalyticsDashboard() {
                         <Clock className="w-4 h-4 text-purple-400" />
                     </div>
                     <div className="z-10">
-                        <div className="text-2xl font-bold text-white mb-1">4m 12s</div>
-                        <div className="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
-                            <ArrowUp className="w-3 h-3" />
-                            <span>8.2%</span>
-                            <span className="text-slate-500 ml-1">retention</span>
+                        <div className="text-2xl font-bold text-white mb-1">--</div>
+                        <div className="flex items-center gap-1 text-[10px] text-slate-500 font-medium">
+                            <Clock className="w-3 h-3" />
+                            <span>0%</span>
+                            <span className="text-slate-600 ml-1">retention</span>
                         </div>
                     </div>
                 </div>
@@ -94,8 +94,8 @@ export function AnalyticsDashboard() {
                         <div className="absolute top-0 left-0 h-full w-[92%] bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
                     </div>
                     <div className="flex justify-between items-center text-xs">
-                        <span className="text-white font-bold">98/100</span>
-                        <span className="text-emerald-400">Excellent</span>
+                        <span className="text-white font-bold">--/100</span>
+                        <span className="text-slate-500">Wait for data</span>
                     </div>
                 </div>
 
@@ -106,11 +106,11 @@ export function AnalyticsDashboard() {
                         <FileText className="w-4 h-4 text-blue-400" />
                     </div>
                     <div>
-                        <div className="text-sm font-medium text-white truncate w-full mb-1">/industry-trends-2025</div>
+                        <div className="text-sm font-medium text-white truncate w-full mb-1">/dashboard</div>
                         <div className="flex items-center gap-1 text-[10px] text-slate-400">
-                            <span>125k reads</span>
+                            <span>0 reads</span>
                             <span className="w-1 h-1 rounded-full bg-slate-600" />
-                            <span className="text-green-400">Viral</span>
+                            <span className="text-slate-500">Pending</span>
                         </div>
                     </div>
                 </div>

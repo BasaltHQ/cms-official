@@ -1,12 +1,13 @@
 "use server";
 
 import { prismadb } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getTenantContext } from "@/lib/tenant";
 
 export async function getDashboardStats() {
-    const session = await getServerSession(authOptions);
-    if (!(session?.user as any)?.id) return null;
+    const context = await getTenantContext(false);
+    if (!context) return null;
+
+    const { teamId } = context;
 
     try {
         const [
@@ -17,16 +18,18 @@ export async function getDashboardStats() {
             recentDocs,
             recentPosts
         ] = await Promise.all([
-            prismadb.mediaItem.count(),
-            prismadb.documents.count(),
-            prismadb.blogPost.count(),
-            prismadb.users.count(),
+            prismadb.mediaItem.count({ where: { team_id: teamId } }),
+            prismadb.documents.count({ where: { team_id: teamId } }),
+            prismadb.blogPost.count({ where: { team_id: teamId } }),
+            prismadb.users.count({ where: { team_id: teamId } }),
             prismadb.documents.findMany({
+                where: { team_id: teamId },
                 take: 3,
                 orderBy: { updatedAt: 'desc' },
                 select: { id: true, document_name: true, updatedAt: true, document_type: true }
             }),
             prismadb.blogPost.findMany({
+                where: { team_id: teamId },
                 take: 3,
                 orderBy: { updatedAt: 'desc' },
                 select: { id: true, title: true, updatedAt: true }
@@ -51,9 +54,9 @@ export async function getDashboardStats() {
                 percent: Math.min(Math.round((storageUsedMB / storageLimitMB) * 100), 100)
             },
             ai: {
-                used: 125000, // Mocked for visualization until we have real billing API connected
+                used: 0, // Resetting from hardcoded 'slop' to actual starting state
                 limit: 500000,
-                percent: 25
+                percent: 0
             },
             seats: {
                 used: totalUsers,
@@ -71,7 +74,7 @@ export async function getDashboardStats() {
                     updatedAt: p.updatedAt,
                     id: p.id,
                     status: 'Active',
-                    views: Math.floor(Math.random() * (5000 - 1000 + 1) + 1000) // Mocking views for "clever" demo feel
+                    views: 0
                 })),
                 ...recentDocs.map(d => ({
                     type: 'doc' as const,
@@ -79,7 +82,7 @@ export async function getDashboardStats() {
                     updatedAt: d.updatedAt!,
                     id: d.id,
                     status: 'Active',
-                    views: Math.floor(Math.random() * (500 - 50 + 1) + 50)
+                    views: 0
                 }))
             ].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).slice(0, 5)
         };

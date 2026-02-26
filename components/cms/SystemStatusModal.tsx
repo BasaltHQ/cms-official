@@ -12,10 +12,10 @@ interface SystemStatusModalProps {
 
 export function SystemStatusModal({ isOpen, onClose }: SystemStatusModalProps) {
     const [stats, setStats] = useState({
-        latency: 45,
+        latency: 0,
         requests: 0,
-        connections: 84,
-        health: 99.9,
+        connections: 0,
+        health: 100,
         status: "ONLINE"
     });
 
@@ -26,11 +26,11 @@ export function SystemStatusModal({ isOpen, onClose }: SystemStatusModalProps) {
             try {
                 const data = await getSystemStatus();
                 setStats({
-                    latency: data.latency,
-                    requests: data.requests,
-                    connections: data.connections,
+                    latency: data?.latency || 0,
+                    requests: data?.requests || 0,
+                    connections: data?.connections || 0,
                     health: 100,
-                    status: data.status
+                    status: data?.status || "ONLINE"
                 });
             } catch (error) {
                 console.error("Failed to fetch status");

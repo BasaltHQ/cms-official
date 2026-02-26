@@ -6,9 +6,16 @@ import { hash } from "bcryptjs";
 import { logActivityInternal } from "@/actions/audit";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getTenantContext } from "@/lib/tenant";
 
 export async function getUsers(query?: string) {
-    const where: any = {};
+    const context = await getTenantContext(false);
+    if (!context) return [];
+
+    const where: any = {
+        team_id: context.teamId
+    };
+
     if (query) {
         where.OR = [
             { name: { contains: query, mode: "insensitive" } },
@@ -49,6 +56,9 @@ export async function getRoles() {
 
 export async function upsertUser(data: any) {
     try {
+        const context = await getTenantContext(false);
+        if (!context) throw new Error("Unauthorized");
+
         const { id, ...updateData } = data;
 
         // If creating new user, verify email uniqueness
@@ -58,6 +68,12 @@ export async function upsertUser(data: any) {
         }
 
         if (id) {
+            // Verify they are in the same team
+            const targetUser = await prismadb.users.findFirst({
+                where: { id, team_id: context.teamId }
+            });
+            if (!targetUser) throw new Error("User not found in your workspace");
+
             if (updateData.password) {
                 if (updateData.password.length < 6) throw new Error("Password must be at least 6 characters");
                 updateData.password = await hash(updateData.password, 12);
@@ -74,6 +90,7 @@ export async function upsertUser(data: any) {
             await prismadb.users.create({
                 data: {
                     ...updateData,
+                    team_id: context.teamId,
                     created_on: new Date(),
                     userStatus: "ACTIVE", // Default to active for manually created users
                     is_admin: false, // Default to false, rely on role
@@ -81,16 +98,16 @@ export async function upsertUser(data: any) {
             });
         }
 
-        const logSession = await getServerSession(authOptions);
         logActivityInternal(
-            logSession?.user?.id || "system",
+            context.userId,
             id ? "Updated User" : "Created User",
             "Team Management",
             `User ${updateData.email} was ${id ? "updated" : "created"}`,
             {
                 email: updateData.email,
                 roleId: updateData.roleId,
-                status: updateData.userStatus
+                status: updateData.userStatus,
+                teamId: context.teamId
             }
         );
 
@@ -106,24 +123,24 @@ export async function upsertUser(data: any) {
 
 export async function deleteUser(id: string) {
     try {
-        // Soft delete or hard delete? Prudence suggests soft delete usually, but for now specific request implied management including delete.
-        // Let's do hard delete for now as per "delete" request, or check if constraints exist.
-        // Users have many relations. Soft delete (status=INACTIVE) is safer.
-        // But user explicitly asked for "delete".
-        // Let's implement Delete but fallback to Deactivate if relations prevent it?
-        // Actually, let's just delete for now and rely on constraints throwing error if needed, or cascading.
-        // Safe approach: Update status to INACTIVE (Deactivate) is a separate action.
-        // Delete = Hard Delete.
+        const context = await getTenantContext(false);
+        if (!context) throw new Error("Unauthorized");
+
+        // Verify ownership
+        const targetUser = await prismadb.users.findFirst({
+            where: { id, team_id: context.teamId }
+        });
+
+        if (!targetUser) throw new Error("User not found in your workspace");
 
         await prismadb.users.delete({ where: { id } });
 
-        const logSession = await getServerSession(authOptions);
         logActivityInternal(
-            logSession?.user?.id || "system",
+            context.userId,
             "Deleted User",
             "Team Management",
             `User ${id} was permanently deleted`,
-            { userId: id }
+            { userId: id, teamId: context.teamId }
         );
 
 
@@ -136,18 +153,27 @@ export async function deleteUser(id: string) {
 
 export async function toggleUserStatus(id: string, status: "ACTIVE" | "INACTIVE" | "PENDING") {
     try {
+        const context = await getTenantContext(false);
+        if (!context) throw new Error("Unauthorized");
+
+        // Verify ownership
+        const targetUser = await prismadb.users.findFirst({
+            where: { id, team_id: context.teamId }
+        });
+
+        if (!targetUser) throw new Error("User not found in your workspace");
+
         await prismadb.users.update({
             where: { id },
             data: { userStatus: status }
         });
 
-        const logSession = await getServerSession(authOptions);
         logActivityInternal(
-            logSession?.user?.id || "system",
+            context.userId,
             "Updated User Status",
             "Team Management",
             `User ${id} status changed to ${status}`,
-            { userId: id, newStatus: status }
+            { userId: id, newStatus: status, teamId: context.teamId }
         );
 
 

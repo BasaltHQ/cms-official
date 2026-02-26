@@ -28,11 +28,11 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
 }
 
 export const authOptions: NextAuthOptions = {
-  debug: true, // Enable NextAuth debugging
+  debug: false, // Disable NextAuth debugging
   //Trust the host header (useful for proxies)
   // @ts-ignore
   trustHost: true,
-  secret: process.env.JWT_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET,
   //adapter: PrismaAdapter(prismadb),
   session: {
     strategy: "jwt",
@@ -132,20 +132,14 @@ export const authOptions: NextAuthOptions = {
       },
 
       async authorize(credentials) {
-        console.log("[Auth Debug] Authorize called");
-
         if (!credentials?.email || !credentials?.password) {
-          console.log("[Auth Debug] Missing credentials");
           throw new Error("Email or password is missing");
         }
 
-        // Normalize email to avoid case sensitivity issues in lookups
         const normalizedEmail =
           typeof credentials.email === "string"
             ? credentials.email.trim().toLowerCase()
             : credentials.email;
-
-        console.log(`[Auth Debug] Looking up user: ${normalizedEmail}`);
 
         const user = await prismadb.users.findFirst({
           where: {
@@ -153,24 +147,17 @@ export const authOptions: NextAuthOptions = {
           },
         });
 
-        //clear white space from password
         const trimmedPassword = credentials.password.trim();
 
         if (!user) {
-          console.log("[Auth Debug] User not found in database");
           throw new Error("User not found. Please register first.");
         }
 
-        console.log(`[Auth Debug] User found: ${user.id}, Status: ${user.userStatus}`);
-
-        // Check if user is active
         if (user.userStatus !== "ACTIVE") {
-          console.log(`[Auth Debug] User inactive. Status: ${user.userStatus}`);
           throw new Error("Your account is pending approval. Please contact support.");
         }
 
         if (!user?.password) {
-          console.log("[Auth Debug] User has no password set (OAuth user?)");
           throw new Error(
             "Account exists but no password is set. Sign in with Google/GitHub or use 'Forgot password' to set one."
           );
@@ -182,12 +169,9 @@ export const authOptions: NextAuthOptions = {
         );
 
         if (!isCorrectPassword) {
-          console.log("[Auth Debug] Password mismatch");
           throw new Error("Password is incorrect");
         }
 
-        console.log("[Auth Debug] Login successful, returning user");
-        //console.log(user, "user");
         return user;
       },
     }),
@@ -222,9 +206,7 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, account, user }: any) {
-      console.log("[Auth Debug] JWT Callback called");
-      if (user) console.log(`[Auth Debug] JWT Callback - User present: ${user.id}`);
-      if (account) console.log(`[Auth Debug] JWT Callback - Account present: ${account.provider}`);
+
 
       // If we have an account and the user is already signed in (token has email/sub) or we just signed in (user object present)
       if (account && ["twitter", "linkedin", "github", "azure-ad", "facebook", "slack"].includes(account.provider.toLowerCase())) {
@@ -332,7 +314,7 @@ export const authOptions: NextAuthOptions = {
       // Credentials Login Logic (or when user object is available)
       // Ensure we copy the user data to the token so the session callback can see it
       if (user) {
-        console.log(`[Auth Debug] JWT Callback - Copying user data to token: ${user.email}`);
+
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
@@ -345,14 +327,10 @@ export const authOptions: NextAuthOptions = {
 
     //TODO: fix this any
     async session({ token, session }: any) {
-      console.log("[Auth Debug] Session Callback called");
-      // Guard against missing token data to avoid runtime errors and JWT session failures
       if (!token?.email) {
-        console.log("[Auth Debug] Session Callback - Token missing email", token);
         return session;
       }
 
-      // Normalize email for stable lookups and consistent storage
       const tokenEmail =
         typeof token?.email === "string" ? token.email.toLowerCase() : token?.email;
 
@@ -364,14 +342,23 @@ export const authOptions: NextAuthOptions = {
 
       if (!user) {
         try {
-          // Attempt to create the user
+          // Create a default team for the new user
+          const defaultTeam = await prismadb.team.create({
+            data: {
+              name: `${token.name || "My"}'s Workspace`,
+              slug: `${(token.name || "workspace").toLowerCase().replace(/\s+/g, '-')}-${Math.random().toString(36).substring(2, 7)}`,
+            }
+          });
+
           const newUser = await prismadb.users.create({
             data: {
               email: tokenEmail,
               name: token.name,
               avatar: token.picture,
+              team_id: defaultTeam.id,
+              team_role: "OWNER",
               is_admin: false,
-              is_account_admin: false,
+              is_account_admin: true,
               lastLoginAt: new Date(),
               userStatus:
                 process.env.NEXT_PUBLIC_APP_URL === "https://demo.nextcrm.io"
@@ -382,21 +369,21 @@ export const authOptions: NextAuthOptions = {
 
           await newUserNotify(newUser);
 
-          //Put new created user data in session
           session.user.id = newUser.id;
           session.user.name = newUser.name;
           session.user.email = newUser.email;
           session.user.avatar = newUser.avatar;
           session.user.image = newUser.avatar;
           session.user.isAdmin = false;
+          session.user.team_id = newUser.team_id;
+          session.user.team_role = "OWNER";
           session.user.userLanguage = newUser.userLanguage;
           session.user.userStatus = newUser.userStatus;
           session.user.lastLoginAt = newUser.lastLoginAt;
           return session;
         } catch (error) {
-          console.error("[auth.session] users.create error (potential race condition):", error);
+          console.error("[auth.session] users.create error:", error);
 
-          // If create failed (likely due to race condition), try finding the user again
           const existingUser = await prismadb.users.findFirst({
             where: {
               email: tokenEmail,
@@ -404,7 +391,6 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (existingUser) {
-            // User exists now (likely created by concurrent request) - populate session
             session.user.id = existingUser.id;
             session.user.name = existingUser.name;
             session.user.email = existingUser.email;
@@ -418,7 +404,6 @@ export const authOptions: NextAuthOptions = {
             session.user.timezone = existingUser.timezone;
             session.user.region = existingUser.region;
 
-            // Fetch role and permissions if available
             if (existingUser.roleId) {
               const role = await prismadb.role.findUnique({ where: { id: existingUser.roleId } });
               if (role) {
@@ -428,14 +413,9 @@ export const authOptions: NextAuthOptions = {
             }
             return session;
           }
-
-          // If we still can't find the user, return session without user data (or let it fail)
           return session;
         }
       } else {
-        console.log(`[Auth Debug] Session Callback - User found: ${user.id}`);
-        // User already exists in localDB, put user data in session (avoid DB writes here)
-        //User allready exist in localDB, put user data in session
         session.user.id = user.id;
         session.user.name = user.name;
         session.user.email = user.email;
@@ -450,7 +430,10 @@ export const authOptions: NextAuthOptions = {
         session.user.region = user.region;
         session.user.forcePasswordReset = user.forcePasswordReset;
 
-        // Fetch role and permissions if available
+        // Multi-tenant additions
+        session.user.team_id = user.team_id;
+        session.user.team_role = user.team_role || "MEMBER";
+
         if (user.roleId) {
           const role = await prismadb.role.findUnique({ where: { id: user.roleId } });
           if (role) {
@@ -460,7 +443,6 @@ export const authOptions: NextAuthOptions = {
         }
       }
 
-      //console.log(session, "session");
       return session;
     },
   },

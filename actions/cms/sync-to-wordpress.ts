@@ -52,8 +52,8 @@ export async function syncToWordPress(pageId: string, puckData: Data, manualWpUr
         // If still no ID, create new!
         if (!wpPageId) {
             const newPage = await wpService.createPage({
-                title: { rendered: puckData.root?.props?.title || page.title || "New Page" },
-                content: { rendered: "" },
+                title: (puckData.root?.props?.title || page.title || "New Page") as any,
+                content: "" as any,
                 status: 'publish'
             });
 

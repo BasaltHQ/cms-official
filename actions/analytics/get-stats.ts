@@ -2,8 +2,14 @@
 
 import { prismadb } from "@/lib/prisma";
 import { format, subDays } from "date-fns";
+import { getTenantContext } from "@/lib/tenant";
 
 export async function getAnalyticsStats() {
+    const context = await getTenantContext(false);
+    if (!context) return null;
+
+    const { teamId } = context;
+
     try {
         const now = new Date();
         const thirtyDaysAgo = subDays(now, 30);
@@ -16,6 +22,7 @@ export async function getAnalyticsStats() {
                 _all: true
             },
             where: {
+                team_id: teamId,
                 createdAt: {
                     gte: thirtyDaysAgo
                 }
@@ -27,6 +34,7 @@ export async function getAnalyticsStats() {
         // @ts-ignore
         const totalPageViews = await prismadb.pageView.count({
             where: {
+                team_id: teamId,
                 createdAt: {
                     gte: thirtyDaysAgo
                 }
@@ -40,6 +48,7 @@ export async function getAnalyticsStats() {
         // @ts-ignore
         const views = await prismadb.pageView.findMany({
             where: {
+                team_id: teamId,
                 createdAt: {
                     gte: thirtyDaysAgo
                 }
@@ -87,7 +96,10 @@ export async function getAnalyticsStats() {
                     path: 'desc'
                 }
             },
-            take: 10
+            take: 10,
+            where: {
+                team_id: teamId
+            }
         });
 
         const topPages = topPagesRaw.map((p: { path: string, _count: { _all: number } }) => ({
@@ -102,6 +114,7 @@ export async function getAnalyticsStats() {
         const activeUsersRaw = await prismadb.pageView.groupBy({
             by: ['ipHash'],
             where: {
+                team_id: teamId,
                 createdAt: {
                     gte: fiveMinutesAgo
                 }
@@ -122,6 +135,7 @@ export async function getAnalyticsStats() {
                 }
             },
             where: {
+                team_id: teamId,
                 city: {
                     not: null
                 }

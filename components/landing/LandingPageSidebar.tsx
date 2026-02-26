@@ -23,10 +23,12 @@ interface PageItem {
 
 export function LandingPageSidebar({
     pages,
-    locale
+    locale,
+    tenant
 }: {
     pages: PageItem[],
-    locale: string
+    locale: string,
+    tenant: string
 }) {
     const pathname = usePathname();
     const { isAdvancedMode } = useEditor();
@@ -53,7 +55,7 @@ export function LandingPageSidebar({
         <div className="w-64 border-r border-white/10 flex flex-col h-full glass rounded-none border-y-0 border-l-0">
             {/* Using global 'glass' utility as requested, consistent with other sidebars */}
             <div className="p-4 border-b border-white/10 space-y-4">
-                <Link href={`/${locale}/cms/landing`} className="group">
+                <Link href={`/${locale}/cms/${tenant}/landing`} className="group">
                     <h2 className="text-lg font-semibold text-white flex items-center gap-2 group-hover:text-emerald-400 transition-colors">
                         <LayoutTemplate className="h-5 w-5 text-emerald-500" />
                         Landing Pages
@@ -103,7 +105,7 @@ export function LandingPageSidebar({
                                             isActive && "bg-emerald-500/10 text-emerald-400 font-medium border border-emerald-500/20"
                                         )}
                                     >
-                                        <Link href={`/${locale}/cms/landing/${page.id}`} className="flex items-center justify-between w-full">
+                                        <Link href={`/${locale}/cms/${tenant}/landing/${page.id}`} className="flex items-center justify-between w-full">
                                             <span className="truncate pr-2">{page.title || "Untitled Page"}</span>
                                         </Link>
                                     </Button>

@@ -509,6 +509,18 @@ model Team {
   tasks       Tasks[]
   employees   Employees[]
   landing_pages LandingPage[]
+  blog_posts  BlogPost[]
+  media_items MediaItem[]
+  forms       Form[]
+  job_postings JobPosting[]
+  doc_articles DocArticle[]
+  page_views   PageView[]
+  subscribers  Subscriber[]
+  newsletter_subscribers NewsletterSubscriber[]
+  support_tickets SupportTicket[]
+  system_activities SystemActivity[]
+  faqs         Faq[]
+  scheduled_posts ScheduledPost[]
   
   ai_config           TeamAiConfig?
 }
@@ -736,7 +748,7 @@ model UserAiConfig {
   configuration Json?      // For Azure (resourceName), AWS (accessKeyId), etc.
   isActive      Boolean    @default(true)
   
-  assigned_user Users      @relation(fields: [userId], references: [id])
+  assigned_user Users      @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@unique([userId, provider])
 }
@@ -887,6 +899,9 @@ model BlogPost {
   publishedAt DateTime @default(now())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  team_id     String?  @db.ObjectId
+  assigned_team Team?  @relation(fields: [team_id], references: [id])
 }
 
 model JobPosting {
@@ -904,6 +919,10 @@ model JobPosting {
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  
+  team_id      String?  @db.ObjectId
+  assigned_team Team?   @relation(fields: [team_id], references: [id])
+  
   applications JobApplication[]
 }
 
@@ -940,6 +959,9 @@ model DocArticle {
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  team_id     String?  @db.ObjectId
+  assigned_team Team?  @relation(fields: [team_id], references: [id])
 }
 
 model SocialSettings {
@@ -993,6 +1015,9 @@ model Subscriber {
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  team_id     String?  @db.ObjectId
+  assigned_team Team?  @relation(fields: [team_id], references: [id])
 }
 
 model SupportTicket {
@@ -1012,7 +1037,10 @@ model SupportTicket {
   status    String   @default("NEW") // "NEW", "JIRA_CREATED", "ARCHIVED"
   jiraTicketId String?
   createdAt DateTime @default(now()) @db.Date
-  updatedAt DateTime @updatedAt @db.Date
+  updatedAt DateTime @updatedAt
+  
+  team_id     String?  @db.ObjectId
+  assigned_team Team?  @relation(fields: [team_id], references: [id])
   
   formSubmission FormSubmission?
 }
@@ -1025,8 +1053,11 @@ model SystemActivity {
   details   String?
   createdAt DateTime @default(now()) @db.Date
 
-  user      Users    @relation(name: "UserSystemActivities", fields: [userId], references: [id])
+  user      Users    @relation(name: "UserSystemActivities", fields: [userId], references: [id], onDelete: Cascade)
   metadata  Json?
+
+  team_id     String?  @db.ObjectId
+  assigned_team Team?  @relation(fields: [team_id], references: [id])
 }
 
 
@@ -1039,6 +1070,9 @@ model PageView {
   city      String?
   country   String?
   createdAt DateTime @default(now()) @db.Date
+
+  team_id     String?  @db.ObjectId
+  assigned_team Team?  @relation(fields: [team_id], references: [id])
 }
 
 model MediaItem {
@@ -1061,6 +1095,9 @@ model MediaItem {
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
+  team_id     String?  @db.ObjectId
+  assigned_team Team?  @relation(fields: [team_id], references: [id])
   
   userId      String?  @db.ObjectId // Uploader
   
@@ -1216,7 +1253,7 @@ model AppConnection {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt @db.Date
 
-  user        Users       @relation(fields: [userId], references: [id])
+  user        Users       @relation(fields: [userId], references: [id], onDelete: Cascade)
   sync_logs   AppSyncLog[]
 
   @@index([providerId, userId])
@@ -1256,6 +1293,9 @@ model Form {
   // Creator
   createdById String?  @db.ObjectId
   createdBy   Users?   @relation(fields: [createdById], references: [id])
+  
+  team_id     String?  @db.ObjectId
+  assigned_team Team?  @relation(fields: [team_id], references: [id])
   
   submissions FormSubmission[]
 
@@ -1304,6 +1344,9 @@ model NewsletterSubscriber {
   source    String?          @default("website")
   createdAt DateTime         @default(now()) @db.Date
   updatedAt DateTime         @updatedAt @db.Date
+
+  team_id     String?  @db.ObjectId
+  assigned_team Team?  @relation(fields: [team_id], references: [id])
 }
 
 enum NewsletterStatus {
@@ -1321,6 +1364,9 @@ model Faq {
   isVisible   Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  team_id     String?  @db.ObjectId
+  assigned_team Team?  @relation(fields: [team_id], references: [id])
 }
 
 // Scheduled Social Media Posts for Broadcast Studio
@@ -1339,6 +1385,9 @@ model ScheduledPost {
   // User who created the post
   createdById   String?             @db.ObjectId
   createdBy     Users?              @relation(fields: [createdById], references: [id])
+
+  team_id     String?             @db.ObjectId
+  assigned_team Team?              @relation(fields: [team_id], references: [id])
 }
 
 enum ScheduledPostStatus {

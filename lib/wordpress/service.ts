@@ -192,16 +192,23 @@ export class WordPressService {
 
     async updatePage(id: number, data: Partial<WPPost>): Promise<WPPost> {
         try {
+            console.log(`[WP_SYNC] Attempting REST API update for Page ${id}...`);
             return await this.fetchAPI(`/pages/${id}`, {
                 method: 'PUT', // Use PUT for updates as it's more standard and sometimes bypasses POST firewalls
                 body: JSON.stringify(data)
             });
         } catch (error: any) {
-            if (error.message.includes('Permissions Error') || error.message.includes('401') || error.message.includes('403')) {
-                console.log(`[WP_SYNC] REST API failed with permissions error. Falling back to XML-RPC for Page ${id}...`);
-                return this.updatePageXmlRpc(id, data);
+            console.warn(`[WP_SYNC] REST API update failed: ${error.message}`);
+
+            // For almost any error (Auth, Bad Request, Server Error), try XML-RPC as a robust fallback
+            console.log(`[WP_SYNC] Falling back to XML-RPC for Page ${id}...`);
+            try {
+                const result = await this.updatePageXmlRpc(id, data);
+                return result;
+            } catch (xmlError: any) {
+                console.error(`[WP_SYNC] XML-RPC fallback also failed: ${xmlError.message}`);
+                throw new Error(`Sync failed. REST: ${error.message} | XML-RPC: ${xmlError.message}`);
             }
-            throw error;
         }
     }
 
@@ -214,18 +221,25 @@ export class WordPressService {
 
     async updatePost(id: number, data: Partial<WPPost>): Promise<WPPost> {
         try {
+            console.log(`[WP_SYNC] Attempting REST API update for Post ${id}...`);
             return await this.fetchAPI(`/posts/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify(data)
             });
         } catch (error: any) {
-            if (error.message.includes('Permissions Error') || error.message.includes('401') || error.message.includes('403')) {
-                console.log(`[WP_SYNC] REST API failed with permissions error. Falling back to XML-RPC for Post ${id}...`);
-                return this.updatePostXmlRpc(id, data);
+            console.warn(`[WP_SYNC] REST API update failed: ${error.message}`);
+
+            console.log(`[WP_SYNC] Falling back to XML-RPC for Post ${id}...`);
+            try {
+                const result = await this.updatePostXmlRpc(id, data);
+                return result;
+            } catch (xmlError: any) {
+                console.error(`[WP_SYNC] XML-RPC fallback also failed: ${xmlError.message}`);
+                throw new Error(`Sync failed. REST: ${error.message} | XML-RPC: ${xmlError.message}`);
             }
-            throw error;
         }
     }
+
 
     // XML-RPC Fallback Implementation
     // XML-RPC bypasses header-stripping because it sends credentials in the BODY.
@@ -372,7 +386,7 @@ export class WordPressService {
                     inlineStyles += styleMatch[1];
                 }
             }
-            
+
             // Store CSS for later use in background extraction
             this.lastScrapedCSS = inlineStyles;
             console.log(`[WP_SCRAPE] Extracted ${inlineStyles.length} chars of CSS`);
@@ -427,7 +441,7 @@ export class WordPressService {
 
     // Store last scraped CSS for reference
     private lastScrapedCSS: string = '';
-    
+
     // Get last scraped CSS (for external tools)
     getLastScrapedCSS(): string {
         return this.lastScrapedCSS;
@@ -436,10 +450,10 @@ export class WordPressService {
     // Inject inline background styles from CSS into HTML elements
     private injectInlineBackgroundStyles(html: string, css: string): string {
         if (!css) return html;
-        
+
         // Parse CSS rules for section backgrounds
         const bgRules: Map<string, string> = new Map();
-        
+
         // Match CSS rules like: .section-xyz { background: #color }
         const ruleRegex = /\.([a-zA-Z0-9_-]+section[a-zA-Z0-9_-]*)\s*\{[^}]*background(?:-color)?\s*:\s*([^;}\s]+)/gi;
         let match;
@@ -450,7 +464,7 @@ export class WordPressService {
                 bgRules.set(className, bgColor);
             }
         }
-        
+
         // Also match ID-based rules: #section-xyz { background: #color }
         const idRuleRegex = /#([a-zA-Z0-9_-]*section[a-zA-Z0-9_-]*)\s*\{[^}]*background(?:-color)?\s*:\s*([^;}\s]+)/gi;
         while ((match = idRuleRegex.exec(css)) !== null) {
@@ -460,9 +474,9 @@ export class WordPressService {
                 bgRules.set(`#${id}`, bgColor);
             }
         }
-        
+
         console.log(`[WP_SCRAPE] Found ${bgRules.size} background rules in CSS`);
-        
+
         // Inject found backgrounds into matching HTML elements
         Array.from(bgRules.entries()).forEach(([selector, bgColor]) => {
             if (selector.startsWith('#')) {
@@ -486,7 +500,7 @@ export class WordPressService {
                 });
             }
         });
-        
+
         return html;
     }
 

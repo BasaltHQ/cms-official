@@ -1,17 +1,17 @@
 "use server";
 
 import { prismadb } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getTenantContext } from "@/lib/tenant";
 
 export async function getAllLandingPages() {
     try {
-        const session = await getServerSession(authOptions);
-        if (!session) {
+        const context = await getTenantContext(false);
+        if (!context) {
             return { error: "Unauthorized" };
         }
 
         const pages = await prismadb.landingPage.findMany({
+            where: { team_id: context.teamId },
             orderBy: { updatedAt: "desc" },
             select: {
                 id: true,

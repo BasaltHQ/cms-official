@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Mic, MicOff, X, Maximize2, Minimize2, Phone, Ghost, MapPin, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useParams } from "next/navigation";
 import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
 import { CMS_MODULES } from "@/app/[locale]/cms/config";
@@ -13,17 +13,21 @@ import { CMS_MODULES } from "@/app/[locale]/cms/config";
 // Types
 type AgentState = "idle" | "connecting" | "listening" | "speaking";
 
-// Helper to generate sitemap string
-const SITEMAP_CONTEXT = CMS_MODULES.map(m => {
-    let base = `- ${m.label}: ${m.href("en")}`; // Default to 'en' or dynamic? We'll use relative paths in tools usually but hrefs here help context.
-    // Actually, just labels and general paths.
-    if (m.options) {
-        return base + "\n" + m.options.map(o => `  * ${o.label}: ${o.href("en")}`).join("\n");
-    }
-    return base;
-}).join("\n");
+// Helper to generate sitemap string - moved inside component to access params
 
 export function UniversalVoiceAgent() {
+    const params = useParams();
+    const locale = (params?.locale as string) || "en";
+    const tenant = (params?.tenant as string) || "my-workspace";
+
+    const sitemapContext = CMS_MODULES.map(m => {
+        let base = `- ${m.label}: ${m.href(locale, tenant)}`;
+        if (m.options) {
+            return base + "\n" + m.options.map(o => `  * ${o.label}: ${o.href(locale, tenant)}`).join("\n");
+        }
+        return base;
+    }).join("\n");
+
     const [isOpen, setIsOpen] = useState(false); // Minimized vs Expanded
     const [isActive, setIsActive] = useState(false); // Connected or not
     const [agentState, setAgentState] = useState<AgentState>("idle");
@@ -263,7 +267,7 @@ export function UniversalVoiceAgent() {
             - System: You are currently on page "${pathname}".
             
             AVAILABLE APP NAVIGATION (SITEMAP):
-            ${SITEMAP_CONTEXT}
+            ${sitemapContext}
         `,
         // ...
     };

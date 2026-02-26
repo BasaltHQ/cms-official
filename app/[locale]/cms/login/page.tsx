@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams, usePathname, useParams } from "next/navigation";
 import { Loader2, Lock, AlertCircle, Info, Mail } from "lucide-react";
 import NextImage from "next/image";
@@ -15,9 +15,20 @@ import { requestPasswordReset } from "@/actions/cms/users";
 import { BrandLogo } from "@/components/cms/BrandLogo";
 
 export default function AdminLoginPage() {
+    const { status } = useSession();
     const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();
+
+    const params = useParams();
+    const locale = (params?.locale as string) || "en";
+
+    // If authenticated, redirect to dashboard
+    useEffect(() => {
+        if (status === "authenticated") {
+            router.push(`/${locale}/cms`);
+        }
+    }, [status, router, locale]);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -28,9 +39,6 @@ export default function AdminLoginPage() {
     const [resetLoading, setResetLoading] = useState(false);
 
     const error = searchParams.get("error");
-
-    const params = useParams();
-    const locale = (params?.locale as string) || "en";
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
